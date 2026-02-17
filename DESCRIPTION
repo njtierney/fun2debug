@@ -22,3 +22,5 @@ Imports:
   testthat,
   tidyverse,
   usethis
+URL: https://github.com/njtierney/fun2debug
+BugReports: https://github.com/njtierney/fun2debug/issues
