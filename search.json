@@ -13,8 +13,8 @@
     "objectID": "index.html#why-functions-matter",
     "href": "index.html#why-functions-matter",
     "title": "Introduction to Functions and Debugging",
-    "section": "6.1 Why Functions Matter",
-    "text": "6.1 Why Functions Matter\n\nThe problem with repeated code; when re-reading becomes a burden\nWhy write functions?\n\nManaging complexity\nExpressing ideas clearly\nMaking code easier to reason about\n\nMoving beyond DRY (Don’t Repeat Yourself)\n\nDRRY: Don’t Re-Read Yourself\nFunctions as tools for expression\nWhen to write a function (it’s not just about repetition)",
+    "section": "3.1 Why Functions Matter",
+    "text": "3.1 Why Functions Matter\n\nThe problem with repeated code; when re-reading becomes a burden\nWhy write functions?\n\nManaging complexity\nExpressing ideas clearly\nMaking code easier to reason about\n\nMoving beyond DRY (Don’t Repeat Yourself)\n\nDRRY: Don’t Re-Read Yourself\nFunctions as tools for expression\nWhen to write a function (it’s not just about repetition)",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
     ]
@@ -23,8 +23,8 @@
     "objectID": "index.html#function-fundamentals-and-design",
     "href": "index.html#function-fundamentals-and-design",
     "title": "Introduction to Functions and Debugging",
-    "section": "6.2 Function Fundamentals and Design",
-    "text": "6.2 Function Fundamentals and Design\n\nAnatomy of a function\n\nName, inputs (arguments), body, output\nFunction signatures and what they communicate\n\nTwo approaches to writing functions\n\nOutside-in: Start with how you want to use it\nInside-out: Extract from existing code\n\nNaming things\n\nMaking function names evocative\nNaming arguments and variables\nIteration is normal and expected",
+    "section": "3.2 Function Fundamentals and Design",
+    "text": "3.2 Function Fundamentals and Design\n\nAnatomy of a function\n\nName, inputs (arguments), body, output\nFunction signatures and what they communicate\n\nTwo approaches to writing functions\n\nOutside-in: Start with how you want to use it\nInside-out: Extract from existing code\n\nNaming things\n\nMaking function names evocative\nNaming arguments and variables\nIteration is normal and expected",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
     ]
@@ -33,8 +33,8 @@
     "objectID": "index.html#writing-functions-in-practice",
     "href": "index.html#writing-functions-in-practice",
     "title": "Introduction to Functions and Debugging",
-    "section": "6.3 Writing Functions in Practice",
-    "text": "6.3 Writing Functions in Practice\n\nOutside-in approach\n\nImagining the ideal function interface\nWhat am I trying to do?\nWhat inputs do I need?\nWhat should it return?\n\nInside-out approach\n\nStarting with working code\nIdentifying the parts that change\nAbstracting complexity step-by-step\n\nMoving between outside and inside views\n\nUp and down the ladder of abstraction\nStreet-level vs map-level understanding",
+    "section": "3.3 Writing Functions in Practice",
+    "text": "3.3 Writing Functions in Practice\n\nOutside-in approach\n\nImagining the ideal function interface\nWhat am I trying to do?\nWhat inputs do I need?\nWhat should it return?\n\nInside-out approach\n\nStarting with working code\nIdentifying the parts that change\nAbstracting complexity step-by-step\n\nMoving between outside and inside views\n\nUp and down the ladder of abstraction\nStreet-level vs map-level understanding",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
     ]
@@ -43,8 +43,8 @@
     "objectID": "index.html#debugging-basics-and-tools",
     "href": "index.html#debugging-basics-and-tools",
     "title": "Introduction to Functions and Debugging",
-    "section": "6.4 Debugging Basics and Tools",
-    "text": "6.4 Debugging Basics and Tools\n\nWhy debugging matters\n\nFunctions create boxes we need to look inside\nErrors are normal, not punishment\nLearning to read error messages\n\nEssential debugging tools\n\nbrowser(): Setting breakpoints and stepping through code\nRStudio debugging interface\ndebug() and debugonce()\n\nCommon debugging workflow\n\nWhere did the error occur?\nWhat values do variables have?\nTesting assumptions step-by-step",
+    "section": "3.4 Debugging Basics and Tools",
+    "text": "3.4 Debugging Basics and Tools\n\nWhy debugging matters\n\nFunctions create boxes we need to look inside\nErrors are normal, not punishment\nLearning to read error messages\n\nEssential debugging tools\n\nbrowser(): Setting breakpoints and stepping through code\nRStudio debugging interface\ndebug() and debugonce()\n\nCommon debugging workflow\n\nWhere did the error occur?\nWhat values do variables have?\nTesting assumptions step-by-step",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
     ]
@@ -53,8 +53,8 @@
     "objectID": "index.html#cleaning-up-a-data-analysis",
     "href": "index.html#cleaning-up-a-data-analysis",
     "title": "Introduction to Functions and Debugging",
-    "section": "6.5 Cleaning Up a Data Analysis",
-    "text": "6.5 Cleaning Up a Data Analysis\n\nHands-on: From script to functions\n\nTaking a real data analysis\nBreaking down complexity\nIdentifying what to turn into functions\n\nChunking code\n\nCode is not just lines, but ideas\nBreaking 50 lines into manageable chunks\nEach chunk should be individually understandable\n\nPractical debugging in action\n\nUsing browser() to explore function execution\nFinding and fixing issues\nNavigating to function definitions (Cmd/Ctrl + Click)",
+    "section": "3.5 Cleaning Up a Data Analysis",
+    "text": "3.5 Cleaning Up a Data Analysis\n\nHands-on: From script to functions\n\nTaking a real data analysis\nBreaking down complexity\nIdentifying what to turn into functions\n\nChunking code\n\nCode is not just lines, but ideas\nBreaking 50 lines into manageable chunks\nEach chunk should be individually understandable\n\nPractical debugging in action\n\nUsing browser() to explore function execution\nFinding and fixing issues\nNavigating to function definitions (Cmd/Ctrl + Click)",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
     ]
@@ -63,8 +63,8 @@
     "objectID": "index.html#practice-and-integration",
     "href": "index.html#practice-and-integration",
     "title": "Introduction to Functions and Debugging",
-    "section": "6.6 Practice and Integration",
-    "text": "6.6 Practice and Integration\n\nBringing it all together\n\nWork on your own code\nPractice the outside-in and inside-out approaches\nApply debugging tools to real problems\n\nCode as writing\n\nFunctions help you express ideas\nIteration and refinement\nWriting code for your future self\n\nResources and next steps\n\nKey concepts to remember\nTools to continue using\nFurther learning materials\nOpen Q&A",
+    "section": "3.6 Practice and Integration",
+    "text": "3.6 Practice and Integration\n\nBringing it all together\n\nWork on your own code\nPractice the outside-in and inside-out approaches\nApply debugging tools to real problems\n\nCode as writing\n\nFunctions help you express ideas\nIteration and refinement\nWriting code for your future self\n\nResources and next steps\n\nKey concepts to remember\nTools to continue using\nFurther learning materials\nOpen Q&A",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
     ]

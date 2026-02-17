@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -34,14 +34,15 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-1e81d527365e20b3495763033adbcf98.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-a680f39748eefeef055d76a0b2f2728d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -128,17 +129,14 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome"><span class="header-section-number">1</span> Welcome</a></li>
   <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details"><span class="header-section-number">2</span> Details</a></li>
-  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites"><span class="header-section-number">3</span> Prerequisites</a></li>
-  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes"><span class="header-section-number">4</span> Learning outcomes</a></li>
-  <li><a href="#course-website" id="toc-course-website" class="nav-link" data-scroll-target="#course-website"><span class="header-section-number">5</span> Course website</a></li>
-  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule"><span class="header-section-number">6</span> Schedule</a>
+  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule"><span class="header-section-number">3</span> Schedule</a>
   <ul class="collapse">
-  <li><a href="#why-functions-matter" id="toc-why-functions-matter" class="nav-link" data-scroll-target="#why-functions-matter"><span class="header-section-number">6.1</span> Why Functions Matter</a></li>
-  <li><a href="#function-fundamentals-and-design" id="toc-function-fundamentals-and-design" class="nav-link" data-scroll-target="#function-fundamentals-and-design"><span class="header-section-number">6.2</span> Function Fundamentals and Design</a></li>
-  <li><a href="#writing-functions-in-practice" id="toc-writing-functions-in-practice" class="nav-link" data-scroll-target="#writing-functions-in-practice"><span class="header-section-number">6.3</span> Writing Functions in Practice</a></li>
-  <li><a href="#debugging-basics-and-tools" id="toc-debugging-basics-and-tools" class="nav-link" data-scroll-target="#debugging-basics-and-tools"><span class="header-section-number">6.4</span> Debugging Basics and Tools</a></li>
-  <li><a href="#cleaning-up-a-data-analysis" id="toc-cleaning-up-a-data-analysis" class="nav-link" data-scroll-target="#cleaning-up-a-data-analysis"><span class="header-section-number">6.5</span> Cleaning Up a Data Analysis</a></li>
-  <li><a href="#practice-and-integration" id="toc-practice-and-integration" class="nav-link" data-scroll-target="#practice-and-integration"><span class="header-section-number">6.6</span> Practice and Integration</a></li>
+  <li><a href="#why-functions-matter" id="toc-why-functions-matter" class="nav-link" data-scroll-target="#why-functions-matter"><span class="header-section-number">3.1</span> Why Functions Matter</a></li>
+  <li><a href="#function-fundamentals-and-design" id="toc-function-fundamentals-and-design" class="nav-link" data-scroll-target="#function-fundamentals-and-design"><span class="header-section-number">3.2</span> Function Fundamentals and Design</a></li>
+  <li><a href="#writing-functions-in-practice" id="toc-writing-functions-in-practice" class="nav-link" data-scroll-target="#writing-functions-in-practice"><span class="header-section-number">3.3</span> Writing Functions in Practice</a></li>
+  <li><a href="#debugging-basics-and-tools" id="toc-debugging-basics-and-tools" class="nav-link" data-scroll-target="#debugging-basics-and-tools"><span class="header-section-number">3.4</span> Debugging Basics and Tools</a></li>
+  <li><a href="#cleaning-up-a-data-analysis" id="toc-cleaning-up-a-data-analysis" class="nav-link" data-scroll-target="#cleaning-up-a-data-analysis"><span class="header-section-number">3.5</span> Cleaning Up a Data Analysis</a></li>
+  <li><a href="#practice-and-integration" id="toc-practice-and-integration" class="nav-link" data-scroll-target="#practice-and-integration"><span class="header-section-number">3.6</span> Practice and Integration</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://https://github.com/njtierney/fun2debug/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -185,18 +183,14 @@ ul.task-list li input[type="checkbox"] {
 <h1 data-number="2"><span class="header-section-number">2</span> Details</h1>
 <p>I would argue the highest value skillset in statistical programming is knowing how to write good functions. Functions are often taught as a tool to avoid repetition using the mnemonic DRY: Don’t Repeat Yourself. Whilst DRY is both true and real, I think functions are at their best when they encapsulate expression and are easy to reason with. That is, DRY is sufficient, but not necessary.</p>
 <p>Writing good functions is more than esoteric aesthetics. We need to be able to reason with our code in statistics. We often don’t have the capacity to write tests to show our code is “correct”. Instead, we need to rely on our ability to reason with, trust, and verify that the code works as it should. I believe writing good functions that encapsulate expressions and are able to be reasoned with are how we can ensure our code, and therefore our methods, and our analyses, work as they should.</p>
-</section>
-<section id="prerequisites" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Prerequisites</h1>
+<p><a href="https://fun2debug.njtierney.com" class="uri">https://fun2debug.njtierney.com</a></p>
+<p><strong>Prerequisites</strong></p>
 <ul>
 <li>Basic R programming experience</li>
 <li>Familiarity with R scripts and basic data manipulation</li>
 <li>Experience running R code and encountering errors</li>
 </ul>
-</section>
-<section id="learning-outcomes" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Learning outcomes</h1>
-<p>In this course you will learn the following ideas on writing good functions:</p>
+<p><strong>Learning outcomes</strong></p>
 <ul>
 <li>How to write functions to:
 <ul>
@@ -209,14 +203,10 @@ ul.task-list li input[type="checkbox"] {
 <li>Best practices for function documentation</li>
 </ul>
 </section>
-<section id="course-website" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Course website</h1>
-<p><a href="https://fun2debug.njtierney.com" class="uri">https://fun2debug.njtierney.com</a></p>
-</section>
-<section id="schedule" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Schedule</h1>
-<section id="why-functions-matter" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="why-functions-matter"><span class="header-section-number">6.1</span> Why Functions Matter</h2>
+<section id="schedule" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Schedule</h1>
+<section id="why-functions-matter" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="why-functions-matter"><span class="header-section-number">3.1</span> Why Functions Matter</h2>
 <ul>
 <li>The problem with repeated code; when re-reading becomes a burden</li>
 <li>Why write functions?
@@ -233,8 +223,8 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="function-fundamentals-and-design" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="function-fundamentals-and-design"><span class="header-section-number">6.2</span> Function Fundamentals and Design</h2>
+<section id="function-fundamentals-and-design" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="function-fundamentals-and-design"><span class="header-section-number">3.2</span> Function Fundamentals and Design</h2>
 <ul>
 <li>Anatomy of a function
 <ul>
@@ -254,8 +244,8 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="writing-functions-in-practice" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="writing-functions-in-practice"><span class="header-section-number">6.3</span> Writing Functions in Practice</h2>
+<section id="writing-functions-in-practice" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="writing-functions-in-practice"><span class="header-section-number">3.3</span> Writing Functions in Practice</h2>
 <ul>
 <li>Outside-in approach
 <ul>
@@ -277,8 +267,8 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="debugging-basics-and-tools" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="debugging-basics-and-tools"><span class="header-section-number">6.4</span> Debugging Basics and Tools</h2>
+<section id="debugging-basics-and-tools" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="debugging-basics-and-tools"><span class="header-section-number">3.4</span> Debugging Basics and Tools</h2>
 <ul>
 <li>Why debugging matters
 <ul>
@@ -300,8 +290,8 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="cleaning-up-a-data-analysis" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="cleaning-up-a-data-analysis"><span class="header-section-number">6.5</span> Cleaning Up a Data Analysis</h2>
+<section id="cleaning-up-a-data-analysis" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="cleaning-up-a-data-analysis"><span class="header-section-number">3.5</span> Cleaning Up a Data Analysis</h2>
 <ul>
 <li>Hands-on: From script to functions
 <ul>
@@ -323,8 +313,8 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="practice-and-integration" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="practice-and-integration"><span class="header-section-number">6.6</span> Practice and Integration</h2>
+<section id="practice-and-integration" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="practice-and-integration"><span class="header-section-number">3.6</span> Practice and Integration</h2>
 <ul>
 <li>Bringing it all together
 <ul>
@@ -403,13 +393,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
