@@ -1,12 +1,12 @@
-# Prerequisites
+<https://fun2debug.njtierney.com>
+
+**Prerequisites**
 
 - Basic R programming experience
 - Familiarity with R scripts and basic data manipulation
 - Experience running R code and encountering errors
 
-# Learning outcomes
-
-In this course you will learn the following ideas on writing good functions:
+**Learning outcomes**
 
 - How to write functions to:
     - Manage complexity
@@ -15,8 +15,3 @@ In this course you will learn the following ideas on writing good functions:
     - Avoid repetition
 - How to debug functions and troubleshoot common errors
 - Best practices for function documentation
-
-# Course website
-
-<https://fun2debug.njtierney.com>
-
