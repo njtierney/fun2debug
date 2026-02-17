@@ -1,0 +1,22 @@
+# Prerequisites
+
+- Basic R programming experience
+- Familiarity with R scripts and basic data manipulation
+- Experience running R code and encountering errors
+
+# Learning outcomes
+
+In this course you will learn the following ideas on writing good functions:
+
+- How to write functions to:
+    - Manage complexity
+    - Explain and express ideas
+    - Techniques for developing good functions: outside-in, inside-out
+    - Avoid repetition
+- How to debug functions and troubleshoot common errors
+- Best practices for function documentation
+
+# Course website
+
+<https://fun2debug.njtierney.com>
+

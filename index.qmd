@@ -1,0 +1,13 @@
+---
+title: "Introduction to Functions and Debugging"
+---
+
+# Welcome
+
+Welcome to Functions and Debugging! This course will teach you how to write your own functions and confidently debug your R code.
+
+{{< include details.qmd >}}
+
+{{< include outcomes.qmd >}}
+
+{{< include schedule.md >}}
