@@ -60,11 +60,21 @@
     ]
   },
   {
+    "objectID": "index.html#measuring-and-improving-function-speed",
+    "href": "index.html#measuring-and-improving-function-speed",
+    "title": "Introduction to Functions and Debugging",
+    "section": "3.6 Measuring, and Improving Function Speed",
+    "text": "3.6 Measuring, and Improving Function Speed\n\nDangers of premature optimisation\nEvaluating compute time\n\nsystem.time()\n{tictoc}\n{profvis}\n\nComparing compute time\n\nHow to use bench::mark()\nEvaluating many iterations with bench::press()",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+    ]
+  },
+  {
     "objectID": "index.html#practice-and-integration",
     "href": "index.html#practice-and-integration",
     "title": "Introduction to Functions and Debugging",
-    "section": "3.6 Practice and Integration",
-    "text": "3.6 Practice and Integration\n\nBringing it all together\n\nWork on your own code\nPractice the outside-in and inside-out approaches\nApply debugging tools to real problems\n\nCode as writing\n\nFunctions help you express ideas\nIteration and refinement\nWriting code for your future self\n\nResources and next steps\n\nKey concepts to remember\nTools to continue using\nFurther learning materials\nOpen Q&A",
+    "section": "3.7 Practice and Integration",
+    "text": "3.7 Practice and Integration\n\nBringing it all together\n\nWork on your own code\nPractice the outside-in and inside-out approaches\nApply debugging tools to real problems\n\nCode as writing\n\nFunctions help you express ideas\nIteration and refinement\nWriting code for your future self\n\nResources and next steps\n\nKey concepts to remember\nTools to continue using\nFurther learning materials\nOpen Q&A",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
     ]
