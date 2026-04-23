@@ -70,6 +70,17 @@
   - Finding and fixing issues
   - Navigating to function definitions (Cmd/Ctrl + Click)
 
+## Measuring, and Improving Function Speed
+
+- Dangers of premature optimisation
+- Evaluating compute time
+  - `system.time()`
+  - `{tictoc}`
+  - `{profvis}`
+- Comparing compute time
+  - How to use `bench::mark()`
+  - Evaluating many iterations with `bench::press()`
+
 ## Practice and Integration
 
 - Bringing it all together
