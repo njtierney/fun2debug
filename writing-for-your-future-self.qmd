@@ -1,0 +1,61 @@
+# Writing for your future self {#sec-future-self}
+
+We started this course with the idea that you should not have to re-read your own code. This session is about who does the re-reading, which is you, in about six weeks, having forgotten all of it. We spend the hour on your code rather than mine.
+
+::: {.overview}
+
+## Overview {.unnumbered}
+
+**Duration** 60 minutes
+
+**Questions**
+
+- How do I apply all this to my own work?
+- What does it mean to treat code as writing?
+- What should I do next?
+
+**What you need this session**
+
+- A session of RStudio open
+- A script of your own that you would like to improve
+
+:::
+
+## Bringing it all together
+
+<!--
+TODO: work on your own code. Both approaches. The debugging tools on real
+problems.
+-->
+
+## Code as writing
+
+<!--
+TODO: functions let you express ideas. Drafting, iterating, cutting. This is
+where the argument gets made.
+-->
+
+## Writing for your future self
+
+<!--
+TODO: close the loop with chapter 1. The person re-reading is you.
+-->
+
+## Where to next
+
+<!--
+TODO: key ideas to remember, tools to keep using, further reading, and how this
+leads into pipelines.
+-->
+
+## Open Q&A
+
+<!--
+TODO: no notes needed, but leave the slot.
+-->
+
+## Summary {.unnumbered}
+
+<!--
+TODO: numbered take-homes.
+-->

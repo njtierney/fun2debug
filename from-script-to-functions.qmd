@@ -1,0 +1,79 @@
+# From script to functions {#sec-from-script}
+
+This is the session where we do the whole thing, on a real script, from one end to the other. We start with a hundred lines that work and nobody wants to touch, and we finish with a folder of named functions and a script thin enough to read in one go.
+
+::: {.overview}
+
+## Overview {.unnumbered}
+
+**Duration** 60 minutes
+
+**Questions**
+
+- Where do I even start with a script this long?
+- How do I break code into ideas rather than lines?
+- How do I extract functions without breaking what works?
+- Where do the functions live once I have them?
+
+**What you need this session**
+
+- A session of RStudio open
+- The script we will work on, or one of your own
+
+:::
+
+## The script
+
+<!--
+TODO: the ABS education and work script, from [ozed](https://github.com/njtierney/ozed).
+Ninety lines, six steps, two of which are the same idea twice.
+
+The data now lives in `data/` in this repo and is served from
+<https://fun2debug.njtierney.com/data/>, so nobody needs to clone anything.
+-->
+
+## Chunking: code is ideas, not lines
+
+<!--
+TODO: read the script and write a comment above each chunk. The comments become
+the to-do list of functions.
+-->
+
+## One chunk at a time
+
+<!--
+TODO: work down the list. `ozed` already has every intermediate step as its own
+file, `script_00.R` through to `script_03.R`, so we can show the middle of the
+refactor rather than a before and after.
+
+TODO: the ozed scripts use `%>%`. Convert to `|>` before they go in the book.
+-->
+
+## Debugging as we go
+
+<!--
+TODO: `browser()` in anger, on the functions we just wrote. Cmd/Ctrl + Click to
+jump to a definition.
+-->
+
+## Where it lands
+
+<!--
+TODO: `script_03.R`. Ten years of data in three lines, over an `R/` folder of
+nine named functions. Note that this is one `tar_source()` away from a pipeline,
+for anyone going on to targets.
+-->
+
+## What is still wrong
+
+<!--
+TODO: ozed's README already lists the next moves, and they are better as
+exercises than as prose. The two near-identical `pivot_longer_*` functions, the
+default that reaches into the global environment, and the magic row numbers.
+-->
+
+## Summary {.unnumbered}
+
+<!--
+TODO: numbered take-homes.
+-->

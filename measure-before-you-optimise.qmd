@@ -1,0 +1,63 @@
+# Measure before you optimise {#sec-measure}
+
+Everyone has a theory about which bit of their code is slow. In my experience those theories are wrong about as often as they are right, and acting on them costs you a morning. So this session is about measuring first, and only then making something faster.
+
+::: {.overview}
+
+## Overview {.unnumbered}
+
+**Duration** 60 minutes
+
+**Questions**
+
+- Why is guessing at slow code such a bad idea?
+- How do I time a piece of code?
+- How do I find which part of it is actually slow?
+- How do I compare two versions fairly?
+
+**What you need this session**
+
+- A session of RStudio open
+
+:::
+
+## The dangers of premature optimisation
+
+<!--
+TODO: the classic argument, made concrete. Time spent optimising is time not
+spent on the analysis, and it usually goes to the wrong line.
+-->
+
+## Timing something
+
+<!--
+TODO: `system.time()`, then `{tictoc}` for anything longer than one call.
+-->
+
+## Finding the slow part
+
+<!--
+TODO: `{profvis}`. The flame graph, and how to read it.
+
+TODO: profvis is an interactive widget. Needs a gif, and a static fallback for
+the PDF.
+-->
+
+## Comparing two versions
+
+<!--
+TODO: `bench::mark()`. Why it checks the results match, and why that matters
+more than the timing.
+-->
+
+## Comparing across a range
+
+<!--
+TODO: `bench::press()`. Scaling behaviour, not single numbers.
+-->
+
+## Summary {.unnumbered}
+
+<!--
+TODO: numbered take-homes.
+-->

@@ -1,0 +1,62 @@
+# Outside-in, inside-out {#sec-outside-in}
+
+There are two ways to arrive at a function. You can imagine the call you wish you could write and then make it true, or you can take code that already works and pull a function out of it. I use both, often on the same problem, and this session is about moving between them.
+
+::: {.overview}
+
+## Overview {.unnumbered}
+
+**Duration** 60 minutes
+
+**Questions**
+
+- How do I write a function before I know how it works?
+- How do I pull a function out of code I have already got working?
+- How do I know which way to start?
+- What does it mean to move up and down the ladder of abstraction?
+
+**What you need this session**
+
+- A session of RStudio open
+- A script of your own, if you have one
+
+:::
+
+## Outside-in
+
+<!--
+TODO: imagine the ideal call first. What am I trying to do? What inputs do I
+need? What should it return? Write the call, then make it true.
+-->
+
+## Inside-out
+
+<!--
+TODO: start from working code. Find the parts that change. Give them names.
+Lift them into arguments.
+-->
+
+## Which way to start
+
+<!--
+TODO: outside-in when you know what you want. Inside-out when you have
+something that works and cannot see the shape yet.
+-->
+
+## Up and down the ladder of abstraction
+
+<!--
+TODO: street level and map level. The skill is moving, not living at one end.
+-->
+
+## Iteration is normal
+
+<!--
+TODO: nobody gets the interface right first go. Say so out loud.
+-->
+
+## Summary {.unnumbered}
+
+<!--
+TODO: numbered take-homes.
+-->

@@ -1,0 +1,102 @@
+# Looking inside a function {#sec-looking-inside}
+
+Writing a function puts your code in a box. That is mostly what you want, right up until something goes wrong in there and you cannot see it. This session is about opening the box, both when your code breaks and when it works fine and you just want to know what it is doing.
+
+::: {.overview}
+
+## Overview {.unnumbered}
+
+**Duration** 60 minutes
+
+**Questions**
+
+- How do I read an R error message?
+- How do I find out where the error actually came from?
+- How do I stop inside a function and look around?
+- How do I do this to a function I did not write?
+- What if I want to look inside code that isn't broken?
+
+**What you need this session**
+
+- A session of RStudio open
+
+:::
+
+## Errors are normal, not punishment
+
+<!--
+TODO: set the tone before any tools. An error is R telling you something, not
+marking your work.
+-->
+
+## Reading an error message
+
+<!--
+TODO: anatomy of an error. Which part names the problem, which part names the
+place, and why the place is often a lie.
+-->
+
+## Where did it come from?
+
+<!--
+TODO: `traceback()` and `rlang::last_trace()`.
+
+TODO: `ozed`'s `script_00_1.R` and `script_00_3.R` both fail with
+`object 'raw_data' not found`, on a stale reference left behind by a refactor.
+That is a real error from a real refactor, which is better than one I invented.
+
+Decided 25 Aug 2026: they stay broken. So the chapter has to say out loud that
+these two fail on purpose, or someone working through the scripts in order will
+think they broke it.
+-->
+
+## Stopping inside a function
+
+<!--
+TODO: `browser()`. The prompt, and the five commands that matter.
+
+TODO: needs a gif or screenshots.
+-->
+
+## Debugging a function you did not write
+
+<!--
+TODO: `debug()` and `debugonce()`. Why `debugonce()` is nearly always the one
+you want.
+
+TODO: `ozed`'s `example-ages.R` is already exactly this demo.
+`str_replace()` against `str_replace_all()` on `15--19`, stepped through.
+-->
+
+## When the error is somewhere you cannot reach
+
+<!--
+TODO: `options(error = recover)`.
+-->
+
+## The RStudio debugging pane
+
+<!--
+TODO: breakpoints, the environment pane, the traceback pane. Screenshots.
+-->
+
+## Looking inside code that works
+
+<!--
+TODO: `browser()` as a reading tool, not only a repair tool. This is the section
+that makes the chapter title honest.
+
+TODO: the best case I have for this is `ozed`'s `data/raw/`. The conventions
+change between years, so reading six files gives you 480 rows, no error, no
+warning, 89 age groups where there should be ten, and a mean of `Inf`. Nothing
+tells you. You have to go and look.
+
+This is also the strongest argument in the course for the whole thesis: the
+failure you most need to catch is the one that does not raise an error.
+-->
+
+## Summary {.unnumbered}
+
+<!--
+TODO: numbered take-homes.
+-->
