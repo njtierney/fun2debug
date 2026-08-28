@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Setup – Introduction to Functions and Debugging</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b45b7b0fa9169e986df15f1ef60a279c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-020cafe2c5162b14dfdb8f310a12914a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./setup.html">Setup</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Functions and Debugging</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/njtierney/fun2debug" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Setup</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#how-this-book-works" id="toc-how-this-book-works" class="nav-link active" data-scroll-target="#how-this-book-works">How this book works</a>
+  <ul class="collapse">
+  <li><a href="#the-book-is-longer-than-the-course" id="toc-the-book-is-longer-than-the-course" class="nav-link" data-scroll-target="#the-book-is-longer-than-the-course">The book is longer than the course</a></li>
+  <li><a href="#how-we-will-work" id="toc-how-we-will-work" class="nav-link" data-scroll-target="#how-we-will-work">How we will work</a></li>
+  <li><a href="#the-boxes" id="toc-the-boxes" class="nav-link" data-scroll-target="#the-boxes">The boxes</a></li>
+  <li><a href="#the-code" id="toc-the-code" class="nav-link" data-scroll-target="#the-code">The code</a></li>
+  <li><a href="#where-everything-lives" id="toc-where-everything-lives" class="nav-link" data-scroll-target="#where-everything-lives">Where everything lives</a></li>
+  </ul></li>
+  <li><a href="#what-to-install" id="toc-what-to-install" class="nav-link" data-scroll-target="#what-to-install">What to install</a>
+  <ul class="collapse">
+  <li><a href="#r" id="toc-r" class="nav-link" data-scroll-target="#r">R</a></li>
+  <li><a href="#the-r-packages" id="toc-the-r-packages" class="nav-link" data-scroll-target="#the-r-packages">The R packages</a></li>
+  <li><a href="#installing-fnmate" id="toc-installing-fnmate" class="nav-link" data-scroll-target="#installing-fnmate">Installing {fnmate}</a></li>
+  <li><a href="#checking-it-all-worked" id="toc-checking-it-all-worked" class="nav-link" data-scroll-target="#checking-it-all-worked">Checking it all worked</a></li>
+  <li><a href="#if-something-will-not-install" id="toc-if-something-will-not-install" class="nav-link" data-scroll-target="#if-something-will-not-install">If something will not install</a></li>
+  </ul></li>
+  <li><a href="#the-course-data" id="toc-the-course-data" class="nav-link" data-scroll-target="#the-course-data">The course data</a></li>
+  <li><a href="#what-to-bring" id="toc-what-to-bring" class="nav-link" data-scroll-target="#what-to-bring">What to bring</a></li>
+  <li>Links</li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/setup.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-setup" class="quarto-section-identifier">Setup</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Three things before we start:</p>
+<ol type="1">
+<li>How this book is put together,</li>
+<li>What to install, and</li>
+<li>What to bring.</li>
+</ol>
+<section id="how-this-book-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-this-book-works">How this book works</h2>
+<section id="the-book-is-longer-than-the-course" class="level3">
+<h3 class="anchored" data-anchor-id="the-book-is-longer-than-the-course">The book is longer than the course</h3>
+<p>The course is 6-7 hours of teaching material. There is more content in the book than the course can cover. This is intentional! I will change the teaching on the day, based on how we are going.</p>
+<p>During the course we will work through things live, and then the content will stay here for you to return to, as needed.</p>
+</section>
+<section id="how-we-will-work" class="level3">
+<h3 class="anchored" data-anchor-id="how-we-will-work">How we will work</h3>
+<p>Mostly by typing. I will write code, you write it too, and we will break things together, then fix them.</p>
+<p>Knowing how to work in R when things are breaking is really important. I want you to learn to be comfortable when R stops and complains at you. This means you’ll be doing a lot of the “driving” during exercises - it is one of the best ways to learn.</p>
+<p>You do not need to keep up with everything I type. There is usually a copy button on every code block, and any extra content I write in class I will share on github.</p>
+</section>
+<section id="the-boxes" class="level3">
+<h3 class="anchored" data-anchor-id="the-boxes">The boxes</h3>
+<p>Five kinds of box turn up throughout, each with its own colour and icon:</p>
+<ul>
+<li><strong>✏️ Your Turn</strong> - something for you to do. Most of these we do together in the session, and a few are there for afterwards. The ones that ask what you think have no wrong answers.</li>
+<li><strong>🕰️ Some history</strong> - Where things came from. One of my favourite little rabbit hols.</li>
+<li><strong>🔎 Going deeper</strong> - optional extra detail a longer example, or a list you might want later. Boxes titled <strong>Read more</strong> point at the blog post or talk a section is adapted from.</li>
+<li><strong>⚠️ Watch out</strong> - a place people commonly trip.</li>
+<li><strong>🚨</strong> - the things that will likely create issues.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Exercises look like this. Most of them give you something to run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a>R.version.string</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Some of them just ask you something.</p>
+<p>Here is the one I actually care about:</p>
+<ol type="1">
+<li>What is the longest you have ever spent chasing a bug in your own R code?</li>
+</ol>
+<p>There are no wrong answers! Mine is likely in the order of months-years.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Some history: the first actual bug">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Some history: the first actual bug
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Operators working on the <a href="https://en.wikipedia.org/wiki/Harvard_Mark_II">Harvard Mark II</a> (room-sized!) found a moth caught in one of the machine’s relays, which stopped it from working. They taped it into the logbook and wrote next to it:</p>
+<blockquote class="blockquote">
+<p>“First actual case of bug being found.”</p>
+</blockquote>
+<p>“Bug” was used by engineers and others, to describe faults, but this was the “first”</p>
+<p>The logbook (moth still attached!) is at the <a href="https://americanhistory.si.edu/collections/object/nmah_334663">Smithsonian</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Going deeper: how these boxes are made">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Going deeper: how these boxes are made
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You just clicked this - that is the collapsing demonstrated.</p>
+<p>These are Quarto callouts, and there is nothing clever going on. Each one is a fenced div with a class on it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a>::: {.callout-note title="Your Turn"}</span>
+<span id="cb2-2"><a href="#cb2-2" aria-label="2"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-label="3"></a>Something for you to do.</span>
+<span id="cb2-4"><a href="#cb2-4" aria-label="4"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-label="5"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The colours and the icons come from a stylesheet in the book’s repo, not from Quarto. If you want them in your own work, the docs are at <a href="https://quarto.org/docs/authoring/callouts.html">Quarto: callout blocks</a>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Restart R after a big install">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Restart R after a big install
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you install a package that is already loaded in your session, R can end up half on the old version and half on the new one. You then get errors that make no sense and do not survive a restart, which is a miserable way to spend twenty minutes.</p>
+<p>So once you have worked through the installs below, restart R.</p>
+<p>In RStudio that is</p>
+<ul>
+<li><code>Ctrl + Shift + F10</code> on windows</li>
+<li><code>Cmd + Shift + 0</code> on Mac</li>
+</ul>
+</div>
+</div>
+<p>Some boxes are collapsed, showing only their title, like the <strong>Going deeper</strong> one above. Click the title to open one.</p>
+</section>
+<section id="the-code" class="level3">
+<h3 class="anchored" data-anchor-id="the-code">The code</h3>
+<p>Code blocks look like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-label="2"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-label="3"></a>airquality <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-label="4"></a>  <span class="fu">count</span>(Month)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-label="5"></a><span class="co">#&gt;   Month  n</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-label="6"></a><span class="co">#&gt; 1     5 31</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-label="7"></a><span class="co">#&gt; 2     6 30</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-label="8"></a><span class="co">#&gt; 3     7 31</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-label="9"></a><span class="co">#&gt; 4     8 31</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-label="10"></a><span class="co">#&gt; 5     9 30</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Lines starting with <code>#&gt;</code> are <strong>output</strong>, not code. You do not type those. They are what R prints back, shown so you can check you got the same thing.</p>
+<p>Longer blocks have line numbers in the margin so that I can say “look at line 4” and we are both looking at the same line. Short blocks do not, because there is nothing to point at.</p>
+<p>We use the base pipe, <code>|&gt;</code>, rather than <code>%&gt;%</code> throughout. If you are used to <code>%&gt;%</code>, everything here works the same way.</p>
+</section>
+<section id="where-everything-lives" class="level3">
+<h3 class="anchored" data-anchor-id="where-everything-lives">Where everything lives</h3>
+<ul>
+<li><strong>This book</strong> - <a href="https://fun2debug.njtierney.com" class="uri">https://fun2debug.njtierney.com</a></li>
+<li><strong>The book’s source</strong> - <a href="https://github.com/njtierney/fun2debug" class="uri">https://github.com/njtierney/fun2debug</a>. Every page has an “Edit this page” link, which goes straight to the file that made it.</li>
+</ul>
+<p><strong>If you find a mistake, please tell me.</strong> Every page has a link to open an issue, or you can email me. I really appreciate knowing f there is an error!</p>
+</section>
+</section>
+<section id="what-to-install" class="level2">
+<h2 class="anchored" data-anchor-id="what-to-install">What to install</h2>
+<p>If you can, it is worthwhile to install the below before the first session.</p>
+<section id="r" class="level3">
+<h3 class="anchored" data-anchor-id="r">R</h3>
+<p>You need <strong>R 4.5.0 or later</strong>, from <a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a>. Check what you have with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-label="1"></a>R.version.string</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>R 4.5.0 came out in April 2025, so this shouldn’t be a stretch. If you are on something older, the base pipe <code>|&gt;</code> and the short anonymous function <code>\(x)</code> both need at least 4.2.0, and they turn up throughout the book.</p>
+<p>You also need an editor. I recommend <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>. <a href="https://positron.posit.co/">Positron</a> works too, and I am happy to talk through the differences. Everything except the pane screenshots carries over.</p>
+</section>
+<section id="the-r-packages" class="level3">
+<h3 class="anchored" data-anchor-id="the-r-packages">The R packages</h3>
+<p>This will take a few minutes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-label="1"></a>pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-label="2"></a>  <span class="st">"bench"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-label="3"></a>  <span class="st">"broom"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-label="4"></a>  <span class="st">"devtools"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a>  <span class="st">"here"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a>  <span class="st">"knitr"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a>  <span class="st">"palmerpenguins"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-label="8"></a>  <span class="st">"profvis"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-label="9"></a>  <span class="st">"purrr"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-label="10"></a>  <span class="st">"rmarkdown"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-label="11"></a>  <span class="st">"spelling"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-label="12"></a>  <span class="st">"testthat"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-label="13"></a>  <span class="st">"tictoc"</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-label="14"></a>  <span class="st">"tidyverse"</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-label="15"></a>  <span class="st">"usethis"</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-label="16"></a>  )</span>
+<span id="cb5-17"><a href="#cb5-17" aria-label="17"></a>  </span>
+<span id="cb5-18"><a href="#cb5-18" aria-label="18"></a><span class="fu">install.packages</span>(pkgs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="installing-fnmate" class="level3">
+<h3 class="anchored" data-anchor-id="installing-fnmate">Installing {fnmate}</h3>
+<p><code>{fnmate}</code> writes the skeleton of a function for you, from the call you wish you could make. We use it in <span class="quarto-unresolved-ref">?sec-anatomy</span>.</p>
+<p>It is not on CRAN. It lives on <a href="https://milesmcbain.xyz">Miles McBain’s</a> r-universe, which is an ordinary website that R installs from, so there is no git and no compiler involved.</p>
+<p>Try this first:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-label="1"></a><span class="fu">install.packages</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-label="2"></a>  <span class="st">"fnmate"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-label="3"></a>  <span class="at">repos =</span> <span class="fu">c</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-label="4"></a>    <span class="st">"https://milesmcbain.r-universe.dev"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-label="5"></a>    <span class="st">"https://cloud.r-project.org"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-label="6"></a>  )</span>
+<span id="cb6-7"><a href="#cb6-7" aria-label="7"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If that is blocked, you can download the package as a file and install it from your own machine. We No compiler needed, because r-universe has already built it.</p>
+<p>First, get the address of the file you need. Run the following in R, based on the Operating System you have:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Mac</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-label="1"></a><span class="co"># Windows</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-label="2"></a><span class="fu">paste0</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-label="3"></a>  <span class="st">"https://milesmcbain.r-universe.dev/bin/windows/contrib/"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-label="4"></a>  <span class="fu">substr</span>(<span class="fu">getRversion</span>(), <span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-label="5"></a>  <span class="st">"/fnmate_0.2.1.zip"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Open that address in your browser, which downloads the file. Then install it, giving R the path to where it landed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a><span class="fu">install.packages</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-label="2"></a>  <span class="st">"C:/Users/you/Downloads/fnmate_0.2.1.zip"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-label="3"></a>  <span class="at">repos =</span> <span class="cn">NULL</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-label="4"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-label="1"></a>arch <span class="ot">&lt;-</span> <span class="cf">if</span> (R.version<span class="sc">$</span>arch <span class="sc">==</span> <span class="st">"aarch64"</span>) <span class="st">"big-sur-arm64"</span> <span class="cf">else</span> <span class="st">"big-sur-x86_64"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-label="2"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-label="3"></a><span class="fu">paste0</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-label="4"></a>  <span class="st">"https://milesmcbain.r-universe.dev/bin/macosx/"</span>, arch, <span class="st">"/contrib/"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-label="5"></a>  <span class="fu">substr</span>(<span class="fu">getRversion</span>(), <span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-label="6"></a>  <span class="st">"/fnmate_0.2.1.tgz"</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-label="7"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a><span class="fu">install.packages</span>(<span class="st">"~/Downloads/fnmate_0.2.1.tgz"</span>, <span class="at">repos =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>On Linux there is no binary, so you want the source and a working toolchain, which you have almost certainly already got:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a><span class="fu">install.packages</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-label="2"></a>  <span class="st">"https://milesmcbain.r-universe.dev/src/contrib/fnmate_0.2.1.tar.gz"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-label="3"></a>  <span class="at">repos =</span> <span class="cn">NULL</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-label="4"></a>  <span class="at">type =</span> <span class="st">"source"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-label="5"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="It's OK if fnmate doesn't install">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>It’s OK if fnmate doesn’t install
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Some machines will not install from anywhere except CRAN, and if yours is one of them, that is a setting somebody else chose and not a problem with you.</p>
+<p>Nothing in this course depends on <code>{fnmate}</code>. It saves typing, and it is a nice thing to know exists. Everywhere I use it, I will also show what it wrote, so you can type the same thing yourself in about fifteen seconds.</p>
+<p>Please do email me if you hit this, because I would like to know how common it is.</p>
+</div>
+</div>
+</section>
+<section id="checking-it-all-worked" class="level3">
+<h3 class="anchored" data-anchor-id="checking-it-all-worked">Checking it all worked</h3>
+<p>Run this in R. It should print <code>TRUE</code> for everything except possibly <code>fnmate</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-label="2"></a>  <span class="st">"bench"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-label="3"></a>  <span class="st">"broom"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-label="4"></a>  <span class="st">"devtools"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-label="5"></a>  <span class="st">"here"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-label="6"></a>  <span class="st">"knitr"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-label="7"></a>  <span class="st">"palmerpenguins"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-label="8"></a>  <span class="st">"profvis"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-label="9"></a>  <span class="st">"purrr"</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-label="10"></a>  <span class="st">"rmarkdown"</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-label="11"></a>  <span class="st">"spelling"</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-label="12"></a>  <span class="st">"testthat"</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-label="13"></a>  <span class="st">"tictoc"</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-label="14"></a>  <span class="st">"tidyverse"</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-label="15"></a>  <span class="st">"usethis"</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-label="16"></a>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-label="17"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-label="18"></a><span class="fu">sapply</span>(pkgs, requireNamespace, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If that looks right, you are set.</p>
+</section>
+<section id="if-something-will-not-install" class="level3">
+<h3 class="anchored" data-anchor-id="if-something-will-not-install">If something will not install</h3>
+<p>Let me know!</p>
+<p>Installation problems are almost always specific to one machine, and they are much faster to solve with two people looking at them. They are also, genuinely, not a reflection on you. Every one of us has lost an afternoon to a package that would not build. Ask me for some horror stories.</p>
+</section>
+</section>
+<section id="the-course-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-course-data">The course data</h2>
+<p>We work on a real analysis in <span class="quarto-unresolved-ref">?sec-from-script</span>, using education and work data from the <a href="https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release">Australian Bureau of Statistics</a>.</p>
+<p>The data is served from this website, so you don’t need to clone anything or sign up to anywhere:</p>
+<ul>
+<li><a href="https://fun2debug.njtierney.com/data/" class="uri">https://fun2debug.njtierney.com/data/</a></li>
+</ul>
+<p>That page lists every file, and has a zip of the lot if you would rather grab it in one go. Unzip it into your project so that you end up with a <code>data/</code> folder sitting next to your R scripts, like this:</p>
+<pre><code>your-project/
+├── data/
+│   ├── Education and work, 2023, Datacube 2 (Table 11).xlsx
+│   ├── raw/
+│   └── tidy/
+└── your-script.R</code></pre>
+<p>That layout matters more than it looks, and we come back to why in <span class="quarto-unresolved-ref">?sec-from-script</span>.</p>
+</section>
+<section id="what-to-bring" class="level2">
+<h2 class="anchored" data-anchor-id="what-to-bring">What to bring</h2>
+<p><strong>An analysis script of your own.</strong></p>
+<p>It doesn’t need to be tidy, and honestly it’s more useful to me if it isn’t. Something long, something you have copied and pasted around, something you have been meaning to clean up and have not. That’s the good stuff.</p>
+<p>We work on your code directly in <span class="quarto-unresolved-ref">?sec-future-self</span>, and you will get more out of that hour than any example I could invent, because you already care about the answer.</p>
+<p>If you’d rather not share your own, that’s completely fine. I have a script for us to work on either way.</p>
+
+
+</section>
+<section class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="">Links</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Harvard_Mark_II">Harvard Mark II</a></li>
+<li><a href="https://americanhistory.si.edu/collections/object/nmah_334663">Smithsonian</a></li>
+<li><a href="https://quarto.org/docs/authoring/callouts.html">Quarto: callout blocks</a></li>
+<li><a href="https://fun2debug.njtierney.com" class="uri">https://fun2debug.njtierney.com</a></li>
+<li><a href="https://github.com/njtierney/fun2debug" class="uri">https://github.com/njtierney/fun2debug</a></li>
+<li><a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></li>
+<li><a href="https://posit.co/download/rstudio-desktop/">RStudio</a></li>
+<li><a href="https://positron.posit.co/">Positron</a></li>
+<li><a href="https://milesmcbain.xyz">Miles McBain’s</a></li>
+<li><a href="https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release">Australian Bureau of Statistics</a></li>
+<li><a href="https://fun2debug.njtierney.com/data/" class="uri">https://fun2debug.njtierney.com/data/</a></li>
+</ul>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/fun2debug\.njtierney\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Welcome">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2026, Nicholas Tierney</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/setup.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -4,79 +4,129 @@
     "href": "index.html",
     "title": "Introduction to Functions and Debugging",
     "section": "",
-    "text": "1 Welcome\nWelcome to Functions and Debugging! This course will teach you how to write your own functions and confidently debug your R code.",
+    "text": "Welcome\nWelcome to Functions and Debugging! This course will teach you how to write your own functions and confidently debug your R code.",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+      "Welcome"
     ]
   },
   {
-    "objectID": "index.html#why-functions-matter",
-    "href": "index.html#why-functions-matter",
+    "objectID": "index.html#dont-re-read-yourself",
+    "href": "index.html#dont-re-read-yourself",
     "title": "Introduction to Functions and Debugging",
-    "section": "3.1 Why Functions Matter",
-    "text": "3.1 Why Functions Matter\n\nThe problem with repeated code; when re-reading becomes a burden\nWhy write functions?\n\nManaging complexity\nExpressing ideas clearly\nMaking code easier to reason about\n\nMoving beyond DRY (Don’t Repeat Yourself)\n\nDRRY: Don’t Re-Read Yourself\nFunctions as tools for expression\nWhen to write a function (it’s not just about repetition)",
+    "section": "Don’t re-read yourself",
+    "text": "Don’t re-read yourself\n\nThe problem with repeated code; when re-reading becomes a burden\nDRRY: Don’t Re-Read Yourself\n\nRe-reading is the cost, repetition is only one way to pay it\n“Spot the difference” in copy-paste-edit code\n\nDRY: Don’t Repeat Yourself, as the special case\nWhen not to write a function\nWhy write functions?\n\nManaging complexity\nExpressing ideas clearly\nSpeed of thought: getting unstuck faster",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+      "Welcome"
     ]
   },
   {
-    "objectID": "index.html#function-fundamentals-and-design",
-    "href": "index.html#function-fundamentals-and-design",
+    "objectID": "index.html#anatomy-of-a-function",
+    "href": "index.html#anatomy-of-a-function",
     "title": "Introduction to Functions and Debugging",
-    "section": "3.2 Function Fundamentals and Design",
-    "text": "3.2 Function Fundamentals and Design\n\nAnatomy of a function\n\nName, inputs (arguments), body, output\nFunction signatures and what they communicate\n\nTwo approaches to writing functions\n\nOutside-in: Start with how you want to use it\nInside-out: Extract from existing code\n\nNaming things\n\nMaking function names evocative\nNaming arguments and variables\nIteration is normal and expected",
+    "section": "Anatomy of a function",
+    "text": "Anatomy of a function\n\nName, inputs (arguments), body, output\nArgument values arrive at the call, not at the definition\nFunction signatures and what they communicate\nGood (simple) function design\nNaming things\n\nMaking function names evocative\nNaming arguments and variables\nIteration is normal and expected\n\nDocumenting a function with roxygen\n\n@param and @return as design questions, answered before the body\nUsing {fnmate} to generate the skeleton",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+      "Welcome"
     ]
   },
   {
-    "objectID": "index.html#writing-functions-in-practice",
-    "href": "index.html#writing-functions-in-practice",
+    "objectID": "index.html#outside-in-inside-out",
+    "href": "index.html#outside-in-inside-out",
     "title": "Introduction to Functions and Debugging",
-    "section": "3.3 Writing Functions in Practice",
-    "text": "3.3 Writing Functions in Practice\n\nOutside-in approach\n\nImagining the ideal function interface\nWhat am I trying to do?\nWhat inputs do I need?\nWhat should it return?\n\nInside-out approach\n\nStarting with working code\nIdentifying the parts that change\nAbstracting complexity step-by-step\n\nMoving between outside and inside views\n\nUp and down the ladder of abstraction\nStreet-level vs map-level understanding",
+    "section": "Outside-in, inside-out",
+    "text": "Outside-in, inside-out\n\nOutside-in approach\n\nImagining the ideal function interface\nWhat am I trying to do? What inputs do I need? What should it return?\n\nInside-out approach\n\nStarting with working code\nIdentifying the parts that change\nAbstracting complexity step-by-step\n\nMoving between outside and inside views\n\nUp and down the ladder of abstraction\nStreet-level vs map-level understanding",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+      "Welcome"
     ]
   },
   {
-    "objectID": "index.html#debugging-basics-and-tools",
-    "href": "index.html#debugging-basics-and-tools",
+    "objectID": "index.html#looking-inside-a-function",
+    "href": "index.html#looking-inside-a-function",
     "title": "Introduction to Functions and Debugging",
-    "section": "3.4 Debugging Basics and Tools",
-    "text": "3.4 Debugging Basics and Tools\n\nWhy debugging matters\n\nFunctions create boxes we need to look inside\nErrors are normal, not punishment\nLearning to read error messages\n\nEssential debugging tools\n\nbrowser(): Setting breakpoints and stepping through code\nRStudio debugging interface\ndebug() and debugonce()\n\nCommon debugging workflow\n\nWhere did the error occur?\nWhat values do variables have?\nTesting assumptions step-by-step",
+    "section": "Looking inside a function",
+    "text": "Looking inside a function\n\nErrors are normal, not punishment\nLearning to read an error message\nWhere did the error come from?\n\ntraceback()\nrlang::last_trace()\n\nStopping inside a function\n\nbrowser(): setting breakpoints and stepping through code\ndebug() and debugonce()\noptions(error = recover)\nThe RStudio debugging interface\n\nLooking inside code that works, not just code that breaks",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+      "Welcome"
     ]
   },
   {
-    "objectID": "index.html#cleaning-up-a-data-analysis",
-    "href": "index.html#cleaning-up-a-data-analysis",
+    "objectID": "index.html#from-script-to-functions",
+    "href": "index.html#from-script-to-functions",
     "title": "Introduction to Functions and Debugging",
-    "section": "3.5 Cleaning Up a Data Analysis",
-    "text": "3.5 Cleaning Up a Data Analysis\n\nHands-on: From script to functions\n\nTaking a real data analysis\nBreaking down complexity\nIdentifying what to turn into functions\n\nChunking code\n\nCode is not just lines, but ideas\nBreaking 50 lines into manageable chunks\nEach chunk should be individually understandable\n\nPractical debugging in action\n\nUsing browser() to explore function execution\nFinding and fixing issues\nNavigating to function definitions (Cmd/Ctrl + Click)",
+    "section": "From script to functions",
+    "text": "From script to functions\n\nHands-on: taking a real data analysis apart\nChunking code\n\nCode is not just lines, but ideas\nBreaking 50 lines into manageable chunks\nEach chunk should be individually understandable\n\nExtracting functions, step by step\nPractical debugging in action\n\nUsing browser() to explore function execution\nNavigating to function definitions (Cmd/Ctrl + Click)\n\nWhere it lands: an R/ folder of documented functions, and a thin script",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+      "Welcome"
     ]
   },
   {
-    "objectID": "index.html#measuring-and-improving-function-speed",
-    "href": "index.html#measuring-and-improving-function-speed",
+    "objectID": "index.html#measure-before-you-optimise",
+    "href": "index.html#measure-before-you-optimise",
     "title": "Introduction to Functions and Debugging",
-    "section": "3.6 Measuring, and Improving Function Speed",
-    "text": "3.6 Measuring, and Improving Function Speed\n\nDangers of premature optimisation\nEvaluating compute time\n\nsystem.time()\n{tictoc}\n{profvis}\n\nComparing compute time\n\nHow to use bench::mark()\nEvaluating many iterations with bench::press()",
+    "section": "Measure before you optimise",
+    "text": "Measure before you optimise\n\nDangers of premature optimisation\nEvaluating compute time\n\nsystem.time()\n{tictoc}\n{profvis}\n\nComparing compute time\n\nHow to use bench::mark()\nEvaluating many iterations with bench::press()",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+      "Welcome"
     ]
   },
   {
-    "objectID": "index.html#practice-and-integration",
-    "href": "index.html#practice-and-integration",
+    "objectID": "index.html#writing-for-your-future-self",
+    "href": "index.html#writing-for-your-future-self",
     "title": "Introduction to Functions and Debugging",
-    "section": "3.7 Practice and Integration",
-    "text": "3.7 Practice and Integration\n\nBringing it all together\n\nWork on your own code\nPractice the outside-in and inside-out approaches\nApply debugging tools to real problems\n\nCode as writing\n\nFunctions help you express ideas\nIteration and refinement\nWriting code for your future self\n\nResources and next steps\n\nKey concepts to remember\nTools to continue using\nFurther learning materials\nOpen Q&A",
+    "section": "Writing for your future self",
+    "text": "Writing for your future self\n\nBringing it all together\n\nWork on your own code\nPractice the outside-in and inside-out approaches\nApply debugging tools to real problems\n\nCode as writing\n\nFunctions help you express ideas\nIteration and refinement\n\nResources and next steps\n\nKey concepts to remember\nTools to continue using\nFurther learning materials\nOpen Q&A",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to Functions and Debugging</span>"
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Setup",
+    "section": "",
+    "text": "How this book works\nThree things before we start:",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#how-this-book-works",
+    "href": "setup.html#how-this-book-works",
+    "title": "Setup",
+    "section": "",
+    "text": "The book is longer than the course\nThe course is 6-7 hours of teaching material. There is more content in the book than the course can cover. This is intentional! I will change the teaching on the day, based on how we are going.\nDuring the course we will work through things live, and then the content will stay here for you to return to, as needed.\n\n\nHow we will work\nMostly by typing. I will write code, you write it too, and we will break things together, then fix them.\nKnowing how to work in R when things are breaking is really important. I want you to learn to be comfortable when R stops and complains at you. This means you’ll be doing a lot of the “driving” during exercises - it is one of the best ways to learn.\nYou do not need to keep up with everything I type. There is usually a copy button on every code block, and any extra content I write in class I will share on github.\n\n\nThe boxes\nFive kinds of box turn up throughout, each with its own colour and icon:\n\n✏️ Your Turn - something for you to do. Most of these we do together in the session, and a few are there for afterwards. The ones that ask what you think have no wrong answers.\n🕰️ Some history - Where things came from. One of my favourite little rabbit hols.\n🔎 Going deeper - optional extra detail a longer example, or a list you might want later. Boxes titled Read more point at the blog post or talk a section is adapted from.\n⚠️ Watch out - a place people commonly trip.\n🚨 - the things that will likely create issues.\n\n\n\n\n\n\n\nNoteYour Turn\n\n\n\nExercises look like this. Most of them give you something to run:\nR.version.string\nSome of them just ask you something.\nHere is the one I actually care about:\n\nWhat is the longest you have ever spent chasing a bug in your own R code?\n\nThere are no wrong answers! Mine is likely in the order of months-years.\n\n\n\n\n\n\n\n\nCautionSome history: the first actual bug\n\n\n\nOperators working on the Harvard Mark II (room-sized!) found a moth caught in one of the machine’s relays, which stopped it from working. They taped it into the logbook and wrote next to it:\n\n“First actual case of bug being found.”\n\n“Bug” was used by engineers and others, to describe faults, but this was the “first”\nThe logbook (moth still attached!) is at the Smithsonian.\n\n\n\n\n\n\n\n\nTipGoing deeper: how these boxes are made\n\n\n\n\n\nYou just clicked this - that is the collapsing demonstrated.\nThese are Quarto callouts, and there is nothing clever going on. Each one is a fenced div with a class on it:\n::: {.callout-note title=\"Your Turn\"}\n\nSomething for you to do.\n\n:::\nThe colours and the icons come from a stylesheet in the book’s repo, not from Quarto. If you want them in your own work, the docs are at Quarto: callout blocks.\n\n\n\n\n\n\n\n\n\nImportantRestart R after a big install\n\n\n\nIf you install a package that is already loaded in your session, R can end up half on the old version and half on the new one. You then get errors that make no sense and do not survive a restart, which is a miserable way to spend twenty minutes.\nSo once you have worked through the installs below, restart R.\nIn RStudio that is\n\nCtrl + Shift + F10 on windows\nCmd + Shift + 0 on Mac\n\n\n\nSome boxes are collapsed, showing only their title, like the Going deeper one above. Click the title to open one.\n\n\nThe code\nCode blocks look like this:\nlibrary(dplyr)\n\nairquality |&gt;\n  count(Month)\n#&gt;   Month  n\n#&gt; 1     5 31\n#&gt; 2     6 30\n#&gt; 3     7 31\n#&gt; 4     8 31\n#&gt; 5     9 30\nLines starting with #&gt; are output, not code. You do not type those. They are what R prints back, shown so you can check you got the same thing.\nLonger blocks have line numbers in the margin so that I can say “look at line 4” and we are both looking at the same line. Short blocks do not, because there is nothing to point at.\nWe use the base pipe, |&gt;, rather than %&gt;% throughout. If you are used to %&gt;%, everything here works the same way.\n\n\nWhere everything lives\n\nThis book - https://fun2debug.njtierney.com\nThe book’s source - https://github.com/njtierney/fun2debug. Every page has an “Edit this page” link, which goes straight to the file that made it.\n\nIf you find a mistake, please tell me. Every page has a link to open an issue, or you can email me. I really appreciate knowing f there is an error!",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#what-to-install",
+    "href": "setup.html#what-to-install",
+    "title": "Setup",
+    "section": "What to install",
+    "text": "What to install\nIf you can, it is worthwhile to install the below before the first session.\n\nR\nYou need R 4.5.0 or later, from https://cran.r-project.org/. Check what you have with:\nR.version.string\nR 4.5.0 came out in April 2025, so this shouldn’t be a stretch. If you are on something older, the base pipe |&gt; and the short anonymous function \\(x) both need at least 4.2.0, and they turn up throughout the book.\nYou also need an editor. I recommend RStudio. Positron works too, and I am happy to talk through the differences. Everything except the pane screenshots carries over.\n\n\nThe R packages\nThis will take a few minutes:\npkgs &lt;- c(\n  \"bench\",\n  \"broom\",\n  \"devtools\",\n  \"here\",\n  \"knitr\",\n  \"palmerpenguins\",\n  \"profvis\",\n  \"purrr\",\n  \"rmarkdown\",\n  \"spelling\",\n  \"testthat\",\n  \"tictoc\",\n  \"tidyverse\",\n  \"usethis\"\n  )\n  \ninstall.packages(pkgs)\n\n\nInstalling {fnmate}\n{fnmate} writes the skeleton of a function for you, from the call you wish you could make. We use it in ?sec-anatomy.\nIt is not on CRAN. It lives on Miles McBain’s r-universe, which is an ordinary website that R installs from, so there is no git and no compiler involved.\nTry this first:\ninstall.packages(\n  \"fnmate\",\n  repos = c(\n    \"https://milesmcbain.r-universe.dev\",\n    \"https://cloud.r-project.org\"\n  )\n)\nIf that is blocked, you can download the package as a file and install it from your own machine. We No compiler needed, because r-universe has already built it.\nFirst, get the address of the file you need. Run the following in R, based on the Operating System you have:\n\nWindowsMacLinux\n\n\n# Windows\npaste0(\n  \"https://milesmcbain.r-universe.dev/bin/windows/contrib/\",\n  substr(getRversion(), 1, 3),\n  \"/fnmate_0.2.1.zip\"\n)\nOpen that address in your browser, which downloads the file. Then install it, giving R the path to where it landed:\ninstall.packages(\n  \"C:/Users/you/Downloads/fnmate_0.2.1.zip\",\n  repos = NULL\n)\n\n\narch &lt;- if (R.version$arch == \"aarch64\") \"big-sur-arm64\" else \"big-sur-x86_64\"\n\npaste0(\n  \"https://milesmcbain.r-universe.dev/bin/macosx/\", arch, \"/contrib/\",\n  substr(getRversion(), 1, 3),\n  \"/fnmate_0.2.1.tgz\"\n)\nThen\ninstall.packages(\"~/Downloads/fnmate_0.2.1.tgz\", repos = NULL)\n\n\nOn Linux there is no binary, so you want the source and a working toolchain, which you have almost certainly already got:\ninstall.packages(\n  \"https://milesmcbain.r-universe.dev/src/contrib/fnmate_0.2.1.tar.gz\",\n  repos = NULL,\n  type = \"source\"\n)\n\n\n\n\n\n\n\n\n\nImportantIt’s OK if fnmate doesn’t install\n\n\n\nSome machines will not install from anywhere except CRAN, and if yours is one of them, that is a setting somebody else chose and not a problem with you.\nNothing in this course depends on {fnmate}. It saves typing, and it is a nice thing to know exists. Everywhere I use it, I will also show what it wrote, so you can type the same thing yourself in about fifteen seconds.\nPlease do email me if you hit this, because I would like to know how common it is.\n\n\n\n\nChecking it all worked\nRun this in R. It should print TRUE for everything except possibly fnmate.\npkgs &lt;- c(\n  \"bench\",\n  \"broom\",\n  \"devtools\",\n  \"here\",\n  \"knitr\",\n  \"palmerpenguins\",\n  \"profvis\",\n  \"purrr\",\n  \"rmarkdown\",\n  \"spelling\",\n  \"testthat\",\n  \"tictoc\",\n  \"tidyverse\",\n  \"usethis\"\n)\n\nsapply(pkgs, requireNamespace, quietly = TRUE)\nIf that looks right, you are set.\n\n\nIf something will not install\nLet me know!\nInstallation problems are almost always specific to one machine, and they are much faster to solve with two people looking at them. They are also, genuinely, not a reflection on you. Every one of us has lost an afternoon to a package that would not build. Ask me for some horror stories.",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#the-course-data",
+    "href": "setup.html#the-course-data",
+    "title": "Setup",
+    "section": "The course data",
+    "text": "The course data\nWe work on a real analysis in ?sec-from-script, using education and work data from the Australian Bureau of Statistics.\nThe data is served from this website, so you don’t need to clone anything or sign up to anywhere:\n\nhttps://fun2debug.njtierney.com/data/\n\nThat page lists every file, and has a zip of the lot if you would rather grab it in one go. Unzip it into your project so that you end up with a data/ folder sitting next to your R scripts, like this:\nyour-project/\n├── data/\n│   ├── Education and work, 2023, Datacube 2 (Table 11).xlsx\n│   ├── raw/\n│   └── tidy/\n└── your-script.R\nThat layout matters more than it looks, and we come back to why in ?sec-from-script.",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#what-to-bring",
+    "href": "setup.html#what-to-bring",
+    "title": "Setup",
+    "section": "What to bring",
+    "text": "What to bring\nAn analysis script of your own.\nIt doesn’t need to be tidy, and honestly it’s more useful to me if it isn’t. Something long, something you have copied and pasted around, something you have been meaning to clean up and have not. That’s the good stuff.\nWe work on your code directly in ?sec-future-self, and you will get more out of that hour than any example I could invent, because you already care about the answer.\nIf you’d rather not share your own, that’s completely fine. I have a script for us to work on either way.",
+    "crumbs": [
+      "Setup"
     ]
   }
 ]

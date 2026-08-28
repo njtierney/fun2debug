@@ -2,22 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nicholas Tierney">
-<meta name="dcterms.date" content="2026-02-17">
+<meta name="dcterms.date" content="2026-08-31">
 
 <title>Introduction to Functions and Debugging</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -35,16 +38,17 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./setup.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b45b7b0fa9169e986df15f1ef60a279c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d186ee71915d1414126d49a598f8905e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-020cafe2c5162b14dfdb8f310a12914a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -85,7 +89,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Functions and Debugging</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -102,7 +106,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction to Functions and Debugging</a> 
         <div class="sidebar-tools-main">
-    <a href="https://https://github.com/njtierney/fun2debug" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/njtierney/fun2debug" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -116,7 +120,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Functions and Debugging</span></span></a>
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setup</span></a>
   </div>
 </li>
     </ul>
@@ -129,20 +139,21 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome"><span class="header-section-number">1</span> Welcome</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details"><span class="header-section-number">2</span> Details</a></li>
-  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule"><span class="header-section-number">3</span> Schedule</a>
+  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
+  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule">Schedule</a>
   <ul class="collapse">
-  <li><a href="#why-functions-matter" id="toc-why-functions-matter" class="nav-link" data-scroll-target="#why-functions-matter"><span class="header-section-number">3.1</span> Why Functions Matter</a></li>
-  <li><a href="#function-fundamentals-and-design" id="toc-function-fundamentals-and-design" class="nav-link" data-scroll-target="#function-fundamentals-and-design"><span class="header-section-number">3.2</span> Function Fundamentals and Design</a></li>
-  <li><a href="#writing-functions-in-practice" id="toc-writing-functions-in-practice" class="nav-link" data-scroll-target="#writing-functions-in-practice"><span class="header-section-number">3.3</span> Writing Functions in Practice</a></li>
-  <li><a href="#debugging-basics-and-tools" id="toc-debugging-basics-and-tools" class="nav-link" data-scroll-target="#debugging-basics-and-tools"><span class="header-section-number">3.4</span> Debugging Basics and Tools</a></li>
-  <li><a href="#cleaning-up-a-data-analysis" id="toc-cleaning-up-a-data-analysis" class="nav-link" data-scroll-target="#cleaning-up-a-data-analysis"><span class="header-section-number">3.5</span> Cleaning Up a Data Analysis</a></li>
-  <li><a href="#measuring-and-improving-function-speed" id="toc-measuring-and-improving-function-speed" class="nav-link" data-scroll-target="#measuring-and-improving-function-speed"><span class="header-section-number">3.6</span> Measuring, and Improving Function Speed</a></li>
-  <li><a href="#practice-and-integration" id="toc-practice-and-integration" class="nav-link" data-scroll-target="#practice-and-integration"><span class="header-section-number">3.7</span> Practice and Integration</a></li>
+  <li><a href="#dont-re-read-yourself" id="toc-dont-re-read-yourself" class="nav-link" data-scroll-target="#dont-re-read-yourself">Don’t re-read yourself</a></li>
+  <li><a href="#anatomy-of-a-function" id="toc-anatomy-of-a-function" class="nav-link" data-scroll-target="#anatomy-of-a-function">Anatomy of a function</a></li>
+  <li><a href="#outside-in-inside-out" id="toc-outside-in-inside-out" class="nav-link" data-scroll-target="#outside-in-inside-out">Outside-in, inside-out</a></li>
+  <li><a href="#looking-inside-a-function" id="toc-looking-inside-a-function" class="nav-link" data-scroll-target="#looking-inside-a-function">Looking inside a function</a></li>
+  <li><a href="#from-script-to-functions" id="toc-from-script-to-functions" class="nav-link" data-scroll-target="#from-script-to-functions">From script to functions</a></li>
+  <li><a href="#measure-before-you-optimise" id="toc-measure-before-you-optimise" class="nav-link" data-scroll-target="#measure-before-you-optimise">Measure before you optimise</a></li>
+  <li><a href="#writing-for-your-future-self" id="toc-writing-for-your-future-self" class="nav-link" data-scroll-target="#writing-for-your-future-self">Writing for your future self</a></li>
+  <li>Links</li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://https://github.com/njtierney/fun2debug/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -166,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 17, 2026</p>
+      <p class="date">August 31, 2026</p>
     </div>
   </div>
   
@@ -178,84 +189,86 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="welcome" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Welcome</h1>
+<section id="welcome" class="level1 unnumbered">
+<h1 class="unnumbered">Welcome</h1>
 <p>Welcome to Functions and Debugging! This course will teach you how to write your own functions and confidently debug your R code.</p>
 </section>
-<section id="details" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Details</h1>
+<section id="details" class="level1">
+<h1>Details</h1>
 <p>I would argue the highest value skillset in statistical programming is knowing how to write good functions. Functions are often taught as a tool to avoid repetition using the mnemonic DRY: Don’t Repeat Yourself. Whilst DRY is both true and real, I think functions are at their best when they encapsulate expression and are easy to reason with. That is, DRY is sufficient, but not necessary.</p>
 <p>Writing good functions is more than esoteric aesthetics. We need to be able to reason with our code in statistics. We often don’t have the capacity to write tests to show our code is “correct”. Instead, we need to rely on our ability to reason with, trust, and verify that the code works as it should. I believe writing good functions that encapsulate expressions and are able to be reasoned with are how we can ensure our code, and therefore our methods, and our analyses, work as they should.</p>
+<p>This course is for people writing analysis code, not packages. You will take a real analysis script, ideally your own, and turn it into a set of named, documented functions that you can look inside when something goes wrong, and reason about when it doesn’t. The functions you end up with are the same unit of work that pipelines like <code>targets</code> are built from, so this is useful whether or not you ever write a pipeline.</p>
 <p><a href="https://fun2debug.njtierney.com" class="uri">https://fun2debug.njtierney.com</a></p>
 <p><strong>Prerequisites</strong></p>
 <ul>
 <li>Basic R programming experience</li>
 <li>Familiarity with R scripts and basic data manipulation</li>
 <li>Experience running R code and encountering errors</li>
+<li>An analysis script of your own that you would like to improve</li>
 </ul>
 <p><strong>Learning outcomes</strong></p>
 <ul>
-<li>How to write functions to:
-<ul>
-<li>Manage complexity</li>
-<li>Explain and express ideas</li>
-<li>Techniques for developing good functions: outside-in, inside-out</li>
-<li>Avoid repetition</li>
-</ul></li>
-<li>How to debug functions and troubleshoot common errors</li>
-<li>Best practices for function documentation</li>
+<li>Write functions to express an idea.</li>
+<li>Spot when code has become expensive to re-read</li>
+<li>Recognise the reasons to (and not to!) write a function</li>
+<li>Design a function from the outside in, before writing its body</li>
+<li>Extract a function out of code you have already got working</li>
+<li>Name functions and arguments so they explain themselves</li>
+<li>Document a function with roxygen, so you and others know how to use it</li>
+<li>Read an R error message and work out where it actually came from</li>
+<li>Use debugging tools: <code>browser()</code>, <code>debug()</code> and <code>debugonce()</code> to look inside a running function</li>
+<li>Turn a long analysis script into a set of functions without breaking it</li>
+<li>Efficiently, and fairly measure code speed.</li>
 </ul>
 </section>
-<section id="schedule" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Schedule</h1>
-<section id="why-functions-matter" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="why-functions-matter"><span class="header-section-number">3.1</span> Why Functions Matter</h2>
+<section id="schedule" class="level1">
+<h1>Schedule</h1>
+<section id="dont-re-read-yourself" class="level2">
+<h2 class="anchored" data-anchor-id="dont-re-read-yourself">Don’t re-read yourself</h2>
 <ul>
 <li>The problem with repeated code; when re-reading becomes a burden</li>
+<li>DRRY: Don’t Re-Read Yourself
+<ul>
+<li>Re-reading is the cost, repetition is only one way to pay it</li>
+<li>“Spot the difference” in copy-paste-edit code</li>
+</ul></li>
+<li>DRY: Don’t Repeat Yourself, as the special case</li>
+<li>When <em>not</em> to write a function</li>
 <li>Why write functions?
 <ul>
 <li>Managing complexity</li>
 <li>Expressing ideas clearly</li>
-<li>Making code easier to reason about</li>
-</ul></li>
-<li>Moving beyond DRY (Don’t Repeat Yourself)
-<ul>
-<li>DRRY: Don’t Re-Read Yourself</li>
-<li>Functions as tools for expression</li>
-<li>When to write a function (it’s not just about repetition)</li>
+<li>Speed of thought: getting unstuck faster</li>
 </ul></li>
 </ul>
 </section>
-<section id="function-fundamentals-and-design" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="function-fundamentals-and-design"><span class="header-section-number">3.2</span> Function Fundamentals and Design</h2>
-<ul>
-<li>Anatomy of a function
+<section id="anatomy-of-a-function" class="level2">
+<h2 class="anchored" data-anchor-id="anatomy-of-a-function">Anatomy of a function</h2>
 <ul>
 <li>Name, inputs (arguments), body, output</li>
+<li>Argument values arrive at the call, not at the definition</li>
 <li>Function signatures and what they communicate</li>
-</ul></li>
-<li>Two approaches to writing functions
-<ul>
-<li>Outside-in: Start with how you want to use it</li>
-<li>Inside-out: Extract from existing code</li>
-</ul></li>
+<li>Good (simple) function design</li>
 <li>Naming things
 <ul>
 <li>Making function names evocative</li>
 <li>Naming arguments and variables</li>
 <li>Iteration is normal and expected</li>
 </ul></li>
+<li>Documenting a function with roxygen
+<ul>
+<li><code>@param</code> and <code>@return</code> as design questions, answered before the body</li>
+<li>Using <code>{fnmate}</code> to generate the skeleton</li>
+</ul></li>
 </ul>
 </section>
-<section id="writing-functions-in-practice" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="writing-functions-in-practice"><span class="header-section-number">3.3</span> Writing Functions in Practice</h2>
+<section id="outside-in-inside-out" class="level2">
+<h2 class="anchored" data-anchor-id="outside-in-inside-out">Outside-in, inside-out</h2>
 <ul>
 <li>Outside-in approach
 <ul>
 <li>Imagining the ideal function interface</li>
-<li>What am I trying to do?</li>
-<li>What inputs do I need?</li>
-<li>What should it return?</li>
+<li>What am I trying to do? What inputs do I need? What should it return?</li>
 </ul></li>
 <li>Inside-out approach
 <ul>
@@ -270,54 +283,47 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="debugging-basics-and-tools" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="debugging-basics-and-tools"><span class="header-section-number">3.4</span> Debugging Basics and Tools</h2>
+<section id="looking-inside-a-function" class="level2">
+<h2 class="anchored" data-anchor-id="looking-inside-a-function">Looking inside a function</h2>
 <ul>
-<li>Why debugging matters
-<ul>
-<li>Functions create boxes we need to look inside</li>
 <li>Errors are normal, not punishment</li>
-<li>Learning to read error messages</li>
-</ul></li>
-<li>Essential debugging tools
+<li>Learning to read an error message</li>
+<li>Where did the error come from?
 <ul>
-<li><code>browser()</code>: Setting breakpoints and stepping through code</li>
-<li>RStudio debugging interface</li>
+<li><code>traceback()</code></li>
+<li><code>rlang::last_trace()</code></li>
+</ul></li>
+<li>Stopping inside a function
+<ul>
+<li><code>browser()</code>: setting breakpoints and stepping through code</li>
 <li><code>debug()</code> and <code>debugonce()</code></li>
+<li><code>options(error = recover)</code></li>
+<li>The RStudio debugging interface</li>
 </ul></li>
-<li>Common debugging workflow
-<ul>
-<li>Where did the error occur?</li>
-<li>What values do variables have?</li>
-<li>Testing assumptions step-by-step</li>
-</ul></li>
+<li>Looking inside code that works, not just code that breaks</li>
 </ul>
 </section>
-<section id="cleaning-up-a-data-analysis" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="cleaning-up-a-data-analysis"><span class="header-section-number">3.5</span> Cleaning Up a Data Analysis</h2>
+<section id="from-script-to-functions" class="level2">
+<h2 class="anchored" data-anchor-id="from-script-to-functions">From script to functions</h2>
 <ul>
-<li>Hands-on: From script to functions
-<ul>
-<li>Taking a real data analysis</li>
-<li>Breaking down complexity</li>
-<li>Identifying what to turn into functions</li>
-</ul></li>
+<li>Hands-on: taking a real data analysis apart</li>
 <li>Chunking code
 <ul>
 <li>Code is not just lines, but ideas</li>
 <li>Breaking 50 lines into manageable chunks</li>
 <li>Each chunk should be individually understandable</li>
 </ul></li>
+<li>Extracting functions, step by step</li>
 <li>Practical debugging in action
 <ul>
 <li>Using <code>browser()</code> to explore function execution</li>
-<li>Finding and fixing issues</li>
 <li>Navigating to function definitions (Cmd/Ctrl + Click)</li>
 </ul></li>
+<li>Where it lands: an <code>R/</code> folder of documented functions, and a thin script</li>
 </ul>
 </section>
-<section id="measuring-and-improving-function-speed" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="measuring-and-improving-function-speed"><span class="header-section-number">3.6</span> Measuring, and Improving Function Speed</h2>
+<section id="measure-before-you-optimise" class="level2">
+<h2 class="anchored" data-anchor-id="measure-before-you-optimise">Measure before you optimise</h2>
 <ul>
 <li>Dangers of premature optimisation</li>
 <li>Evaluating compute time
@@ -333,8 +339,8 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="practice-and-integration" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="practice-and-integration"><span class="header-section-number">3.7</span> Practice and Integration</h2>
+<section id="writing-for-your-future-self" class="level2">
+<h2 class="anchored" data-anchor-id="writing-for-your-future-self">Writing for your future self</h2>
 <ul>
 <li>Bringing it all together
 <ul>
@@ -346,7 +352,6 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Functions help you express ideas</li>
 <li>Iteration and refinement</li>
-<li>Writing code for your future self</li>
 </ul></li>
 <li>Resources and next steps
 <ul>
@@ -358,6 +363,12 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 
 
+</section>
+<section class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="">Links</h2>
+<ul>
+<li><a href="https://fun2debug.njtierney.com" class="uri">https://fun2debug.njtierney.com</a></li>
+</ul>
 </section>
 </section>
 
@@ -762,6 +773,15 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./setup.html" class="pagination-link" aria-label="Setup">
+        <span class="nav-page-text">Setup</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -770,7 +790,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
 <p>Copyright 2026, Nicholas Tierney</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://https://github.com/njtierney/fun2debug/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
