@@ -1,26 +1,61 @@
-project: 
+project:
   type: book
   output-dir: docs
+  # The ozed data is copied into docs/ so it is downloadable straight from
+  # fun2debug.njtierney.com/data/. Attendees are on machines where cloning
+  # from GitHub is awkward, and a plain HTTPS download from the course site
+  # they are already reading is the path of least resistance.
+  resources:
+    - data/
+
+# Applied to every chapter. linkate collects each chapter's links and lists
+# them at the end. Set here rather than per-chapter so they cannot drift.
+filters:
+  - linkate
+  # The chapter overview box. HTML gets it from chapter-overview.scss;
+  # this is the LaTeX half, and it is a no-op in every other format.
+  - overview-box.lua
 
 book:
   title: "Introduction to Functions and Debugging"
   site-url: https://fun2debug.njtierney.com
   author: "Nicholas Tierney"
-  repo-url: https://https://github.com/njtierney/fun2debug
+  repo-url: https://github.com/njtierney/fun2debug
   repo-branch: main
   repo-actions: [edit, issue]
-  date: "2026-02-17"
-  page-footer: "Copyright 2026, Nicholas Tierney" 
+  date: "2026-08-31"
+  page-footer: "Copyright 2026, Nicholas Tierney"
   page-navigation: true
   search: true
+  # The book opens and closes on the same idea: chapter 1 is why you should
+  # not have to re-read your own code, chapter 7 is who does the re-reading.
   chapters:
     - "index.qmd"
+    - "setup.qmd"
+    # - "dont-re-read-yourself.qmd"
+    # - "anatomy-of-a-function.qmd"
+    # - "outside-in-inside-out.qmd"
+    # - "looking-inside-a-function.qmd"
+    # - "from-script-to-functions.qmd"
+    # - "measure-before-you-optimise.qmd"
+    # - "writing-for-your-future-self.qmd"
+
+# Only `##` and above get a number.
+number-depth: 2
 
 format:
   html:
-    theme: 
+    theme:
       - cosmo
-    code-background: true
+      - measured/_measured-palette.scss    # Dark2 colours
+      - measured/_measured-structure.scss  # code blocks, callout shape
+      - measured/_measured-house.scss      # what each callout type means
+      - measured/measured-legible.scss     # Atkinson Hyperlegible + Fira Code
+      - book-grid.scss                     # book column is narrower than a website
+      - chapter-overview.scss              # the box each chapter opens with
     code-copy: true
-    code-overflow: wrap
+    code-line-numbers: true
     toc: true
+    # `code-overflow: wrap` is deliberately NOT set. measured sizes blocks
+    # to 80 characters and scrolls beyond that; wrapping instead would
+    # destroy the indentation that shows the shape of a pipeline.

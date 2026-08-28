@@ -1,37 +1,37 @@
 # Schedule
 
-## Why Functions Matter
+## Don't re-read yourself
 
 - The problem with repeated code; when re-reading becomes a burden
+- DRRY: Don't Re-Read Yourself
+  - Re-reading is the cost, repetition is only one way to pay it
+  - "Spot the difference" in copy-paste-edit code
+- DRY: Don't Repeat Yourself, as the special case
+- When *not* to write a function
 - Why write functions?
   - Managing complexity
   - Expressing ideas clearly
-  - Making code easier to reason about
-- Moving beyond DRY (Don't Repeat Yourself)
-  - DRRY: Don't Re-Read Yourself
-  - Functions as tools for expression
-  - When to write a function (it's not just about repetition)
+  - Speed of thought: getting unstuck faster
 
-## Function Fundamentals and Design
+## Anatomy of a function
 
-- Anatomy of a function
-  - Name, inputs (arguments), body, output
-  - Function signatures and what they communicate
-- Two approaches to writing functions
-  - Outside-in: Start with how you want to use it
-  - Inside-out: Extract from existing code
+- Name, inputs (arguments), body, output
+- Argument values arrive at the call, not at the definition
+- Function signatures and what they communicate
+- Good (simple) function design
 - Naming things
   - Making function names evocative
   - Naming arguments and variables
   - Iteration is normal and expected
+- Documenting a function with roxygen
+  - `@param` and `@return` as design questions, answered before the body
+  - Using `{fnmate}` to generate the skeleton
 
-## Writing Functions in Practice
+## Outside-in, inside-out
 
 - Outside-in approach
   - Imagining the ideal function interface
-  - What am I trying to do?
-  - What inputs do I need?
-  - What should it return?
+  - What am I trying to do? What inputs do I need? What should it return?
 - Inside-out approach
   - Starting with working code
   - Identifying the parts that change
@@ -40,37 +40,34 @@
   - Up and down the ladder of abstraction
   - Street-level vs map-level understanding
 
-## Debugging Basics and Tools
+## Looking inside a function
 
-- Why debugging matters
-  - Functions create boxes we need to look inside
-  - Errors are normal, not punishment
-  - Learning to read error messages
-- Essential debugging tools
-  - `browser()`: Setting breakpoints and stepping through code
-  - RStudio debugging interface
+- Errors are normal, not punishment
+- Learning to read an error message
+- Where did the error come from?
+  - `traceback()`
+  - `rlang::last_trace()`
+- Stopping inside a function
+  - `browser()`: setting breakpoints and stepping through code
   - `debug()` and `debugonce()`
-- Common debugging workflow
-  - Where did the error occur?
-  - What values do variables have?
-  - Testing assumptions step-by-step
+  - `options(error = recover)`
+  - The RStudio debugging interface
+- Looking inside code that works, not just code that breaks
 
-## Cleaning Up a Data Analysis
+## From script to functions
 
-- Hands-on: From script to functions
-  - Taking a real data analysis
-  - Breaking down complexity
-  - Identifying what to turn into functions
+- Hands-on: taking a real data analysis apart
 - Chunking code
   - Code is not just lines, but ideas
   - Breaking 50 lines into manageable chunks
   - Each chunk should be individually understandable
+- Extracting functions, step by step
 - Practical debugging in action
   - Using `browser()` to explore function execution
-  - Finding and fixing issues
   - Navigating to function definitions (Cmd/Ctrl + Click)
+- Where it lands: an `R/` folder of documented functions, and a thin script
 
-## Measuring, and Improving Function Speed
+## Measure before you optimise
 
 - Dangers of premature optimisation
 - Evaluating compute time
@@ -81,7 +78,7 @@
   - How to use `bench::mark()`
   - Evaluating many iterations with `bench::press()`
 
-## Practice and Integration
+## Writing for your future self
 
 - Bringing it all together
   - Work on your own code
@@ -90,7 +87,6 @@
 - Code as writing
   - Functions help you express ideas
   - Iteration and refinement
-  - Writing code for your future self
 - Resources and next steps
   - Key concepts to remember
   - Tools to continue using

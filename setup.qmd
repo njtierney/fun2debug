@@ -1,0 +1,318 @@
+# Setup {#sec-setup .unnumbered}
+
+Three things before we start:
+
+1. How this book is put together,
+2. What to install, and
+3. What to bring.
+
+## How this book works
+
+### The book is longer than the course
+
+The course is 6-7 hours of teaching material. There is more content in the book than the course can cover. This is intentional! I will change the teaching on the day, based on how we are going.
+
+During the course we will work through things live, and then the content will stay here for you to return to, as needed.
+
+### How we will work
+
+Mostly by typing. I will write code, you write it too, and we will break things together, then fix them.
+
+Knowing how to work in R when things are breaking is really important. I want you to learn to be comfortable when R stops and complains at you. This means you'll be doing a lot of the "driving" during exercises - it is one of the best ways to learn.
+
+You do not need to keep up with everything I type. There is usually a copy button on every code block, and any extra content I write in class I will share on github.
+
+### The boxes
+
+Five kinds of box turn up throughout, each with its own colour and icon:
+
+- **✏️ Your Turn** - something for you to do. Most of these we do together in the session, and a few are there for afterwards. The ones that ask what you think have no wrong answers.
+- **🕰️ Some history** - Where things came from. One of my favourite little rabbit hols.
+- **🔎 Going deeper** - optional extra detail a longer example, or a list you might want later. Boxes titled **Read more** point at the blog post or talk a section is adapted from.
+- **⚠️ Watch out** - a place people commonly trip.
+- **🚨** - the things that will likely create issues.
+
+::: {.callout-note title="Your Turn"}
+
+Exercises look like this. Most of them give you something to run:
+
+```r
+R.version.string
+```
+
+Some of them just ask you something. 
+
+Here is the one I actually care about: 
+
+1. What is the longest you have ever spent chasing a bug in your own R code?
+
+There are no wrong answers! Mine is likely in the order of months-years.
+
+:::
+
+::: {.callout-caution title="Some history: the first actual bug"}
+
+Operators working on the [Harvard Mark II](https://en.wikipedia.org/wiki/Harvard_Mark_II) (room-sized!) found a moth caught in one of the machine's relays, which stopped it from working. They taped it into the logbook and wrote next to it: 
+
+> "First actual case of bug being found."
+
+"Bug" was used by engineers and others, to describe faults, but this was the "first"
+
+The logbook (moth still attached!) is at the [Smithsonian](https://americanhistory.si.edu/collections/object/nmah_334663).
+
+:::
+
+::: {.callout-tip title="Going deeper: how these boxes are made" collapse="true"}
+
+You just clicked this - that is the collapsing demonstrated.
+
+These are Quarto callouts, and there is nothing clever going on. Each one is a fenced div with a class on it:
+
+````markdown
+::: {.callout-note title="Your Turn"}
+
+Something for you to do.
+
+:::
+````
+
+The colours and the icons come from a stylesheet in the book's repo, not from Quarto. If you want them in your own work, the docs are at [Quarto: callout blocks](https://quarto.org/docs/authoring/callouts.html).
+
+:::
+
+::: {.callout-important title="Restart R after a big install"}
+
+If you install a package that is already loaded in your session, R can end up half on the old version and half on the new one. You then get errors that make no sense and do not survive a restart, which is a miserable way to spend twenty minutes.
+
+So once you have worked through the installs below, restart R. 
+
+In RStudio that is 
+
+- `Ctrl + Shift + F10` on windows
+- `Cmd + Shift + 0` on Mac
+
+:::
+
+Some boxes are collapsed, showing only their title, like the **Going deeper** one above. Click the title to open one.
+
+### The code
+
+Code blocks look like this:
+
+```r
+library(dplyr)
+
+airquality |>
+  count(Month)
+#>   Month  n
+#> 1     5 31
+#> 2     6 30
+#> 3     7 31
+#> 4     8 31
+#> 5     9 30
+```
+
+Lines starting with `#>` are **output**, not code. You do not type those. They are what R prints back, shown so you can check you got the same thing.
+
+Longer blocks have line numbers in the margin so that I can say "look at line 4" and we are both looking at the same line. Short blocks do not, because there is nothing to point at.
+
+We use the base pipe, `|>`, rather than `%>%` throughout. If you are used to `%>%`, everything here works the same way.
+
+### Where everything lives
+
+- **This book** - <https://fun2debug.njtierney.com>
+- **The book's source** - <https://github.com/njtierney/fun2debug>. Every page has an "Edit this page" link, which goes straight to the file that made it.
+
+**If you find a mistake, please tell me.** Every page has a link to open an issue, or you can email me. I really appreciate knowing f there is an error!
+
+## What to install
+
+If you can, it is worthwhile to install the below before the first session.
+
+### R
+
+You need **R 4.5.0 or later**, from <https://cran.r-project.org/>. Check what you have with:
+
+```r
+R.version.string
+```
+
+R 4.5.0 came out in April 2025, so this shouldn't be a stretch. If you are on something older, the base pipe `|>` and the short anonymous function `\(x)` both need at least 4.2.0, and they turn up throughout the book.
+
+You also need an editor. I recommend [RStudio](https://posit.co/download/rstudio-desktop/). [Positron](https://positron.posit.co/) works too, and I am happy to talk through the differences. Everything except the pane screenshots carries over.
+
+### The R packages
+
+This will take a few minutes:
+
+```r
+pkgs <- c(
+  "bench",
+  "broom",
+  "devtools",
+  "here",
+  "knitr",
+  "palmerpenguins",
+  "profvis",
+  "purrr",
+  "rmarkdown",
+  "spelling",
+  "testthat",
+  "tictoc",
+  "tidyverse",
+  "usethis"
+  )
+  
+install.packages(pkgs)
+```
+
+### Installing {fnmate}
+
+`{fnmate}` writes the skeleton of a function for you, from the call you wish you could make. We use it in @sec-anatomy.
+
+It is not on CRAN. It lives on [Miles McBain's](https://milesmcbain.xyz) r-universe, which is an ordinary website that R installs from, so there is no git and no compiler involved.
+
+Try this first:
+
+```r
+install.packages(
+  "fnmate",
+  repos = c(
+    "https://milesmcbain.r-universe.dev",
+    "https://cloud.r-project.org"
+  )
+)
+```
+
+If that is blocked, you can download the package as a file and install it from your own machine. We  No compiler needed, because r-universe has already built it.
+
+First, get the address of the file you need. Run the following in R, based on the Operating System you have:
+
+::: {.panel-tabset}
+
+## Windows
+
+```r
+# Windows
+paste0(
+  "https://milesmcbain.r-universe.dev/bin/windows/contrib/",
+  substr(getRversion(), 1, 3),
+  "/fnmate_0.2.1.zip"
+)
+```
+
+Open that address in your browser, which downloads the file. Then install it, giving R the path to where it landed:
+
+```r
+install.packages(
+  "C:/Users/you/Downloads/fnmate_0.2.1.zip",
+  repos = NULL
+)
+```
+
+## Mac
+
+```r
+arch <- if (R.version$arch == "aarch64") "big-sur-arm64" else "big-sur-x86_64"
+
+paste0(
+  "https://milesmcbain.r-universe.dev/bin/macosx/", arch, "/contrib/",
+  substr(getRversion(), 1, 3),
+  "/fnmate_0.2.1.tgz"
+)
+```
+
+Then 
+
+```r
+install.packages("~/Downloads/fnmate_0.2.1.tgz", repos = NULL)
+```
+
+
+## Linux
+
+On Linux there is no binary, so you want the source and a working toolchain, which you have almost certainly already got:
+
+```r
+install.packages(
+  "https://milesmcbain.r-universe.dev/src/contrib/fnmate_0.2.1.tar.gz",
+  repos = NULL,
+  type = "source"
+)
+```
+
+:::
+
+::: {.callout-important title="It's OK if fnmate doesn't install"}
+
+Some machines will not install from anywhere except CRAN, and if yours is one of them, that is a setting somebody else chose and not a problem with you.
+
+Nothing in this course depends on `{fnmate}`. It saves typing, and it is a nice thing to know exists. Everywhere I use it, I will also show what it wrote, so you can type the same thing yourself in about fifteen seconds.
+
+Please do email me if you hit this, because I would like to know how common it is.
+
+:::
+
+### Checking it all worked
+
+Run this in R. It should print `TRUE` for everything except possibly `fnmate`.
+
+```r
+pkgs <- c(
+  "bench",
+  "broom",
+  "devtools",
+  "here",
+  "knitr",
+  "palmerpenguins",
+  "profvis",
+  "purrr",
+  "rmarkdown",
+  "spelling",
+  "testthat",
+  "tictoc",
+  "tidyverse",
+  "usethis"
+)
+
+sapply(pkgs, requireNamespace, quietly = TRUE)
+```
+
+If that looks right, you are set.
+
+### If something will not install
+
+Let me know!
+
+Installation problems are almost always specific to one machine, and they are much faster to solve with two people looking at them. They are also, genuinely, not a reflection on you. Every one of us has lost an afternoon to a package that would not build. Ask me for some horror stories.
+
+## The course data
+
+We work on a real analysis in @sec-from-script, using education and work data from the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release).
+
+The data is served from this website, so you don't need to clone anything or sign up to anywhere:
+
+- <https://fun2debug.njtierney.com/data/>
+
+That page lists every file, and has a zip of the lot if you would rather grab it in one go. Unzip it into your project so that you end up with a `data/` folder sitting next to your R scripts, like this:
+
+```
+your-project/
+├── data/
+│   ├── Education and work, 2023, Datacube 2 (Table 11).xlsx
+│   ├── raw/
+│   └── tidy/
+└── your-script.R
+```
+
+That layout matters more than it looks, and we come back to why in @sec-from-script.
+
+## What to bring
+
+**An analysis script of your own.**
+
+It doesn't need to be tidy, and honestly it's more useful to me if it isn't. Something long, something you have copied and pasted around, something you have been meaning to clean up and have not. That's the good stuff.
+
+We work on your code directly in @sec-future-self, and you will get more out of that hour than any example I could invent, because you already care about the answer.
+
+If you'd rather not share your own, that's completely fine. I have a script for us to work on either way.

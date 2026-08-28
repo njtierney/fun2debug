@@ -1,3 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.qmd$
+^fun2debug\.Rproj$
+^\.claude$

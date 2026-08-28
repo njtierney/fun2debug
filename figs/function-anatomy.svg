@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 492" width="940" height="492" role="img" aria-labelledby="t d">
+<title id="t">The anatomy of an R function</title>
+<desc id="d">The function prop_missing, defined as function(x, digits = 2), with a body that divides the number of missing values by the length of x and rounds it. Six labels with arrows point to the parts: the name, the keyword function, the argument x, the default digits = 2, the body, and the return value.</desc>
+<defs><style>
+ .code{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:26px}
+ .head{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;font-weight:bold}
+ .desc{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:16px}
+ .pill{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold}
+ .lead{fill:none;stroke-width:2.1}
+</style>
+<marker id="a-name" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-fn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#736EB2"/></marker>
+<marker id="a-args" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-default" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9B6E1B"/></marker>
+<marker id="a-body" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+<marker id="a-return" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-good" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-bad" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-warn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-muted" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+</defs>
+<rect width="940" height="492" fill="#ffffff"/>
+<rect x="175" y="169" width="700" height="215" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<rect x="226" y="237" width="519" height="84" rx="7" fill="#666666" opacity="0.1"/>
+<rect x="202" y="191" width="194" height="38" rx="6" fill="#1B9E77" opacity="0.18"/>
+<rect x="451" y="191" width="132" height="38" rx="6" fill="#7570B3" opacity="0.18"/>
+<rect x="592" y="191" width="22" height="38" rx="5" fill="#D95F02" opacity="0.26"/>
+<rect x="638" y="191" width="164" height="38" rx="6" fill="#A6761D" opacity="0.2"/>
+<rect x="230" y="283" width="308" height="38" rx="6" fill="#E7298A" opacity="0.18"/>
+<text class="code" x="205" y="219" fill="#1b2733">prop_missing &lt;- function(x, digits = 2) {</text>
+<text class="code" x="236" y="265" fill="#1b2733">prop &lt;- n_missing(x) / length(x)</text>
+<text class="code" x="236" y="311" fill="#1b2733">round(prop, digits)</text>
+<text class="code" x="205" y="357" fill="#1b2733">}</text>
+<text class="head" x="20" y="94" fill="#178665">The name</text>
+<text class="desc" x="20" y="118" fill="#4a5160">How you call it later.</text>
+<path class="lead" stroke="#178665" marker-end="url(#a-name)" d="M 70,130 Q 120,174 252,187"/>
+<text class="head" x="290" y="58" fill="#736EB2">function()</text>
+<text class="desc" x="290" y="82" fill="#4a5160">This is what makes a function.</text>
+<path class="lead" stroke="#736EB2" marker-end="url(#a-fn)" d="M 380,94 Q 440,139 502,187"/>
+<text class="head" x="620" y="58" fill="#C25502">The arguments</text>
+<text class="desc" x="620" y="82" fill="#4a5160">What changes each time you call it.</text>
+<path class="lead" stroke="#C25502" marker-end="url(#a-args)" d="M 650,94 Q 615,139 604,187"/>
+<text class="head" x="920" y="136" fill="#9B6E1B" text-anchor="end">A default</text>
+<text class="desc" x="920" y="160" fill="#4a5160" text-anchor="end">Used if you don't give one.</text>
+<path class="lead" stroke="#9B6E1B" marker-end="url(#a-default)" d="M 862,170 Q 800,178 726,188"/>
+<text class="head" x="12" y="256" fill="#666666">The body</text>
+<text class="desc" x="12" y="280" fill="#4a5160">The code that runs.</text>
+<path class="lead" stroke="#666666" marker-end="url(#a-body)" d="M 168,269 Q 195,269 222,269"/>
+<text class="head" x="430" y="444" fill="#E0197F">The return value</text>
+<text class="desc" x="430" y="468" fill="#4a5160">The last thing evaluated.</text>
+<path class="lead" stroke="#E0197F" marker-end="url(#a-return)" d="M 450,432 Q 400,389 358,328"/>
+</svg>

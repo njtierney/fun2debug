@@ -11,15 +11,20 @@ Language: en-GB
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
+  bench,
   broom,
   devtools,
   here,
   knitr,
   palmerpenguins,
+  profvis,
   readr,
+  readxl,
+  rlang,
   rmarkdown,
   spelling,
   testthat,
+  tictoc,
   tidyverse,
   usethis
 URL: https://github.com/njtierney/fun2debug

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 620" width="940" height="620" role="img" aria-labelledby="t d">
+<title id="t">Writing a function is writing</title>
+<desc id="d">Four steps stacked in a column, joined by arrows. Copy: paste the code into an empty function body and change nothing. Identify: work out which parts change between uses, because those are the arguments. Abstract: replace the hard-coded parts with argument names. Iterate: get it working first, then improve the names. A curved arrow runs from Iterate back up to Identify, because the middle two steps repeat.</desc>
+<defs><style>
+ .code{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:26px}
+ .head{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;font-weight:bold}
+ .desc{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:16px}
+ .pill{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold}
+ .lead{fill:none;stroke-width:2.1}
+</style>
+<marker id="a-name" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-fn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#736EB2"/></marker>
+<marker id="a-args" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-default" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9B6E1B"/></marker>
+<marker id="a-body" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+<marker id="a-return" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-good" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-bad" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-warn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-muted" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+</defs>
+<rect width="940" height="620" fill="#ffffff"/>
+<rect x="130" y="40" width="750" height="110" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="head" x="156" y="84" fill="#736EB2">1. Copy</text>
+<text class="desc" x="156" y="108" fill="#4a5160">Paste the code into an empty function body. Change nothing yet.</text>
+<path class="lead" stroke="#666666" marker-end="url(#a-muted)" d="M 190,154 L 190,178"/>
+<rect x="130" y="182" width="750" height="110" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="head" x="156" y="226" fill="#736EB2">2. Identify</text>
+<text class="desc" x="156" y="250" fill="#4a5160">Which parts change between uses? Those are your arguments.</text>
+<path class="lead" stroke="#666666" marker-end="url(#a-muted)" d="M 190,296 L 190,320"/>
+<rect x="130" y="324" width="750" height="110" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="head" x="156" y="368" fill="#736EB2">3. Abstract</text>
+<text class="desc" x="156" y="392" fill="#4a5160">Replace the hard-coded parts with argument names.</text>
+<path class="lead" stroke="#666666" marker-end="url(#a-muted)" d="M 190,438 L 190,462"/>
+<rect x="130" y="466" width="750" height="110" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="head" x="156" y="510" fill="#736EB2">4. Iterate</text>
+<text class="desc" x="156" y="534" fill="#4a5160">Get it working, then go back and improve the names.</text>
+<path class="lead" stroke="#C25502" marker-end="url(#a-args)" d="M 120,521 Q 60,521 60,379 Q 60,237 120,237"/>
+<text class="head" x="74" y="354" fill="#C25502">again</text>
+</svg>

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 470" width="940" height="470" role="img" aria-labelledby="t d">
+<title id="t">What a good function does</title>
+<desc id="d">A question across the top, what complexity am I managing, and four cards below it. Manages complexity: it hides detail you do not need while reading this line. Expresses an idea: its name says what it is for, not how it works. Can be reasoned about on its own: you can understand it without reading the rest of the script. Takes iteration: the first version is never the one you keep.</desc>
+<defs><style>
+ .code{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:26px}
+ .head{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;font-weight:bold}
+ .desc{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:16px}
+ .pill{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold}
+ .lead{fill:none;stroke-width:2.1}
+</style>
+<marker id="a-name" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-fn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#736EB2"/></marker>
+<marker id="a-args" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-default" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9B6E1B"/></marker>
+<marker id="a-body" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+<marker id="a-return" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-good" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-bad" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-warn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-muted" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+</defs>
+<rect width="940" height="470" fill="#ffffff"/>
+<text class="head" x="60" y="60" fill="#736EB2">What complexity am I managing? What am I abstracting away?</text>
+<text class="desc" x="60" y="84" fill="#4a5160">The question to ask of every function you write.</text>
+<rect x="60" y="140" width="390" height="140" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="head" x="86" y="184" fill="#736EB2">Manages complexity</text>
+<text class="head" x="86" y="220" fill="#666666">Hides detail you do not need</text>
+<text class="head" x="86" y="248" fill="#666666">while reading this line.</text>
+<rect x="490" y="140" width="390" height="140" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="head" x="516" y="184" fill="#736EB2">Expresses an idea</text>
+<text class="head" x="516" y="220" fill="#666666">Its name says what it is for,</text>
+<text class="head" x="516" y="248" fill="#666666">not how it works.</text>
+<rect x="60" y="300" width="390" height="140" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="head" x="86" y="344" fill="#736EB2">Reasoned about alone</text>
+<text class="head" x="86" y="380" fill="#666666">You can understand it without</text>
+<text class="head" x="86" y="408" fill="#666666">reading the rest of the script.</text>
+<rect x="490" y="300" width="390" height="140" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="head" x="516" y="344" fill="#736EB2">Takes iteration</text>
+<text class="head" x="516" y="380" fill="#666666">The first version is never</text>
+<text class="head" x="516" y="408" fill="#666666">the one you keep.</text>
+</svg>

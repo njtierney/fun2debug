@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 592" width="940" height="592" role="img" aria-labelledby="t d">
+<title id="t">Where a function's values come from when you call it</title>
+<desc id="d">The definition prop_missing has two arguments, x and digits, with digits defaulting to 2. Called with one argument, airquality$Ozone becomes x and digits falls back to its default of 2, returning 0.24. Called with two, airquality$Ozone becomes x and 4 becomes digits, returning 0.2418.</desc>
+<defs><style>
+ .code{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:26px}
+ .head{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;font-weight:bold}
+ .desc{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:16px}
+ .pill{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold}
+ .lead{fill:none;stroke-width:2.1}
+</style>
+<marker id="a-name" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-fn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#736EB2"/></marker>
+<marker id="a-args" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-default" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9B6E1B"/></marker>
+<marker id="a-body" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+<marker id="a-return" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-good" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-bad" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-warn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-muted" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+</defs>
+<rect width="940" height="592" fill="#ffffff"/>
+<text class="head" x="40" y="44" fill="#666666">The definition</text>
+<rect x="40" y="60" width="860" height="84" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<rect x="447" y="82" width="22" height="38" rx="5" fill="#D95F02" opacity="0.26"/>
+<rect x="492.8" y="82" width="158" height="38" rx="6" fill="#A6761D" opacity="0.2"/>
+<text class="code" x="60" y="110" fill="#1b2733">prop_missing &lt;- function(x, digits = 2)</text>
+<text class="head" x="40" y="196" fill="#666666">Call it with one argument</text>
+<rect x="40" y="212" width="860" height="152" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<text class="code" x="60" y="256" fill="#1b2733">prop_missing(airquality$Ozone)</text>
+<line x1="262.8" y1="268" x2="512.4" y2="268" stroke="#D95F02"/>
+<text class="head" x="262.8" y="296" fill="#C25502">becomes x</text>
+<rect x="620" y="232" width="210.8" height="26" rx="13" fill="#A6761D" opacity="0.12"/>
+<text class="pill" x="725.4" y="250" text-anchor="middle" fill="#9B6E1B">digits falls back to 2</text>
+<text class="code" x="60" y="340" fill="#4a5160">#&gt; [1] 0.24</text>
+<text class="head" x="40" y="416" fill="#666666">Or give it both</text>
+<rect x="40" y="432" width="860" height="152" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<text class="code" x="60" y="476" fill="#1b2733">prop_missing(airquality$Ozone, digits = 4)</text>
+<line x1="262.8" y1="488" x2="512.4" y2="488" stroke="#D95F02"/>
+<text class="head" x="262.8" y="516" fill="#C25502">becomes x</text>
+<line x1="543.6" y1="488" x2="699.6" y2="488" stroke="#A6761D"/>
+<text class="head" x="543.6" y="516" fill="#9B6E1B">becomes digits</text>
+<text class="code" x="60" y="560" fill="#4a5160">#&gt; [1] 0.2418</text>
+</svg>

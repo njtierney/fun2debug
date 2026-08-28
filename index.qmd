@@ -1,8 +1,4 @@
----
-title: "Introduction to Functions and Debugging"
----
-
-# Welcome
+# Welcome {.unnumbered}
 
 Welcome to Functions and Debugging! This course will teach you how to write your own functions and confidently debug your R code.
 

@@ -5,13 +5,18 @@
 - Basic R programming experience
 - Familiarity with R scripts and basic data manipulation
 - Experience running R code and encountering errors
+- An analysis script of your own that you would like to improve
 
 **Learning outcomes**
 
-- How to write functions to:
-    - Manage complexity
-    - Explain and express ideas
-    - Techniques for developing good functions: outside-in, inside-out
-    - Avoid repetition
-- How to debug functions and troubleshoot common errors
-- Best practices for function documentation
+- Write functions to express an idea.
+- Spot when code has become expensive to re-read
+- Recognise the reasons to (and not to!) write a function
+- Design a function from the outside in, before writing its body
+- Extract a function out of code you have already got working
+- Name functions and arguments so they explain themselves
+- Document a function with roxygen, so you and others know how to use it
+- Read an R error message and work out where it actually came from
+- Use debugging tools: `browser()`, `debug()` and `debugonce()` to look inside a running function
+- Turn a long analysis script into a set of functions without breaking it
+- Efficiently, and fairly measure code speed.

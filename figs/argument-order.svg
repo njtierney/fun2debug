@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 570" width="940" height="570" role="img" aria-labelledby="t d">
+<title id="t">Positional and named arguments</title>
+<desc id="d">A function definition, prop_missing with arguments x and digits equals two, shown at the top along with ozone being assigned from airquality$Ozone. Below it three calls, all returning the same answer. The first passes both values by position and is marked by position, with the note that you have to know the definition to read it. The second names both arguments and is marked by name, the habit worth having. The third names both but puts them in the opposite order, and is marked by name any order, because naming makes order irrelevant.</desc>
+<defs><style>
+ .code{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:26px}
+ .head{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;font-weight:bold}
+ .desc{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:16px}
+ .pill{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold}
+ .lead{fill:none;stroke-width:2.1}
+</style>
+<marker id="a-name" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-fn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#736EB2"/></marker>
+<marker id="a-args" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-default" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9B6E1B"/></marker>
+<marker id="a-body" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+<marker id="a-return" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-good" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-bad" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-warn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-muted" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+</defs>
+<rect width="940" height="570" fill="#ffffff"/>
+<text class="head" x="60" y="44" fill="#666666">The definition</text>
+<rect x="60" y="60" width="820" height="104" rx="12" fill="#f7f6fb" stroke="#e3e0ef"/>
+<text class="code" x="86" y="100" fill="#1b2733">ozone &lt;- airquality$Ozone</text>
+<text class="code" x="86" y="140" fill="#1b2733">prop_missing &lt;- function(x, digits = 2)</text>
+<rect x="60" y="192" width="820" height="90" rx="12" fill="#fdf5ee" stroke="#f0dcc8"/>
+<text class="code" x="86" y="230" fill="#1b2733">prop_missing(ozone, 4)</text>
+<text class="head" x="86" y="262" fill="#666666">You have to know the definition to read this.</text>
+<rect x="690" y="208" width="170" height="26" rx="13" fill="#D95F02" opacity="0.12"/>
+<text class="pill" x="775" y="226" text-anchor="middle" fill="#C25502">By position</text>
+<rect x="60" y="298" width="820" height="90" rx="12" fill="#eef7f3" stroke="#cfe6dc"/>
+<text class="code" x="86" y="336" fill="#1b2733">prop_missing(x = ozone, digits = 4)</text>
+<text class="head" x="86" y="368" fill="#666666">Reads on its own. This is the habit worth having.</text>
+<rect x="690" y="314" width="170" height="26" rx="13" fill="#1B9E77" opacity="0.12"/>
+<text class="pill" x="775" y="332" text-anchor="middle" fill="#178665">By name</text>
+<rect x="60" y="404" width="820" height="90" rx="12" fill="#eef7f3" stroke="#cfe6dc"/>
+<text class="code" x="86" y="442" fill="#1b2733">prop_missing(digits = 4, x = ozone)</text>
+<text class="head" x="86" y="474" fill="#666666">Once they are named, the order stops mattering.</text>
+<rect x="690" y="420" width="170" height="26" rx="13" fill="#1B9E77" opacity="0.12"/>
+<text class="pill" x="775" y="438" text-anchor="middle" fill="#178665">By name, any order</text>
+<text class="head" x="60" y="548" fill="#666666">All three give 0.2418.</text>
+</svg>

@@ -10,3 +10,5 @@ docs
 *.pdf
 *.tex
 *.toc
+
+**/*.quarto_ipynb

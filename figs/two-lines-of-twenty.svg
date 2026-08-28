@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 430" width="940" height="430" role="img" aria-labelledby="t d">
+<title id="t">Two lines out of twenty</title>
+<desc id="d">Four copies of the same script side by side, drawn as rows of grey bars rather than readable code. In every copy the top two rows are coloured, a different colour in each copy, and the remaining eighteen rows are identical grey. A label underneath reads: two lines changed, eighteen ran again anyway, four times over. The picture shows that almost all of the work was re-run by hand for the sake of two lines.</desc>
+<defs><style>
+ .code{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:26px}
+ .head{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;font-weight:bold}
+ .desc{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:16px}
+ .pill{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold}
+ .lead{fill:none;stroke-width:2.1}
+</style>
+<marker id="a-name" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-fn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#736EB2"/></marker>
+<marker id="a-args" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-default" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9B6E1B"/></marker>
+<marker id="a-body" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+<marker id="a-return" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-good" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
+<marker id="a-bad" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
+<marker id="a-warn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-muted" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
+</defs>
+<rect width="940" height="430" fill="#ffffff"/>
+<rect x="60" y="70" width="190" height="300" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<text class="head" x="82" y="100" fill="#666666">run 1</text>
+<rect x="82" y="118" width="113.9" height="9" rx="3" fill="#1B9E77" opacity="0.85"/>
+<rect x="82" y="132" width="90.5" height="9" rx="3" fill="#1B9E77" opacity="0.85"/>
+<rect x="82" y="146" width="65.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="160" width="65.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="174" width="58.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="188" width="58.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="202" width="105.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="216" width="105.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="230" width="128.5" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="244" width="80.3" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="258" width="73" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="272" width="96.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="286" width="84.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="300" width="102.2" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="314" width="61.3" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="328" width="90.5" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="342" width="51.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="82" y="356" width="43.8" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="276" y="70" width="190" height="300" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<text class="head" x="298" y="100" fill="#666666">run 2</text>
+<rect x="298" y="118" width="113.9" height="9" rx="3" fill="#D95F02" opacity="0.85"/>
+<rect x="298" y="132" width="90.5" height="9" rx="3" fill="#D95F02" opacity="0.85"/>
+<rect x="298" y="146" width="65.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="160" width="65.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="174" width="58.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="188" width="58.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="202" width="105.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="216" width="105.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="230" width="128.5" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="244" width="80.3" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="258" width="73" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="272" width="96.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="286" width="84.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="300" width="102.2" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="314" width="61.3" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="328" width="90.5" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="342" width="51.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="298" y="356" width="43.8" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="492" y="70" width="190" height="300" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<text class="head" x="514" y="100" fill="#666666">run 3</text>
+<rect x="514" y="118" width="113.9" height="9" rx="3" fill="#E7298A" opacity="0.85"/>
+<rect x="514" y="132" width="90.5" height="9" rx="3" fill="#E7298A" opacity="0.85"/>
+<rect x="514" y="146" width="65.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="160" width="65.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="174" width="58.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="188" width="58.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="202" width="105.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="216" width="105.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="230" width="128.5" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="244" width="80.3" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="258" width="73" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="272" width="96.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="286" width="84.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="300" width="102.2" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="314" width="61.3" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="328" width="90.5" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="342" width="51.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="514" y="356" width="43.8" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="708" y="70" width="190" height="300" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<text class="head" x="730" y="100" fill="#666666">run 4</text>
+<rect x="730" y="118" width="113.9" height="9" rx="3" fill="#7570B3" opacity="0.85"/>
+<rect x="730" y="132" width="90.5" height="9" rx="3" fill="#7570B3" opacity="0.85"/>
+<rect x="730" y="146" width="65.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="160" width="65.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="174" width="58.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="188" width="58.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="202" width="105.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="216" width="105.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="230" width="128.5" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="244" width="80.3" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="258" width="73" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="272" width="96.4" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="286" width="84.7" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="300" width="102.2" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="314" width="61.3" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="328" width="90.5" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="342" width="51.1" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<rect x="730" y="356" width="43.8" height="9" rx="3" fill="#666666" opacity="0.22"/>
+<text class="head" x="60" y="402" fill="#666666">Two lines changed. The other eighteen ran again anyway, every single time.</text>
+</svg>

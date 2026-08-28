@@ -7,30 +7,36 @@
 
 <!-- badges: end -->
 
-## Prerequisites
+<https://fun2debug.njtierney.com>
+
+**Prerequisites**
 
 - Basic R programming experience
 - Familiarity with R scripts and basic data manipulation
 - Experience running R code and encountering errors
+- An analysis script of your own that you would like to improve
 
-## Learning outcomes
+**Learning outcomes**
 
-In this course you will learn the following ideas on writing good
-functions:
+- Write functions that express an idea, so your code reads the way you
+  would explain it
+- Spot when code has become expensive to re-read, and use a function to
+  fix that
+- Recognise repetition as one reason to write a function, not the only
+  one, and know when not to write one at all
+- Design a function from the outside in, before writing its body
+- Extract a function out of code you have already got working
+- Name functions and arguments so they explain themselves
+- Document a function with roxygen, so you and others know how to use it
+- Read an R error message and work out where it actually came from
+- Use `browser()`, `debug()` and `debugonce()` to look inside a running
+  function
+- Turn a long analysis script into a set of functions without breaking
+  it
+- Measure what is actually slow before trying to speed it up, and
+  compare implementations fairly
 
-- How to write functions to:
-  - Manage complexity
-  - Explain and express ideas
-  - Techniques for developing good functions: outside-in, inside-out
-  - Avoid repetition
-- How to debug functions and troubleshoot common errors
-- Best practices for function documentation
-
-## Course website
-
-<https://fun2debug.njtierney.com>
-
-## Details
+# Details
 
 I would argue the highest value skillset in statistical programming is
 knowing how to write good functions. Functions are often taught as a
@@ -47,43 +53,48 @@ works as it should. I believe writing good functions that encapsulate
 expressions and are able to be reasoned with are how we can ensure our
 code, and therefore our methods, and our analyses, work as they should.
 
-## Schedule
+This course is for people writing analysis code, not packages. You will
+take a real analysis script, ideally your own, and turn it into a set of
+named, documented functions that you can look inside when something goes
+wrong, and reason about when it doesn’t. The functions you end up with
+are the same unit of work that pipelines like `targets` are built from,
+so this is useful whether or not you ever write a pipeline.
 
-### Why Functions Matter
+# Schedule
 
-- The problem with repeated code
-  - Recognising patterns in data analysis scripts
-  - “Spot the difference” problem
-  - When re-reading code becomes a burden
+## Don’t re-read yourself
+
+- The problem with repeated code; when re-reading becomes a burden
+- DRRY: Don’t Re-Read Yourself
+  - Re-reading is the cost, repetition is only one way to pay it
+  - “Spot the difference” in copy-paste-edit code
+- DRY: Don’t Repeat Yourself, as the special case
+- When *not* to write a function
 - Why write functions?
   - Managing complexity
   - Expressing ideas clearly
-  - Making code easier to reason about
-- Moving beyond DRY (Don’t Repeat Yourself)
-  - DRRY: Don’t Re-Read Yourself
-  - Functions as tools for expression
-  - When to write a function (it’s not just about repetition)
+  - Speed of thought: getting unstuck faster
 
-### Function Fundamentals and Design
+## Anatomy of a function
 
-- Anatomy of a function
-  - Name, inputs (arguments), body, output
-  - Function signatures and what they communicate
-- Two approaches to writing functions
-  - Outside-in: Start with how you want to use it
-  - Inside-out: Extract from existing code
+- Name, inputs (arguments), body, output
+- Argument values arrive at the call, not at the definition
+- Function signatures and what they communicate
+- Good (simple) function design
 - Naming things
   - Making function names evocative
   - Naming arguments and variables
   - Iteration is normal and expected
+- Documenting a function with roxygen
+  - `@param` and `@return` as design questions, answered before the body
+  - Using `{fnmate}` to generate the skeleton
 
-### Writing Functions in Practice
+## Outside-in, inside-out
 
 - Outside-in approach
   - Imagining the ideal function interface
-  - What am I trying to do?
-  - What inputs do I need?
-  - What should it return?
+  - What am I trying to do? What inputs do I need? What should it
+    return?
 - Inside-out approach
   - Starting with working code
   - Identifying the parts that change
@@ -92,37 +103,46 @@ code, and therefore our methods, and our analyses, work as they should.
   - Up and down the ladder of abstraction
   - Street-level vs map-level understanding
 
-### Debugging Basics and Tools
+## Looking inside a function
 
-- Why debugging matters
-  - Functions create boxes we need to look inside
-  - Errors are normal, not punishment
-  - Learning to read error messages
-- Essential debugging tools
-  - `browser()`: Setting breakpoints and stepping through code
-  - RStudio debugging interface
+- Errors are normal, not punishment
+- Learning to read an error message
+- Where did the error come from?
+  - `traceback()`
+  - `rlang::last_trace()`
+- Stopping inside a function
+  - `browser()`: setting breakpoints and stepping through code
   - `debug()` and `debugonce()`
-- Common debugging workflow
-  - Where did the error occur?
-  - What values do variables have?
-  - Testing assumptions step-by-step
+  - `options(error = recover)`
+  - The RStudio debugging interface
+- Looking inside code that works, not just code that breaks
 
-### Cleaning Up a Data Analysis
+## From script to functions
 
-- Hands-on: From script to functions
-  - Taking a real data analysis
-  - Breaking down complexity
-  - Identifying what to turn into functions
+- Hands-on: taking a real data analysis apart
 - Chunking code
   - Code is not just lines, but ideas
   - Breaking 50 lines into manageable chunks
   - Each chunk should be individually understandable
+- Extracting functions, step by step
 - Practical debugging in action
   - Using `browser()` to explore function execution
-  - Finding and fixing issues
   - Navigating to function definitions (Cmd/Ctrl + Click)
+- Where it lands: an `R/` folder of documented functions, and a thin
+  script
 
-### Practice and Integration
+## Measure before you optimise
+
+- Dangers of premature optimisation
+- Evaluating compute time
+  - `system.time()`
+  - `{tictoc}`
+  - `{profvis}`
+- Comparing compute time
+  - How to use `bench::mark()`
+  - Evaluating many iterations with `bench::press()`
+
+## Writing for your future self
 
 - Bringing it all together
   - Work on your own code
@@ -131,7 +151,6 @@ code, and therefore our methods, and our analyses, work as they should.
 - Code as writing
   - Functions help you express ideas
   - Iteration and refinement
-  - Writing code for your future self
 - Resources and next steps
   - Key concepts to remember
   - Tools to continue using
