@@ -16,6 +16,17 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # The PDF is part of the book render, so if it fails the HTML deploy
+      # fails with it. It needs a mono font with box-drawing glyphs, because
+      # the project layout tree in "Setup" uses U+2500, U+251C, U+2514 and
+      # U+2502 - a font without them drops every one silently, leaving an
+      # indented list of names with no structure. TinyTeX ships no such font,
+      # so install one. Added 30 Aug 2026 with `downloads: [pdf]`; this is the
+      # step that keeps the PDF from taking the site down, and rbestpractices
+      # learned that the hard way on 3 Aug 2026.
+      - name: Install Fira Code
+        run: sudo apt-get update && sudo apt-get install -y fonts-firacode
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:

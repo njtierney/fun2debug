@@ -1,0 +1,104 @@
+% ---------------------------------------------------------------------------
+% Preamble for the PDF build. Loaded via `include-in-header` in _quarto.yml.
+%
+% This replaced a ~380 line tufte.tex on 4 Aug 2026. Almost all of that file
+% was working around the `tufte-book` class rather than styling anything:
+% patching \allcaps against the LaTeX kernel, re-defining \subsubsection,
+% widening `Shaded` by \@tufte@overhang, aliasing `figure` to `figure*`.
+%
+% The decisive problem was that tufte-book defines \sidenote and \marginnote
+% itself, which collides with the `sidenotes` and `marginnote` packages Quarto
+% emits. The old file resolved that by declaring both packages already loaded
+% so Quarto would skip them - which silently disabled `.column-margin`,
+% `cap-location: margin` and `reference-location: margin`. The class was
+% blocking the margin features it was chosen for.
+%
+% So: plain KOMA `scrbook`, wide margins from `geometry`, and Quarto's own
+% margin machinery. What is left here is the two things that are genuinely
+% ours.
+% ---------------------------------------------------------------------------
+
+% --- Image sizing ----------------------------------------------------------
+%
+% Images arrive three ways:
+%
+%   1. `width=100%` in the .qmd  -> \includegraphics[width=1\linewidth]
+%   2. `width=70%`  in the .qmd  -> \includegraphics[width=0.7\linewidth]
+%   3. no width at all           -> \pandocbounded{\includegraphics{...}},
+%      which only ever *shrinks* an image to fit, never grows it. A wide
+%      screenshot still fills the whole measure.
+%
+% THE .QMD WINS. Our width goes FIRST and the passed options `#1` come after,
+% and graphicx takes the last value given for a key. So an explicit `width=`
+% in the source overrides this, and only images that asked for nothing fall
+% back to \rbpfigscale.
+%
+% This was tried the other way round first, forcing every image to the full
+% measure, which is why the screenshots came out enormous. Dropping them all
+% to one small fraction is not the fix either: at 0.5 the purpose-built
+% teaching diagrams became too small to read the labels on, which is why they
+% ask for `width=100%` in the .qmd.
+%
+% THE KNOB: \rbpfigscale sizes only the images that did not ask for a width,
+% which here is nearly all the screenshots. To change one specific image, set
+% `width=` on it in the .qmd, next to the picture it applies to.
+\newcommand{\rbpfigscale}{0.7}
+
+% \makebox keeps a less-than-full-width image centred. Without it the image
+% sits hard against the left edge with a river of white space down the right,
+% and `\centering` cannot help: an inline image comes wrapped in
+% \pandocbounded rather than in a float, so there is no float to centre it in.
+\usepackage{letltxmacro}
+\LetLtxMacro{\rbporigincludegraphics}{\includegraphics}
+\renewcommand{\includegraphics}[2][]{%
+  \makebox[\linewidth]{%
+    \rbporigincludegraphics[width=\rbpfigscale\linewidth,height=\maxdimen,keepaspectratio,#1]{#2}%
+  }%
+}
+
+% --- The chapter overview box ----------------------------------------------
+%
+% overview-box.lua turns `::: {.overview}` into this environment, with the
+% heading lifted out to become the title. The filter also carries a plain
+% fallback definition for any PDF format that does not load this file, so this
+% is the nice version rather than the only version.
+%
+% tcolorbox is loaded here rather than left to Quarto so the definition can sit
+% in the preamble. Quarto emits
+% `\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}`
+% further down, which takes the empty branch once we have loaded it - and the
+% options must match Quarto's exactly, or that becomes an option clash.
+%
+% The keys mirror Quarto's own callouts so the two sit together on a page,
+% minus the colour: the five callout types each mean something specific and are
+% navigated by colour, and the overview is furniture rather than a sixth
+% meaning. Same reasoning as the HTML, in chapter-overview.scss.
+\usepackage[skins,breakable]{tcolorbox}
+\newtcolorbox{rbpoverview}[1]{%
+  enhanced jigsaw,
+  breakable,
+  arc=.35mm,
+  colback=white,
+  opacityback=0,
+  colframe=black!30,
+  colbacktitle=black!6,
+  opacitybacktitle=1,
+  coltitle=black,
+  left=2mm,
+  leftrule=.15mm,
+  rightrule=.15mm,
+  toprule=.15mm,
+  bottomrule=.15mm,
+  titlerule=0mm,
+  toptitle=1mm,
+  bottomtitle=1mm,
+  title={\textbf{#1}},
+}
+
+% --- Long code lines -------------------------------------------------------
+% The body measure is narrower than it was, so an 80 character code line no
+% longer fits. Break rather than run off the page.
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+  breaklines, breaknonspaceingroup, breakanywhere, commandchars=\\\{\}
+}

@@ -149,7 +149,9 @@ This will take a few minutes:
 pkgs <- c(
   "bench",
   "broom",
+  "countdown",
   "devtools",
+  "glue",
   "here",
   "knitr",
   "palmerpenguins",
@@ -261,7 +263,9 @@ Run this in R. It should print `TRUE` for everything except possibly `fnmate`.
 pkgs <- c(
   "bench",
   "broom",
+  "countdown",
   "devtools",
+  "glue",
   "here",
   "knitr",
   "palmerpenguins",
