@@ -1,6 +1,8 @@
 # Anatomy of a function {#sec-anatomy}
 
-Last session you wrote two functions without me telling you what any of the pieces were called. This session is about naming those pieces, because once you can name them you can look them up, ask about them, and read the help page when something goes wrong. Then we start doing something with all that data you read in.
+This chapter is more specifically about naming the parts of a function.
+
+Knowing the name of something, means you can look it up, ask about it, and read the help page.
 
 ::: {.overview}
 
@@ -39,13 +41,19 @@ education_path <- function(year) {
   here(glue("data/tidy/education_{year}.csv"))
 }
 
+year_from_path <- function(path) {
+  basename(path) |>
+    parse_number() |>
+    as.character()
+}
+
 read_education <- function(year) {
   files <- education_path(year)
-  names(files) <- year
-  bind_rows(
-    lapply(files, read_csv, show_col_types = FALSE),
-    .id = "year"
-  )
+  education_raw <- read_csv(files, id = "path")
+
+  education_raw |>
+    mutate(year = year_from_path(path)) |>
+    select(-path)
 }
 
 education <- read_education(2014:2023)
@@ -95,11 +103,11 @@ education |>
   plot_study_by(y = state_territory)
 ```
 
-**One function.** Two completely different plots, and the only thing that changed is which column goes on the y axis.
+**One function.** Two different plots! What changed is what variable goes on the y axis.
 
-That is harder than it looks, and if you have ever tried to write a function around `dplyr` or `ggplot2` you have probably hit the wall it runs into. The thing that gets through the wall is two curly braces, and we get to those at the end of the hour.
+That can be tricky! Have you ever tried to write a function around `dplyr` or `ggplot2`? We will talk through how to solve this.
 
-First, the parts.
+First, the parts of a function.
 
 ## The parts of a function
 
@@ -143,7 +151,7 @@ Five parts, and here they are.
 
 The **signature** is the name plus the argument names: `pct_studying(data, age)`. That one line is what most people read before deciding whether they can use your function, so it is worth more thought than the body.
 
-![The same parts, drawn out. This figure uses a different function as its example, and the pieces are the same ones.](figs/function-anatomy.png){fig-alt="A function definition with six parts highlighted in colour: the name, the function keyword, an argument, a default value, the body, and the return value." width=100%}
+![The same parts, drawn out.](figs/function-anatomy.png){fig-alt="The function pct_studying, defined as function(data, age), with five parts labelled in colour: the name, the keyword function, the arguments, the body, and the return value, which is the final mutate line." width=100%}
 
 ::: {.callout-tip title="Going deeper: side effects" collapse="true"}
 
@@ -182,16 +190,19 @@ We are not calling `mean` there, we are passing it. That is what people mean whe
 
 ## Default values
 
-Let's plot something, because that is where defaults earn their keep.
+Let's explore defaults using plots.
 
 ```{r}
 #| label: fig-plain
 #| fig-alt: "A plain horizontal bar chart of the proportion studying in Tasmania in 2023 by age group, with raw column names as axis labels."
+
+tas_2023
+
 ggplot(tas_2023, aes(x = prop_studying, y = age_group)) +
   geom_col()
 ```
 
-Two lines, and ggplot2 is a pleasure to write, so wrapping that in a function would not buy much. "Make everything a function" is not the advice.
+ggplot2 expressed itself well, it is a pleasure to write, so wrapping that in a function would not buy much. **"Make everything a function"** is not always the answer.
 
 What changes the calculus is everything you do next. The axis labels are column names, the x axis should be a percentage, and it could use a title and a colour that is not battleship grey. None of that is hard, all of it is fiddly, and none of it is something you want to retype for the ACT and then again for New South Wales.
 
@@ -225,7 +236,7 @@ An argument can have a **default**, which is the value it takes when the caller 
 
 ```{r}
 #| label: default-state
-plot_study_by_age <- function(data, state = unique(data$state_territory)) {
+plot_study_by_age <- function(data, state = "Tas.") {
   ggplot(data, aes(x = prop_studying, y = age_group)) +
     geom_col(fill = "#1B9E77") +
     scale_x_continuous(labels = scales::percent) +
@@ -239,7 +250,7 @@ plot_study_by_age <- function(data, state = unique(data$state_territory)) {
 }
 ```
 
-The default here is worked out from the data itself, which R is happy to do.
+The default here is "Tas."
 
 ```{r}
 #| label: fig-default-state
@@ -393,13 +404,19 @@ education_path <- function(year) {
   here(glue("data/tidy/education_{year}.csv"))
 }
 
+year_from_path <- function(path) {
+  basename(path) |>
+    parse_number() |>
+    as.character()
+}
+
 read_education <- function(year) {
   files <- education_path(year)
-  names(files) <- year
-  bind_rows(
-    lapply(files, read_csv, show_col_types = FALSE),
-    .id = "year"
-  )
+  education_raw <- read_csv(files, id = "path")
+
+  education_raw |>
+    mutate(year = year_from_path(path)) |>
+    select(-path)
 }
 
 education <- read_education(2014:2023)
