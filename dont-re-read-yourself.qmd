@@ -1,6 +1,6 @@
 # Don't re-read yourself {#sec-drry}
 
-You have opened a script you wrote three months ago and not been able to follow it. I do this with my own writing too, where I read a paragraph back twice and still cannot work out what I meant. This session is about why that happens to code, and the single best thing you can do about it.
+Imagine you open an R script you wrote a few months ago, and you cannot follow it. Well, you can read it, but it takes you a couple of goes. This chapter is about writing code you do not have to re-read. We are going to look at ways to say what you meant the first time.
 
 ::: {.overview}
 
@@ -12,11 +12,10 @@ You have opened a script you wrote three months ago and not been able to follow 
 
 <!-- These map onto the sections below, in order. If you move a section, move its question. -->
 
-- What does the end of this course look like?
-- What is wrong with writing the same line ten times?
+- What can you do by the end of this course?
+- What is wrong with writing the same line of code many times?
 - How do I build a file path without typing it out?
 - How do I turn working code into a function?
-- How do I read ten files and still know which is which?
 - What is DRRY, and how is it different from DRY?
 
 **What you need this session**
@@ -31,6 +30,7 @@ You have opened a script you wrote three months ago and not been able to follow 
 ```{r}
 #| label: pkgs
 #| output: false
+library(countdown)
 library(dplyr)
 library(readr)
 library(ggplot2)
@@ -42,19 +42,16 @@ library(here)
 
 ## Where we are going
 
-I want to start by showing you the end, so you know what we are working towards.
+Somewhat like a cooking show, we are going to show you what we are making first. It is a short script, with a few functions. By the end of the course week,  you will be able to write code like this:
 
-The census was on the 11th of August, so this feels like a reasonable moment to be looking at data from the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release).
-
-We are going to spend most of this course on one question:
-
-**How many Australians are studying, by age group and by state, and is that changing?**
-
-By the end of next week, the top of your analysis will look like this.
-
-```r
-source("R/read_education.R")
-source("R/plot_study.R")
+```{r}
+#| label: where-we-are-going
+#| message: false
+#| fig-alt:
+#|   - "Bar chart of the proportion of people studying in each age group. It is highest for 15 to 19 year olds and falls with age."
+#|   - "Nine small line charts, one per age group, of the proportion studying in Tasmania from 2014 to 2023. Each line is fairly flat."
+source("ch1/read_education.R")
+source("ch1/plot_study.R")
 
 education <- read_education(2014:2023)
 
@@ -62,9 +59,13 @@ plot_study_by(education, y = age_group)
 plot_study_over_time(education, state = "Tas.")
 ```
 
-You can reason with each of these lines of code based on their name. The code is documenting itself.
+The reason I think this is a worthwhile goal is that you can reason with each of these lines of code. Each line tells you what it is doing. This is sometimes called "self-documenting code".
 
-The idea of this is to show you where we are heading. Every one of those functions is code you would have written anyway, with a name on it.
+This is education data from the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release). It felt apt, since we had the census somewhat recently, on August 11, 2026.
+
+To give us a direction, we are going to focus on answering this question:
+
+**How many Australians are studying, by age group and by state, and is that changing?**
 
 Let's talk about reading in some education data.
 
@@ -77,34 +78,39 @@ The data is one file per year, from 2014 to 2023.
 list.files("data/tidy")
 ```
 
-Here is one of them.
+Let's read one of them:
 
 ```{r}
 #| label: read-one
-ed_2023 <- read_csv("data/tidy/education_2023.csv", show_col_types = FALSE)
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
 
 ed_2023
 ```
 
-Every row is one age group in one state. So the first row says that in the ACT there were 25,800 people aged 15 to 19, and 22,900 of them were studying. The columns are the state or territory, the age group, the number studying, the population of that group, and the proportion of them studying.
+Each row is for a given age group (`age_group`) at a given state (`state_territory`). It contains information on the number of people studying (`n_studying`), the population (`population`), and the proportion studying (`prop_studying`). The counts are in the thousands. So the first row has 22,900 people, and is not 22.9 people(!).
 
-The counts are in thousands.
+Notice that **year** is not in there?
 
-Notice what is **not** in there. Nothing in the file says which year it is. That lives in the file name, and this is extremely common in real data.
+That lives in the file name:
+
+```r
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
+```
+
+This is pretty common. But still a bit annoying. We will get back to it.
 
 ::: {.callout-note title="Your Turn"}
 
-Before I show you what I would do, have a think about this one. There are ten files and you want all of them.
+If we want all 10 files read in, how should we do this?
 
-1. How would you read in these ten files? Sketch it out, or just say it out loud.
-2. What is different between the ten of them, and what is the same?
-3. If you wrote it the most obvious way, what would go wrong later?
+```r
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
+```
 
-There is no wrong answer here, and I am asking because the answer you give is usually the answer everybody gives, including me.
+1. How would you read in these ten files? Sketch it out.
+2. What is different between the ten file paths? What is the same?
 
-:::
-
-Here is what I do, most of the time.
+Here is one way to solve this:
 
 ```r
 ed_2014 <- read_csv("data/tidy/education_2014.csv")
@@ -119,23 +125,64 @@ ed_2022 <- read_csv("data/tidy/education_2022.csv")
 ed_2023 <- read_csv("data/tidy/education_2023.csv")
 ```
 
-Ten lines, four characters different between them.
+3. Are there any potential problems you can foresee?
 
-The typing is not the problem, because the typing takes twenty seconds. The trade off with this is that we need to carefully read it each time, because there might be an easy to make mistake sitting in one of those lines.
+There are no wrong answers!
 
-And you cannot skim it. Skimming is exactly how you miss that line six says 2019 twice.
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+
+:::
+
+There are issues with code like:
+
+```r
+ed_2014 <- read_csv("data/tidy/education_2014.csv")
+ed_2015 <- read_csv("data/tidy/education_2015.csv")
+ed_2016 <- read_csv("data/tidy/education_2016.csv")
+ed_2017 <- read_csv("data/tidy/education_2017.csv")
+ed_2018 <- read_csv("data/tidy/education_2018.csv")
+ed_2019 <- read_csv("data/tidy/education_2019.csv")
+ed_2020 <- read_csv("data/tidy/education_2020.csv")
+ed_2021 <- read_csv("data/tidy/education_2021.csv")
+ed_2022 <- read_csv("data/tidy/education_2022.csv")
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
+```
+
+it feels a bit safe. But it is a bit repetitive! 
+
+But what is the thing that is changing across all of these lines of code?
+
+What if we had 50, 100, or 1,000 files like this? The typing starts to become a problem. You might make a mistake in aligning the code with the object. So we start to re-read it just to make sure we haven't made an easy to make mistake (we didn't though, but you don't know that)
 
 ### Takehomes
 
-- Repeated code is cheap to write and expensive to read
-- The risk in a block like this is that one line is not like the others
-- You cannot skim it, because skimming is how you miss that
+- Repeated code is cheap to write, but can cost you time.
+- Identifying problems takes energy, even if there are no problems.
 
 ## Building the path
 
-Let's start with the part that changes, which is the path.
+Let's start with the part that changes, which is the file path.
 
-Rather than typing the whole thing out, `glue()` will build it for you. Anything inside curly braces gets swapped for its value.
+Rather than typing the whole file path out each time, can you identify the pattern? Here's the code again, with just the file path:
+
+```r
+"data/tidy/education_2014.csv"
+"data/tidy/education_2015.csv"
+"data/tidy/education_2016.csv"
+"data/tidy/education_2017.csv"
+"data/tidy/education_2018.csv"
+"data/tidy/education_2019.csv"
+"data/tidy/education_2020.csv"
+"data/tidy/education_2021.csv"
+"data/tidy/education_2022.csv"
+"data/tidy/education_2023.csv"
+```
+
+We can use the `{glue}` package to make these file paths:
 
 ```{r}
 #| label: glue-path
@@ -144,138 +191,241 @@ year <- 2023
 glue("data/tidy/education_{year}.csv")
 ```
 
-It reads like the sentence you would say out loud, which is more than I can say for `paste0("data/tidy/education_", year, ".csv")`.
+`glue()` will build it for you. Anything inside curly braces gets swapped for its value.
 
-One improvement before we go on. That path is relative to wherever R happens to be sitting, and R does not always sit where you think. `here()` anchors it to the top of your project, so it works the same whichever folder you are in.
+```{r}
+year <- 2023
+glue("data/tidy/education_{year}.csv")
+year <- 2020
+glue("data/tidy/education_{year}.csv")
+```
+
+It reads like the sentence you would say out loud.
+
+::: {.callout-tip title="Going deeper: paste and paste0" collapse="true"}
+
+You could also use `paste()` and `paste0()`:
+
+```{r}
+year <- 2023
+paste("data/tidy/education_", year, ".csv", sep = "")
+
+# paste, but with sep = "" (zero spaces, hence, paste0)
+paste0("data/tidy/education_", year, ".csv")
+```
+
+But I think `glue` is worth learning about! You can read a bit more at a blog post I wrote, ["Glue Magic Part I"](https://www.njtierney.com/posts/2019-07-07-glue-magic-pt1/).
+
+:::
+
+One more thing about file paths! The path above is relative to wherever R happens to be sitting. Which can be not where you always expect.
+
+We can use the `here()` function from `{here}` to anchor the path to where your ".RProj" is.
 
 ```{r}
 #| label: here-path
-here(glue("data/tidy/education_{year}.csv"))
+glue("data/tidy/education_{year}.csv")
+glue("data/tidy/education_{year}.csv") |> here()
 ```
 
 Now pipe that into `read_csv()`.
 
 ```{r}
 #| label: pipe-read
-here(glue("data/tidy/education_{year}.csv")) |>
-  read_csv(show_col_types = FALSE)
+glue("data/tidy/education_{year}.csv") |> 
+  here() |> 
+  read_csv()
 ```
 
-That works, and I want you to notice the shape of it. Build a path, read the path. Two jobs.
-
-## Turning it into a function
-
-A function in R has three parts you need right now. A **name**, which is how you call it later. Some **arguments**, which are the things that change between calls. And a **body**, which is the code that runs.
-
-We have two jobs, so let's make two functions.
+Notice that we have separated the file path out into its own step. But it requires specifying what year is each time:
 
 ```{r}
-#| label: education-path
-education_path <- function(year) {
-  here(glue("data/tidy/education_{year}.csv"))
-}
+#| label: path-then-read
+#| message: false
+year <- 2023
+year_path <- glue("data/tidy/education_{year}.csv") |> here()
+education_2023 <- read_csv(year_path)
 
-education_path(2023)
+year <- 2022
+year_path <- glue("data/tidy/education_{year}.csv") |> here()
+education_2022 <- read_csv(year_path)
 ```
 
-```{r}
-#| label: read-education-one
-read_education <- function(year) {
-  education_path(year) |>
-    read_csv(show_col_types = FALSE)
-}
+So we've sort of taken one step forward, two steps back, right now.
 
-read_education(2023)
-```
-
-`education_path()` knows how the files are named. `read_education()` knows how to read one. Neither of them knows the other's business.
-
-That split is worth more than it looks. If the files get renamed next year, one function changes and the other does not care.
-
-::: {.callout-note title="Your Turn"}
-
-<details>
-<summary>Setup code</summary>
-
-```r
-library(dplyr)
-library(readr)
-library(glue)
-library(here)
-```
-
-</details>
-
-1. Type out both functions yourself and run `read_education(2019)`. Check you get 72 rows.
-2. What happens if you ask for a year that does not exist, like 2005?
-3. Change `education_path()` so it points at `data/raw` and the `raw_education_` prefix, then run `read_education(2015)`.
-4. Change it back.
-
-Step 3 is the one to notice. You changed one function, and `read_education()` came along with you without being touched.
-
-<details>
-<summary>Answer</summary>
-
-```r
-read_education(2019)
-
-# 2005 gives an error naming the path it tried, which is exactly what you want
-
-education_path <- function(year) {
-  here(glue("data/raw/raw_education_{year}.csv"))
-}
-
-read_education(2015)
-```
-
-`data/raw` only goes to 2019, and there is a good deal more wrong with those files than the date range. We come back to them in @sec-looking-inside.
-
-</details>
-
-:::
+Let's talk about turning that part into a function.
 
 ### Takehomes
 
 - `glue()` builds a string by putting values inside `{ }`
 - `here()` anchors a path to the top of your project
+- Pulling the changing part into its own step is a start, not the finish
+
+## Turning it into a function
+
+A function in R has three parts:
+
+1. A **name**. 
+2. **arguments**, the things that change, and 
+3. **body**, the code that runs
+
+Let's make a function that creates the file path:
+
+```{r}
+# function name ------  # arguments: year
+education_path <- function(year){
+  glue("data/tidy/education_{year}.csv") |> here()
+}
+
+education_path(2023)
+education_path(2022)
+education_path(2021)
+```
+
+Now we can use that like so:
+
+```{r}
+education_2023 <- education_path(2023) |> read_csv()
+education_2022 <- education_path(2022) |> read_csv()
+education_2021 <- education_path(2021) |> read_csv()
+```
+
+Notice that `read_csv()` is repeated each time. Let's combine those together:
+
+```{r}
+#| label: read-education-one
+read_education <- function(year) {
+  education_path(year) |> read_csv()
+}
+
+education_2023 <- read_education(2023)
+education_2022 <- read_education(2022)
+education_2021 <- read_education(2021)
+```
+
+`education_path()` knows how the files are named. 
+
+`read_education()` knows how to read a path.
+
+This idea that we can put functions together is called: "composing" functions.
+
+It's a good thing!
+
+We are still doing some repetition, but bear with me here.
+
+::: {.callout-note title="Your Turn"}
+
+<details>
+<summary>Setup code</summary>
+
+```r
+library(dplyr)
+library(readr)
+library(glue)
+library(here)
+```
+
+</details>
+
+1. Type out both the `education_path()` and `read_education()` functions yourself, and run `read_education(2019)`. Check you get 72 rows.
+2. What happens if you ask for a year that does not exist, like 2005?
+3. Are there some other ways to list file names?
+4. Are there any potential issues with the way we have written this?
+5. What are the benefits of composing functions like this, where they are separate?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+
+:::
+
+### Takehomes
+
 - A function has a name, arguments, and a body
-- Two small functions beat one big one when they know different things
+- Small functions can be composed together
+- `education_path()` knows the naming, `read_education()` knows the reading
 
 ## Reading more than one year
 
-One year at a time is not what we came for. Let's do three.
+Let's read in three years again:
 
 ```{r}
 #| label: three-years
+#| message: false
 ed_2021 <- read_education(2021)
 ed_2022 <- read_education(2022)
 ed_2023 <- read_education(2023)
 ```
 
-Better than before, because each line is now readable. But we are back to one line per year, and I still cannot work with them until they are in one table.
+Each line is now readable. But I cannot do much with them until they are in one table.
+
+But hang on, what is missing? There is no `year` column, so once these three sit on top of each other there is nothing to tell them apart.
+
+We know which year we asked for, though. So we can put it back by hand, with `mutate()`:
+
+```{r}
+#| label: mutate-year
+#| message: false
+ed_2021 <- read_education(2021) |> mutate(year = 2021)
+ed_2022 <- read_education(2022) |> mutate(year = 2022)
+ed_2023 <- read_education(2023) |> mutate(year = 2023)
+
+ed_2023
+```
+
+Now we can stack them, and every row still knows where it came from:
 
 ```{r}
 #| label: bind-three
-bind_rows(ed_2021, ed_2022, ed_2023)
+education_2021_2023 <- bind_rows(ed_2021, ed_2022, ed_2023)
+
+education_2021_2023
 ```
 
-216 rows, which is right. And there is a problem.
+Have a look at those three lines again, though. The year is typed twice on each one, once to read the file and once to label it.
 
-**Which rows are from which year?** They are stacked together and nothing says. Look back at the columns in the file. There is no year in there, because the year was in the file name, and we have thrown the file name away.
+Two copies of the same fact is exactly the thing you have to re-read to check.
 
-`bind_rows()` has thought of this. Give it a named list, and `.id` writes the names into a column.
+So let's move it into the function, where it only has to be right once:
+
+```{r}
+#| label: read-education-mutate
+#| message: false
+read_education <- function(year) {
+  education_path(year) |>
+    read_csv() |>
+    mutate(year = year)
+}
+
+read_education(2023)
+```
+
+Nobody who calls `read_education()` has to remember the labelling step now. They just get a year column.
+
+::: {.callout-tip title="Going deeper: letting bind_rows() do the labelling" collapse="true"}
+
+`bind_rows()` will label the pieces for you. Give it names, and `.id` writes those names into a column:
 
 ```{r}
 #| label: bind-id
+#| message: false
 bind_rows(
-  "2021" = ed_2021,
-  "2022" = ed_2022,
-  "2023" = ed_2023,
+  "2021" = read_csv(education_path(2021)),
+  "2022" = read_csv(education_path(2022)),
+  "2023" = read_csv(education_path(2023)),
   .id = "year"
 )
 ```
 
-There it is. The year is back, and it came from the label rather than from the data.
+One thing to notice. That `year` column is character, not a number, because names are always text.
+
+The names have to actually reach `bind_rows()`, too. Hand it three unnamed data frames and `.id` has nothing to write, so you get 1, 2 and 3 instead of the years. It will not warn you.
+
+This is still one line per year, though, and the year is still typed twice on each of them. We do better than that in the next section.
+
+:::
 
 ::: {.callout-note title="Your Turn"}
 
@@ -289,39 +439,47 @@ library(glue)
 library(here)
 
 education_path <- function(year) {
-  here(glue("data/tidy/education_{year}.csv"))
+  glue("data/tidy/education_{year}.csv") |> here()
 }
 
 read_education <- function(year) {
   education_path(year) |>
-    read_csv(show_col_types = FALSE)
+    read_csv() |>
+    mutate(year = year)
 }
 ```
 
 </details>
 
-1. Read 2014 and 2015, and bind them together with a `year` column.
+1. Read 2014 and 2015, and bind them together.
 2. What class is that `year` column? Use `class()` to check. Is it what you expected?
 3. What would you have to type to do all ten years this way?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 3)
+```
 
 <details>
 <summary>Answer</summary>
 
-```r
+```{r}
+#| label: answer-two-years
+#| message: false
 ed_2014 <- read_education(2014)
 ed_2015 <- read_education(2015)
 
-two_years <- bind_rows("2014" = ed_2014, "2015" = ed_2015, .id = "year")
+two_years <- bind_rows(ed_2014, ed_2015)
 
 class(two_years$year)
-#> [1] "character"
 ```
 
-It is character, not a number, because `.id` writes the names of the list and names are always text.
+It is a number, because we typed a number into `mutate()`.
 
-Hang onto that. It will come back to bite one of us in @sec-outside-in.
+That will not stay true. The version we finish this chapter with reads the year out of the file name instead, and that arrives as text. It comes back to bite one of us in @sec-outside-in.
 
-For step 3, ten years this way is thirteen lines. Which is where we came in.
+For step 3, ten years this way is eleven lines. Which is roughly where we came in.
 
 </details>
 
@@ -329,49 +487,115 @@ For step 3, ten years this way is thirteen lines. Which is where we came in.
 
 ### Takehomes
 
-- `bind_rows()` stacks tables on top of each other
-- `.id` turns the names of a list into a column
 - The year lived in the file name, so we have to put it back deliberately
-- Doing it by hand is still one line per year
+- `mutate()` will add it, one year at a time
+- `bind_rows()` stacks tables on top of each other
+- Updating a function means you don't need to make changes multiple times
 
 ## What read_csv already does
 
-Before you write any more of this, try asking `read_education()` for all ten years at once.
+Before you write any more of this, try asking `education_path()` for all ten years at once.
+
+```{r}
+#| label: ten-paths
+education_path(2014:2023)
+```
+
+Neat!
+
+Can we hand all of them to `read_csv()`?
 
 ```{r}
 #| label: vectorised
-read_education(2014:2023)
+#| message: false
+ten_years <- education_path(2014:2023) |> read_csv()
+
+ten_years
 ```
 
-`r nrow(read_education(2014:2023))` rows. All ten years. Out of a function you wrote to read one.
+`r nrow(ten_years)` rows. Wow!
 
-That works because `glue()` builds ten paths when you give it ten years, and `read_csv()` will take all ten and stack them for you. Neither of those was my idea, and I did not have to ask for either.
+This works for two reasons:
 
-`read_csv()` will also tell you where each row came from.
+1. `glue()` builds ten paths when you give it ten years, and 
+2. `read_csv()` will take all ten and stack them for you. 
+
+`read_csv()` will also tell you where each row came from, using `id` (similar to `bind_rows()`).
 
 ```{r}
 #| label: read-csv-id
+#| message: false
 education_path(2022:2023) |>
-  read_csv(id = "path", show_col_types = FALSE) |>
-  select(path, state_territory, age_group)
+  read_csv(id = "path")
 ```
 
 So a good deal of what I was about to write by hand is already sitting in `readr`.
 
-This is a good outcome rather than a wasted ten minutes. Checking whether the problem is solved already is a habit worth having, and having a go yourself first is a decent way to find out what words to search for.
+This is a good outcome rather than a waste of time!
 
-Now let's put the fix inside the function.
+Checking whether the problem is solved already is a habit worth having, and having a go yourself first is a decent way to find out what words to search for.
+
+The year is still sitting in that path. Let's get it back out, one step at a time.
+
+Here is a single path to work with:
+
+```{r}
+#| label: step-path
+path <- education_path(2014)
+
+path
+```
+
+`basename()` throws away the folders and keeps the file name:
+
+```{r}
+#| label: step-basename
+basename(path)
+```
+
+That step matters more than it looks. `parse_number()` takes the first number it finds, and my home folder is called `nick_1`. Skip `basename()` and the year comes out as `r readr::parse_number("/Users/nick_1/data/tidy/education_2014.csv")`.
+
+`parse_number()` pulls the number out of what is left:
+
+```{r}
+#| label: step-parse
+basename(path) |> parse_number()
+```
+
+And `as.character()` turns it into text:
+
+```{r}
+#| label: step-character
+basename(path) |> parse_number() |> as.character()
+```
+
+Why text? Because a year is a label, not a quantity. You are never going to want the mean of it.
+
+Those three steps are one idea. Get the year out of a path. So let's give that idea a name:
+
+```{r}
+#| label: year-from-path
+year_from_path <- function(path) {
+  basename(path) |>
+    parse_number() |>
+    as.character()
+}
+
+year_from_path(path)
+```
+
+Now let's put all of that inside the function.
 
 ```{r}
 #| label: read-education-final
+#| message: false
 read_education <- function(year) {
   files <- education_path(year)
-  names(files) <- year
+  education_raw <- read_csv(files, id = "path")
 
-  bind_rows(
-    lapply(files, read_csv, show_col_types = FALSE),
-    .id = "year"
-  )
+  education_raw |>
+    mutate(year = year_from_path(path)) |>
+    select(-path)
 }
 
 education <- read_education(2014:2023)
@@ -381,20 +605,24 @@ education
 
 One line now gets you every year, with the year labelled.
 
+Three functions now, and each one knows a single thing. `education_path()` knows how the files are named, `year_from_path()` knows how to undo that, and `read_education()` knows how to read.
+
 And notice where the fix went. It went **inside** `read_education()`, so everything that ever calls it gets the year column, and nobody who calls it had to change.
 
 ### Takehomes
 
 - `read_csv()` takes a vector of paths and stacks them for you
 - `read_csv(id = )` records which file each row came from
+- Run `basename()` before `parse_number()`, or you parse a number out of a folder name
+- A chain of steps with one job between them is a function waiting for a name
 - Check whether somebody has solved it already
 - When a function grows a fix, every caller gets it for free
 
 ## Don't re-read yourself
 
-We started this hour with ten lines that differed by four characters, and we have finished with one line that says what it does.
+We started this hour with ten lines, and we have finished with one line that says what it does.
 
-Now for the rule everyone gets told, and the rule I think is better.
+In programming, the term DRY comes up a bit
 
 **DRY** stands for Don't Repeat Yourself. It says that if you find yourself copying and pasting the same code, write a function instead. Ten `read_csv()` lines, one function. DRY is right about that, and I am not arguing with it.
 
@@ -412,7 +640,7 @@ That fires earlier, and it fires more often. Look back at the version we finishe
 education <- read_education(2014:2023)
 ```
 
-You do not re-read that. You read the name, you believe it, and you get on with the analysis. That is the whole of it.
+You do not re-read that. You read the name, you believe it, and you get on with the analysis.
 
 ### Takehomes
 
@@ -426,7 +654,7 @@ You do not re-read that. You read the name, you believe it, and you get on with 
 1. **Re-reading is the cost.** Repetition is one way to pay it, and not the only one.
 2. **`glue()` and `here()`** build a path that reads like a sentence and works from anywhere.
 3. **Split what changes from what reads.** `education_path()` and `read_education()` know different things.
-4. **`bind_rows(.id = )` and `read_csv(id = )`** put back the information that lived in the file name.
+4. **`read_csv(id = )` and `parse_number()`** put back the information that lived in the file name.
 5. **Check whether it exists first.** `read_csv()` reads ten files on its own.
 6. **A function is where a fix goes**, so every caller gets it without asking.
 

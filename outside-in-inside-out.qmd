@@ -1,6 +1,60 @@
 # Outside-in, inside-out {#sec-outside-in}
 
-There are two ways to arrive at a function. You can imagine the call you wish you could write and then make it true, or you can take code that already works and pull a function out of it. I use both, often on the same problem, and this session is about moving between them.
+I think there are two ways to arrive at a function:
+
+1. Outside in
+2. Inside out
+
+You can also think of these as "top-down" and "bottom up".
+
+**Outside in** means you write out functions as pseudo code that doesn't actually exist yet:
+
+```{r}
+#| eval: false
+education_2014_raw <- read_education("data/education_2014.csv")
+tidy_education_2014 <- tidy_education(education_2014_raw)
+gg_education_by_age_state <- plot_education_state_age(tidy_education_2014)
+```
+
+**Inside out** is where you write the code, get it working, then wrap it up in a script.
+
+```{r}
+#| eval: false
+education_2014_raw <- read_csv(
+    "data/education_2014.csv", 
+    col_types = c("i", "c", "c", "d", "d", "d")
+    ) |> 
+    janitor::clean_names() |> 
+    mutate(
+        year = as.integer(year),
+        state_territory = as.character(state_territory),
+        age_group = as.character(age_group),
+        n_studying = as.numeric(n_studying),
+        population = as.numeric(population),
+        prop_studying = as.numeric(prop_studying)
+    )
+
+# ... eventually
+education_2014_raw <- read_csv(
+    "data/education_2014.csv", 
+    name_repair = janitor::make_clean_names,
+    col_types = c("i", "c", "c", "d", "d", "d")
+    )
+
+# ... wrap it up in a function when you are happy with ti
+read_education <- function(path){
+    education_raw <- read_csv(
+    path, 
+    name_repair = janitor::make_clean_names,
+    col_types = c("i", "c", "c", "d", "d", "d")
+    )
+    
+    education_raw
+}
+```
+
+
+It's not that one is better than the other, but I think knowing that there are these two different ways to think about functions helps you move faster and more efficiently towards solving a problem.
 
 ::: {.overview}
 
@@ -24,12 +78,86 @@ There are two ways to arrive at a function. You can imagine the call you wish yo
 
 ## Outside-in
 
+- Useful for planning
+- introduce example with data set
+- reading in data
+- Where does the read in data get used
+- What kinds of analysis, or plot would I want to do
+- What happens as a result of the output of that function
+- using outside-in with fnmate
+- Exercise: practice writing out functions without implementing them
+
 <!--
 TODO: imagine the ideal call first. What am I trying to do? What inputs do I
 need? What should it return? Write the call, then make it true.
 -->
 
+<!--
+MOVED FROM CHAPTER 2, 30 Aug 2026. This was chapter 2's capstone. It belongs
+here because extracting a function from working code is what this chapter is
+about, and chapter 2 had no room. Make the code fences executable when it goes
+live. Do not write a backtick followed by r and a space anywhere in a comment:
+knitr reads that as inline R and stops the render, which is how this note got
+written twice.
+
+## Your Turn: putting it together {.unnumbered}
+
+::: {.callout-note title="Your Turn"}
+
+Here is some code I actually wrote while making this chapter. It compares the youngest and oldest age groups in a state.
+
+```r
+young <- tas_2023 |>
+  filter(age_group == "15_19") |>
+  summarise(pct = sum(n_studying) / sum(population) * 100)
+
+old <- tas_2023 |>
+  filter(age_group == "55_74") |>
+  summarise(pct = sum(n_studying) / sum(population) * 100)
+
+round(young$pct - old$pct, 1)
+```
+
+It works. It's also nine lines, two of which are the same three lines twice, and it only does Tasmania in 2023.
+
+Turn it into a function.
+
+1. **Copy.** Make an empty function and paste the code into the body. Change nothing yet.
+2. **Identify.** Which parts change between uses? Those are your arguments.
+3. **Abstract.** Replace the hard-coded parts with argument names.
+4. **Iterate.** Get it working first, then improve the names.
+
+Then check you get the same answer you started with, because it's very easy to tidy something into a different result.
+
+<details>
+<summary>One possible answer</summary>
+
+```r
+study_gap <- function(data, young = "15_19", old = "55_74") {
+  young_pct <- pct_studying(data, age = young)$pct
+  old_pct <- pct_studying(data, age = old)$pct
+  round(young_pct - old_pct, 1)
+}
+
+study_gap(tas_2023)
+```
+
+This one reuses `pct_studying()` rather than writing the sum out twice, which is the whole idea. If your first answer did write it out twice, that is completely normal, and noticing afterwards is the skill.
+
+</details>
+
+:::
+
+
+-->
+
 ## Inside-out
+
+- Write some plotting code
+- Get the plotting code nice and clean
+- Is there a part here that would change? Can that be used as a function?
+- Move the part into arguments
+- Exercise: practice creating a function this way
 
 <!--
 TODO: start from working code. Find the parts that change. Give them names.
@@ -38,6 +166,10 @@ Lift them into arguments.
 
 ## Which way to start
 
+- outside-in for planning and drafting
+- inside out as a natural place to start and roll around it
+- Exercise: discussion around the sorts of project you use, where would you be reaching for which way of writing them?
+
 <!--
 TODO: outside-in when you know what you want. Inside-out when you have
 something that works and cannot see the shape yet.
@@ -45,11 +177,16 @@ something that works and cannot see the shape yet.
 
 ## Up and down the ladder of abstraction
 
+- Claude: This is more a comment around using between levels of functions, I actually think this comment on the ladder of abstraction belongs more in the lessons around debugging
+
 <!--
 TODO: street level and map level. The skill is moving, not living at one end.
 -->
 
 ## Iteration is normal
+
+- link back to writing and polish
+- The exercise here should be for everyone to practice iterating on a function
 
 <!--
 TODO: nobody gets the interface right first go. Say so out loud.

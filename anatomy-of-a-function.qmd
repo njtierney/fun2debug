@@ -258,11 +258,11 @@ The default here is "Tas."
 plot_study_by_age(tas_2023)
 ```
 
-The subtitle says `r unique(tas_2023$state_territory)` and I never typed it, because the data already knew.
+The subtitle says "Tas." and I never typed it, because the default was specified
 
-And a default is only a default, so you can still say something else when you want to.
+We could change that to:
 
-```r
+```{r}
 plot_study_by_age(tas_2023, state = "Tasmania, 2023")
 ```
 
@@ -300,7 +300,7 @@ Once they're named, the order stops mattering:
 pct_studying(age = "15_19", data = tas_2023)
 ```
 
-And you can mix the two, which is what most people actually do:
+And you can mix the two:
 
 ```{r}
 #| label: mixed
@@ -387,6 +387,12 @@ education |>
 Notice I renamed it. `plot_study_by_age()` was true when it only did age groups, and it stopped being true the moment we added that argument. `plot_study_by()` is honest again.
 
 That's normal. The first name you pick is rarely the one you keep, and renaming is part of writing a function rather than a sign you've got it wrong.
+
+You can read more about curly curly at:
+
+- My blog post: [Curly Curly: How to pass bare variable arguments to things?](https://www.njtierney.com/posts/2019-07-06-curly-curly-bare-vars/)
+- The dplyr documentation: [Programming with dplyr](https://dplyr.tidyverse.org/articles/programming.html)
+- ggplot2 docs: [ggplot2 in packages](https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html)
 
 ::: {.callout-note title="Your Turn"}
 
@@ -491,7 +497,7 @@ Two habits worth having.
 
 **Name for the question, not the method.** `pct_studying()`, not `sum_divide_round()`. The method will change, and the question won't.
 
-**Name the insides too.** Look back at `pct_studying()`. It says `studying <- sum(...)` and `people <- sum(...)`, so the division reads as studying over people. That was a choice, and it took about three seconds.
+**Name the insides too.** Look back at `pct_studying()`. It says `studying <- sum(...)` and `people <- sum(...)`, so the division reads as studying over people. That is a choice, and I think it is worth it
 
 ### Takehomes
 
