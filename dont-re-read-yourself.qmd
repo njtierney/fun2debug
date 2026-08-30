@@ -1,6 +1,6 @@
 # Don't re-read yourself {#sec-drry}
 
-You have almost certainly written the same twenty lines of code three times, with one thing changed each time. I have done it more times than I would like to admit. This session is about why that hurts, and it is not the reason you have probably been told.
+You have opened a script you wrote three months ago and not been able to follow it. I do this with my own writing too, where I read a paragraph back twice and still cannot work out what I meant. This session is about why that happens to code, and the single best thing you can do about it.
 
 ::: {.overview}
 
@@ -12,422 +12,422 @@ You have almost certainly written the same twenty lines of code three times, wit
 
 <!-- These map onto the sections below, in order. If you move a section, move its question. -->
 
-- Why is repeated code so hard to work with?
+- What does the end of this course look like?
+- What is wrong with writing the same line ten times?
+- How do I build a file path without typing it out?
+- How do I turn working code into a function?
+- How do I read ten files and still know which is which?
 - What is DRRY, and how is it different from DRY?
-- If repetition isn't the reason to write a function, what is?
-- When should I *not* write a function?
-- What do I actually get out of this?
 
 **What you need this session**
 
 - A session of RStudio open
-- Something to draw on, and something to draw with
+- The course data. Download `fun2debug-data.zip` from
+  <https://fun2debug.njtierney.com/data/> and unzip it so that a folder called
+  `data` sits next to the script you are writing in. Then open that folder as
+  an RStudio project, or set your working directory to it, so that
+  `list.files("data/tidy")` shows you ten files.
 
-No packages this session. Everything here uses data that ships with R.
+```{r}
+#| label: pkgs
+#| output: false
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(glue)
+library(here)
+```
 
 :::
 
-## The problem functions solve
+## Where we are going
 
-I do not think I can overstate this: learning to write functions changed how I think about code, and how I think about solving problems. It does take a while to develop, but the payoff is enormous.
+I want to start by showing you the end, so you know what we are working towards.
 
-A function is not only a way to avoid typing something twice. It's a way to take complexity and express it in a form you can reason with.
+The census was on the 11th of August, so this feels like a reasonable moment to be looking at data from the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release).
 
-Once you can do that, you can hold a bigger problem in your head. It is like learning a word for a thing you already knew about:
+We are going to spend most of this course on one question:
 
-> Benighted: Unexpectedly caught out in the dark
+**How many Australians are studying, by age group and by state, and is that changing?**
 
-> Scrumping: To steal fruit such as apples from trees
-
-My own journey into functions started in 2013. I was writing code to calculate a t-test from scratch. I had my reasons! At the top of the script was something like:
+By the end of next week, the top of your analysis will look like this.
 
 ```r
-var_1 <- data$x1
-var_2 <- data$x2
+source("R/read_education.R")
+source("R/plot_study.R")
+
+education <- read_education(2014:2023)
+
+plot_study_by(education, y = age_group)
+plot_study_over_time(education, state = "Tas.")
 ```
 
-and then a pile of code that computed the result.
+You can reason with each of these lines of code based on their name. The code is documenting itself.
 
-::: {.callout-tip title="The whole script, if you want to see it" collapse="true"}
+The idea of this is to show you where we are heading. Every one of those functions is code you would have written anyway, with a name on it.
 
-This is roughly what it looked like. What I would like you to notice is how much of it there is, and where the two lines I kept editing are.
+Let's talk about reading in some education data.
 
-```r
-var_1 <- data$x1                                              # <1>
-var_2 <- data$x2                                              # <1>
+## Reading ten files
 
-n_1 <- length(var_1)
-n_2 <- length(var_2)
-
-mean_1 <- mean(var_1)
-mean_2 <- mean(var_2)
-
-var_within_1 <- sum((var_1 - mean_1)^2) / (n_1 - 1)
-var_within_2 <- sum((var_2 - mean_2)^2) / (n_2 - 1)
-
-pooled_var <- ((n_1 - 1) * var_within_1 + (n_2 - 1) * var_within_2) / (n_1 + n_2 - 2)
-std_error <- sqrt(pooled_var * (1 / n_1 + 1 / n_2))
-
-t_statistic <- (mean_1 - mean_2) / std_error
-degrees_freedom <- n_1 + n_2 - 2
-p_value <- 2 * pt(-abs(t_statistic), df = degrees_freedom)
-
-t_statistic
-p_value
-```
-
-1. These two lines are the only part that ever changed.
-
-:::
-
-Every time I wanted to look at a different pair of variables, I went back to the top, changed those two lines, and ran the whole thing again.
-
-Two lines out of twenty changed, and I re-ran all of them by hand, every single time.
-
-![Four runs of the same script. Two bars change colour.](figs/two-lines-of-twenty.png){fig-alt="Four copies of the same script side by side, drawn as rows of grey bars rather than readable code. In every copy the top two rows are coloured, a different colour in each copy, and the remaining eighteen rows are identical grey. A label underneath reads: two lines changed, the other eighteen ran again anyway, every single time." width=100%}
-
-Something about that felt wrong at the time. But I didn't have the words for it.
-
-What I was reaching for sounded like this:
-
-> I want to run this script, but get the top couple of lines to change depending on which variables I specify.
-
-What I needed was a function, and I just did not have the words for it.
-
-I had been **taught** functions by then, and I had been **using** functions the whole time, things like `lm()`, `table()`, `subset()` and `read.csv()`. I used them every day without once thinking about where they came from, or that I could make my own.
-
-But the examples I was taught with were "convert Celsius to Fahrenheit" and "identify odd numbers", and I couldn't see how those applied to anything I actually did.
-
-They seemed like useful kitchen trinkets. An apple corer, a garlic press. They did not look like a fundamental skill, the way knowing how to use a knife does.
-
-Functions are the knife.
-
-### A bug you can't see
-
-Rather than argue that, let me show you. What does this code do?
-
-We'll use `penguins`, which comes with R from version 4.5.0.
+The data is one file per year, from 2014 to 2023.
 
 ```{r}
-#| label: penguins-head
-head(penguins)
+#| label: list-files
+list.files("data/tidy")
 ```
 
-Now have a proper look at this.
+Here is one of them.
 
 ```{r}
-#| label: drry-centre-scale
-bill_len <- penguins$bill_len
-bill_dep <- penguins$bill_dep
+#| label: read-one
+ed_2023 <- read_csv("data/tidy/education_2023.csv", show_col_types = FALSE)
 
-bill_len_0 <- (bill_len - mean(bill_len, na.rm = TRUE)) / sd(bill_len, na.rm = TRUE)
-bill_dep_0 <- (bill_dep - mean(bill_dep, na.rm = TRUE)) / sd(bill_len, na.rm = TRUE)
+ed_2023
 ```
+
+Every row is one age group in one state. So the first row says that in the ACT there were 25,800 people aged 15 to 19, and 22,900 of them were studying. The columns are the state or territory, the age group, the number studying, the population of that group, and the proportion of them studying.
+
+The counts are in thousands.
+
+Notice what is **not** in there. Nothing in the file says which year it is. That lives in the file name, and this is extremely common in real data.
 
 ::: {.callout-note title="Your Turn"}
 
-::: {.callout-tip title="Setup code" collapse="true"}
+Before I show you what I would do, have a think about this one. There are ten files and you want all of them.
 
-```{r}
-#| ref.label: ["drry-centre-scale"]
-#| eval: false
-#| echo: true
-```
+1. How would you read in these ten files? Sketch it out, or just say it out loud.
+2. What is different between the ten of them, and what is the same?
+3. If you wrote it the most obvious way, what would go wrong later?
+
+There is no wrong answer here, and I am asking because the answer you give is usually the answer everybody gives, including me.
 
 :::
 
-Here is the code again. Don't run it.
+Here is what I do, most of the time.
 
 ```r
-bill_len_0 <- (bill_len - mean(bill_len, na.rm = TRUE)) / sd(bill_len, na.rm = TRUE)
-bill_dep_0 <- (bill_dep - mean(bill_dep, na.rm = TRUE)) / sd(bill_len, na.rm = TRUE)
+ed_2014 <- read_csv("data/tidy/education_2014.csv")
+ed_2015 <- read_csv("data/tidy/education_2015.csv")
+ed_2016 <- read_csv("data/tidy/education_2016.csv")
+ed_2017 <- read_csv("data/tidy/education_2017.csv")
+ed_2018 <- read_csv("data/tidy/education_2018.csv")
+ed_2019 <- read_csv("data/tidy/education_2019.csv")
+ed_2020 <- read_csv("data/tidy/education_2020.csv")
+ed_2021 <- read_csv("data/tidy/education_2021.csv")
+ed_2022 <- read_csv("data/tidy/education_2022.csv")
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
 ```
 
-1. In one sentence, what is this code doing?
-2. There is a bug in it. Find it.
-3. How long did that take, and what made it hard?
+Ten lines, four characters different between them.
 
-:::
+The typing is not the problem, because the typing takes twenty seconds. The trade off with this is that we need to carefully read it each time, because there might be an easy to make mistake sitting in one of those lines.
 
-So what is it doing?
+And you cannot skim it. Skimming is exactly how you miss that line six says 2019 twice.
 
-This is mean centring and scaling. It gives your data a mean of 0 and a standard deviation of 1, which some statistical models want.
+### Takehomes
 
-Reading that code, it is hard to see that this is what is happening. Nothing in it says "centre and scale". You have to reconstruct the intent from the arithmetic.
+- Repeated code is cheap to write and expensive to read
+- The risk in a block like this is that one line is not like the others
+- You cannot skim it, because skimming is how you miss that
 
-And there **is** an error.
+## Building the path
 
-Look at the second line again. For `bill_dep_0` I divide by the standard deviation of **`bill_len`**, not `bill_dep`.
+Let's start with the part that changes, which is the path.
 
-That is a copy-paste bug, it is completely silent, and it produces numbers that look entirely plausible:
+Rather than typing the whole thing out, `glue()` will build it for you. Anything inside curly braces gets swapped for its value.
 
 ```{r}
-#| label: drry-plausible
-head(bill_dep_0, 3)
+#| label: glue-path
+year <- 2023
+
+glue("data/tidy/education_{year}.csv")
 ```
 
-Nothing about those numbers says "wrong". If you found it, well done, and if you did not, that is exactly why I would rather not rely on either of us spotting it.
+It reads like the sentence you would say out loud, which is more than I can say for `paste0("data/tidy/education_", year, ".csv")`.
 
-There is a way to catch it, and it's worth noticing now because the whole course comes back to it. Scaling is supposed to give you a standard deviation of 1. So ask:
+One improvement before we go on. That path is relative to wherever R happens to be sitting, and R does not always sit where you think. `here()` anchors it to the top of your project, so it works the same whichever folder you are in.
 
 ```{r}
-#| label: drry-check
-sd(bill_dep_0, na.rm = TRUE)
+#| label: here-path
+here(glue("data/tidy/education_{year}.csv"))
 ```
 
-That should be 1, and it is not. The failure never raised an error, never printed a warning, and would have gone into a model perfectly happily. We only found it because we went and looked.
-
-A function fixes this by taking away the need to write the variable in each time. Break it into two steps:
+Now pipe that into `read_csv()`.
 
 ```{r}
-#| label: drry-two-steps
-mean_center <- function(variable) {
-  variable - mean(variable, na.rm = TRUE)
+#| label: pipe-read
+here(glue("data/tidy/education_{year}.csv")) |>
+  read_csv(show_col_types = FALSE)
+```
+
+That works, and I want you to notice the shape of it. Build a path, read the path. Two jobs.
+
+## Turning it into a function
+
+A function in R has three parts you need right now. A **name**, which is how you call it later. Some **arguments**, which are the things that change between calls. And a **body**, which is the code that runs.
+
+We have two jobs, so let's make two functions.
+
+```{r}
+#| label: education-path
+education_path <- function(year) {
+  here(glue("data/tidy/education_{year}.csv"))
 }
 
-scale_sd <- function(variable) {
-  variable / sd(variable, na.rm = TRUE)
-}
+education_path(2023)
 ```
-
-Now we can write:
 
 ```{r}
-#| label: drry-piped
-bill_len |>
-  mean_center() |>
-  scale_sd() |>
-  head(3)
-```
-
-Or make one function that does both:
-
-```{r}
-#| label: drry-center-scale
-center_scale <- function(variable) {
-  centered <- mean_center(variable)
-  centered_scaled <- scale_sd(centered)
-  centered_scaled
+#| label: read-education-one
+read_education <- function(year) {
+  education_path(year) |>
+    read_csv(show_col_types = FALSE)
 }
+
+read_education(2023)
 ```
 
-Each function **says what it does** in its name. Reading `center_scale`, you can see it does a thing called `mean_center` first, and then a thing called `scale_sd`.
+`education_path()` knows how the files are named. `read_education()` knows how to read one. Neither of them knows the other's business.
 
-Compare the original:
+That split is worth more than it looks. If the files get renamed next year, one function changes and the other does not care.
+
+::: {.callout-note title="Your Turn"}
+
+<details>
+<summary>Setup code</summary>
 
 ```r
-bill_len_0 <- (bill_len - mean(bill_len, na.rm = TRUE)) / sd(bill_len, na.rm = TRUE)
-bill_dep_0 <- (bill_dep - mean(bill_dep, na.rm = TRUE)) / sd(bill_len, na.rm = TRUE)
+library(dplyr)
+library(readr)
+library(glue)
+library(here)
 ```
 
-with:
+</details>
 
-```{r}
-#| label: drry-fixed
-bill_len_0 <- center_scale(bill_len)
-bill_dep_0 <- center_scale(bill_dep)
+1. Type out both functions yourself and run `read_education(2019)`. Check you get 72 rows.
+2. What happens if you ask for a year that does not exist, like 2005?
+3. Change `education_path()` so it points at `data/raw` and the `raw_education_` prefix, then run `read_education(2015)`.
+4. Change it back.
 
-sd(bill_dep_0, na.rm = TRUE)
+Step 3 is the one to notice. You changed one function, and `read_education()` came along with you without being touched.
+
+<details>
+<summary>Answer</summary>
+
+```r
+read_education(2019)
+
+# 2005 gives an error naming the path it tried, which is exactly what you want
+
+education_path <- function(year) {
+  here(glue("data/raw/raw_education_{year}.csv"))
+}
+
+read_education(2015)
 ```
 
-You cannot even write the bug now, because there is nowhere left to put it.
+`data/raw` only goes to 2019, and there is a good deal more wrong with those files than the date range. We come back to them in @sec-looking-inside.
 
-::: {.callout-tip title="Someone has probably done this already" collapse="true"}
-
-Base R has `scale()`, which centres and scales the columns of a numeric matrix. That's our two steps, in one call.
-
-```{r}
-#| label: drry-base-scale
-head(center_scale(bill_len), 3)
-head(scale(bill_len), 3)
-```
-
-Same numbers. `scale()` hands back a matrix, because it's built to do every column at once.
-
-Which is a good argument for checking whether a solution exists before writing your own.
-
-At worst you find nobody has solved your problem, which is an opportunity. Usually you learn the words other people use for it, and your next search goes much better.
+</details>
 
 :::
 
-**What to hold onto here.** The bug survived because the code was hard to read, not because it was repeated. Twice is not many. It was still too many to read carefully.
+### Takehomes
 
-## Don't re-read yourself
+- `glue()` builds a string by putting values inside `{ }`
+- `here()` anchors a path to the top of your project
+- A function has a name, arguments, and a body
+- Two small functions beat one big one when they know different things
 
-Here is the move this whole course turns on.
+## Reading more than one year
 
-Repetition is one way to make code expensive. Re-reading is the cost underneath it.
-
-Code can be written once, never repeated, and still charge you every single time you come back to it. Here is a line I have written versions of many times:
+One year at a time is not what we came for. Let's do three.
 
 ```{r}
-#| label: drry-nested
-round(
-  sum(!is.na(airquality$Ozone) & airquality$Ozone > 30) /
-    sum(!is.na(airquality$Ozone)) * 100,
-  1
+#| label: three-years
+ed_2021 <- read_education(2021)
+ed_2022 <- read_education(2022)
+ed_2023 <- read_education(2023)
+```
+
+Better than before, because each line is now readable. But we are back to one line per year, and I still cannot work with them until they are in one table.
+
+```{r}
+#| label: bind-three
+bind_rows(ed_2021, ed_2022, ed_2023)
+```
+
+216 rows, which is right. And there is a problem.
+
+**Which rows are from which year?** They are stacked together and nothing says. Look back at the columns in the file. There is no year in there, because the year was in the file name, and we have thrown the file name away.
+
+`bind_rows()` has thought of this. Give it a named list, and `.id` writes the names into a column.
+
+```{r}
+#| label: bind-id
+bind_rows(
+  "2021" = ed_2021,
+  "2022" = ed_2022,
+  "2023" = ed_2023,
+  .id = "year"
 )
 ```
 
-That appears exactly once, so DRY has nothing to say about it. And you still cannot read it.
-
-You can only work it out by running it in your head, from the inside out. Count the days above 30. Count the days with a reading at all. Divide. Times a hundred. Round.
-
-So it is fifty point nine percent of something. Of what, exactly?
-
-Give the idea a name and the question goes away:
-
-```{r}
-#| label: drry-pct-above
-pct_above <- function(x, threshold) {
-  above <- sum(x > threshold, na.rm = TRUE)
-  recorded <- sum(!is.na(x))
-  round(above / recorded * 100, 1)
-}
-
-pct_above(airquality$Ozone, threshold = 30)
-```
-
-Same answer. But now the line tells you what it is for, and the two intermediate names tell you what the division means. Half the recorded ozone days were above 30.
-
-You do not re-read the body, you read the name and carry on.
+There it is. The year is back, and it came from the label rather than from the data.
 
 ::: {.callout-note title="Your Turn"}
 
-::: {.callout-tip title="Setup code" collapse="true"}
-
-```{r}
-#| ref.label: ["drry-pct-above"]
-#| eval: false
-#| echo: true
-```
-
-:::
-
-1. Say out loud what this does, before you run it or edit it. Time yourself.
-
-    ```r
-    round(mean(airquality$Temp[!is.na(airquality$Ozone)]) -
-            mean(airquality$Temp[is.na(airquality$Ozone)]), 2)
-    ```
-
-2. Now write down, in one sentence, what it's **for**. That sentence is the name of a function.
-3. Use `pct_above()` to find what percentage of days had a temperature above 80.
-
-::: {.callout-tip title="Starting code" collapse="true"}
+<details>
+<summary>Setup code</summary>
 
 ```r
-pct_above(x = ___, threshold = ___)
+library(dplyr)
+library(readr)
+library(glue)
+library(here)
+
+education_path <- function(year) {
+  here(glue("data/tidy/education_{year}.csv"))
+}
+
+read_education <- function(year) {
+  education_path(year) |>
+    read_csv(show_col_types = FALSE)
+}
 ```
+
+</details>
+
+1. Read 2014 and 2015, and bind them together with a `year` column.
+2. What class is that `year` column? Use `class()` to check. Is it what you expected?
+3. What would you have to type to do all ten years this way?
+
+<details>
+<summary>Answer</summary>
+
+```r
+ed_2014 <- read_education(2014)
+ed_2015 <- read_education(2015)
+
+two_years <- bind_rows("2014" = ed_2014, "2015" = ed_2015, .id = "year")
+
+class(two_years$year)
+#> [1] "character"
+```
+
+It is character, not a number, because `.id` writes the names of the list and names are always text.
+
+Hang onto that. It will come back to bite one of us in @sec-outside-in.
+
+For step 3, ten years this way is thirteen lines. Which is where we came in.
+
+</details>
 
 :::
 
-::: {.callout-tip title="Answer" collapse="true"}
+### Takehomes
 
-Only open this if you have had a go.
+- `bind_rows()` stacks tables on top of each other
+- `.id` turns the names of a list into a column
+- The year lived in the file name, so we have to put it back deliberately
+- Doing it by hand is still one line per year
+
+## What read_csv already does
+
+Before you write any more of this, try asking `read_education()` for all ten years at once.
 
 ```{r}
-#| label: drry-answer
-pct_above(airquality$Temp, threshold = 80)
+#| label: vectorised
+read_education(2014:2023)
 ```
 
-The first one compares mean temperature on days where ozone was recorded against days where it was missing. A reasonable name would be `temp_gap_by_missingness()`, or something you'd rather read than that.
+`r nrow(read_education(2014:2023))` rows. All ten years. Out of a function you wrote to read one.
 
-:::
+That works because `glue()` builds ten paths when you give it ten years, and `read_csv()` will take all ten and stack them for you. Neither of those was my idea, and I did not have to ask for either.
 
-:::
+`read_csv()` will also tell you where each row came from.
 
-**What to hold onto here.** The trigger is not "have I typed this three times", it is "have I had to read this again to work out what it does".
+```{r}
+#| label: read-csv-id
+education_path(2022:2023) |>
+  read_csv(id = "path", show_col_types = FALSE) |>
+  select(path, state_territory, age_group)
+```
 
-## Don't repeat yourself, as the special case
+So a good deal of what I was about to write by hand is already sitting in `readr`.
 
-You will often be told **DRY**: Don't Repeat Yourself. Copy and paste the same code three times, and you should write a function.
+This is a good outcome rather than a wasted ten minutes. Checking whether the problem is solved already is a habit worth having, and having a go yourself first is a decent way to find out what words to search for.
 
-That is true, and I am not arguing with it. But it treats the symptom rather than the cause.
+Now let's put the fix inside the function.
 
-You only end up repeating yourself because you could not express the idea in the first place. If the idea had a name, you would have called it by name. So the cause is expression, and repetition is what it looks like from outside.
+```{r}
+#| label: read-education-final
+read_education <- function(year) {
+  files <- education_path(year)
+  names(files) <- year
+
+  bind_rows(
+    lapply(files, read_csv, show_col_types = FALSE),
+    .id = "year"
+  )
+}
+
+education <- read_education(2014:2023)
+
+education
+```
+
+One line now gets you every year, with the year labelled.
+
+And notice where the fix went. It went **inside** `read_education()`, so everything that ever calls it gets the year column, and nobody who calls it had to change.
+
+### Takehomes
+
+- `read_csv()` takes a vector of paths and stacks them for you
+- `read_csv(id = )` records which file each row came from
+- Check whether somebody has solved it already
+- When a function grows a fix, every caller gets it for free
+
+## Don't re-read yourself
+
+We started this hour with ten lines that differed by four characters, and we have finished with one line that says what it does.
+
+Now for the rule everyone gets told, and the rule I think is better.
+
+**DRY** stands for Don't Repeat Yourself. It says that if you find yourself copying and pasting the same code, write a function instead. Ten `read_csv()` lines, one function. DRY is right about that, and I am not arguing with it.
+
+But I do not think repetition was ever the real problem. Repetition is a symptom.
+
+You end up repeating yourself because you couldn't say the idea in one go. If the idea had a name, you'd have used the name. So the cause is expression, and repeated code is what unexpressed ideas look like from outside.
 
 The version I prefer is **DRRY**: Don't Re-Read Yourself.^[Naming credit to [Miles McBain](https://milesmcbain.xyz/).]
 
-DRRY fires earlier than DRY, and it fires more often. It fires on the *first* copy rather than the third, and it fires when there is no copy at all, like the line above.
+The trigger is not "have I typed this three times". It is "will I have to read this again to work out what it does".
 
-Every case DRY catches, DRRY catches too. That is what makes it the more useful rule. DRY is a special case of it, and a good one, because repeated code is nearly always code you could not say plainly.
-
-::: {.callout-caution title="Some history: where DRY comes from" collapse="true"}
-
-DRY was named by Andrew Hunt and David Thomas in [The Pragmatic Programmer](https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/), in 1999.
-
-Their actual wording is worth reading, because it is not the version that gets repeated:
-
-> Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.
-
-**Knowledge**, not code. They were never really talking about typing the same characters twice. The version that survived is the one that is easy to check, which is not the same as the one that is useful.
-
-:::
-
-## When not to write a function
-
-If repetition isn't the trigger, you need to know what *is*. The fastest way to get there is to look at when the answer is no.
-
-**When it's used once and already reads plainly.**
+That fires earlier, and it fires more often. Look back at the version we finished with:
 
 ```r
-adult_penguins <- penguins[penguins$body_mass > 4000, ]
+education <- read_education(2014:2023)
 ```
 
-There is nothing to abstract. Wrapping that in `filter_adults()` adds a name you have to learn, and hides a line you could already read. You now have two things instead of one.
+You do not re-read that. You read the name, you believe it, and you get on with the analysis. That is the whole of it.
 
-**When you can't name it.**
+### Takehomes
 
-If you can't say what the function is for in a short phrase, that is information. Usually it means the block is doing two things, and the honest fix is two functions, not one with a vague name.
-
-`process_data()` and `run_analysis()` are what this looks like when you push through anyway. Both names describe the machine rather than the idea, and neither will help you in six weeks.
-
-**When the abstraction hides more than it saves.**
-
-A function that takes seven arguments, four of which change every call, is not managing complexity, it is relocating it. You still have to hold all seven in your head, and now you have to hold the function's name as well.
-
-**When the repetition is a coincidence.**
-
-Two blocks that look identical today, for unrelated reasons, will drift apart. Merging them means every future change has to ask "does this apply to both?" That is a cost you pay forever, in order to save one paste.
-
-This is the case people get wrong most often, because it is the one that looks most like DRY.
-
-::: {.callout-note title="Your Turn"}
-
-For each of these, decide: function, or leave it?
-
-1. A three line block that reads a CSV, renames one column and drops another. It appears in four scripts.
-2. `mean(x, na.rm = TRUE)`, written in eleven places.
-3. Forty lines that clean the 2023 data, and forty nearly identical lines that clean the 2024 data. The differences are the file path and one column name.
-4. A line computing BMI from weight and height, once.
-
-There are no marks for the answers. What I am after is the reason you give, because the reason is the skill.
-
-:::
-
-**What to hold onto here.** "Would I have to read this again to know what it does?" If no, leave it alone.
-
-## What you get out of this
-
-Three things, and they build on each other.
-
-**Speed of thought.** When the ideas in your analysis have names, you can think in those names. You stop holding six lines of arithmetic in working memory and start holding one phrase. That is more room for the actual problem.
-
-**Speed of work.** You stop re-running twenty lines to change two. You stop hunting for the line you need to edit. Small savings, several times an hour, every day.
-
-**Trust.** This is the one I care most about.
-
-In statistics we often cannot test our way to confidence. There is no known right answer to compare against, which is usually the whole reason we are doing the analysis.
-
-So we're left with reasoning. Can I read this code and convince myself it does what I meant?
-
-`center_scale()` is a better answer to that question than the two lines it replaced. Not because it is shorter, but because you can check it once and then trust it everywhere it appears. The version with the arithmetic inline has to be checked every single time, and we already know how that goes.
+- DRY says do not repeat yourself, and it is right
+- DRRY says do not re-read yourself, and it fires earlier and more often
+- Everything DRY catches, DRRY catches too
+- If you cannot name it, you do not have an idea yet, you have some code
 
 ## Summary {.unnumbered}
 
 1. **Re-reading is the cost.** Repetition is one way to pay it, and not the only one.
-2. **DRRY fires before DRY.** On the first copy, and often when there's no copy at all.
-3. **A function is an idea with a name on it.** If you cannot name it, you do not have an idea yet.
-4. **Sometimes the answer is no.** Used once and readable, a coincidental match, or an abstraction that hides more than it saves.
-5. **Silent failures are the ones to fear.** `sd()` should have been 1. Nothing told us that it was not.
+2. **`glue()` and `here()`** build a path that reads like a sentence and works from anywhere.
+3. **Split what changes from what reads.** `education_path()` and `read_education()` know different things.
+4. **`bind_rows(.id = )` and `read_csv(id = )`** put back the information that lived in the file name.
+5. **Check whether it exists first.** `read_csv()` reads ten files on its own.
+6. **A function is where a fix goes**, so every caller gets it without asking.
+
+Next session we pull a function apart properly, and start doing something with all this data.

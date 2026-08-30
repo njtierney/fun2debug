@@ -8,7 +8,11 @@ docs
 *.aux
 *.log
 *.pdf
-*.tex
 *.toc
+# `keep-tex: true` writes this one file, so name it rather than the glob.
+Introduction-to-Functions-and-Debugging.tex
+# Rendering leaves copies of these next to the sources as well as in docs/.
+site_libs
+*_files
 
 **/*.quarto_ipynb
