@@ -1,8 +1,8 @@
 # Anatomy of a function {#sec-anatomy}
 
-This chapter is more specifically about naming the parts of a function.
+This chapter goes into a bit more depth on the naming of different parts of a function, and the other bits and pieces that go with how it is created. 
 
-Knowing the name of something, means you can look it up, ask about it, and read the help page.
+Once we know the names of the particular parts of functions, and the terminology in functions, it will set you up well to look them up, ask about it, and read the help page.
 
 ::: {.overview}
 
@@ -27,6 +27,7 @@ Knowing the name of something, means you can look it up, ask about it, and read 
 ```{r}
 #| label: pkgs
 #| output: false
+library(countdown)
 library(dplyr)
 library(readr)
 library(ggplot2)
@@ -69,7 +70,7 @@ tas_2023 <- education |>
 
 ## What we are making
 
-Two plots. Look at them, and then look at the code underneath.
+Today we are focussing on these two plots. Let's look at them, and the code underneath them.
 
 ```{r}
 #| label: fig-teaser-age
@@ -103,9 +104,9 @@ education |>
   plot_study_by(y = state_territory)
 ```
 
-**One function.** Two different plots! What changed is what variable goes on the y axis.
+This is just **one function**, with two pretty different plots! The thing that changed is what variable goes on the y axis.
 
-That can be tricky! Have you ever tried to write a function around `dplyr` or `ggplot2`? We will talk through how to solve this.
+This can be tricky! Have you ever tried to write a function around `dplyr` or `ggplot2`? We will talk through how to solve this.
 
 First, the parts of a function.
 
@@ -118,30 +119,33 @@ Let's answer a question with the data you read in last session. What percentage 
 ed_2023 |>
   filter(age_group == "15_19") |>
   summarise(
-    total_studying = sum(n_studying),
-    total_population = sum(population)
+    studying = sum(n_studying),
+    people = sum(population)
   ) |>
-  mutate(pct = round(total_studying / total_population * 100, 1))
+  mutate(pct = round(studying / people * 100, 1))
 ```
 
-Now I want it for another age group, and I am not typing that again. So it becomes a function.
+What if we want this to be __for any age group?__
+
+We can express this as a function:
 
 ```{r}
 #| label: pct-studying
-pct_studying <- function(data, age) {
-  data |>
+pct_studying <- function(data, age = "25_29") {
+  data_summary <- data |>
     filter(age_group == age) |>
     summarise(
-      total_studying = sum(n_studying),
-      total_population = sum(population)
+      studying = sum(n_studying),
+      people = sum(population)
     ) |>
-    mutate(pct = round(total_studying / total_population * 100, 1))
+    mutate(pct = round(studying / people * 100, 1))
+  data_summary
 }
 
 pct_studying(ed_2023, age = "25_29")
 ```
 
-Five parts, and here they are.
+Here are the key parts:
 
 - **The name** is `pct_studying`. This is how you call it later.
 - **`function()`** is what makes a function. The `pct_studying <-` bit just gives it a name, the same way you'd name any other value.
@@ -149,15 +153,36 @@ Five parts, and here they are.
 - **The body** is everything between the braces. This is the code that runs.
 - **The return value** is whatever the body evaluates last, so here that is the one row table coming out of `mutate()`. You can write `return()` if you want, and you'll rarely need to.
 
-The **signature** is the name plus the argument names: `pct_studying(data, age)`. That one line is what most people read before deciding whether they can use your function, so it is worth more thought than the body.
+The **signature** is the name plus the argument names: `pct_studying(data, age)`.
 
-![The same parts, drawn out.](figs/function-anatomy.png){fig-alt="The function pct_studying, defined as function(data, age), with five parts labelled in colour: the name, the keyword function, the arguments, the body, and the return value, which is the final mutate line." width=100%}
+![The same parts, drawn out.](figs/function-anatomy.png){fig-alt="The function pct_studying, defined as function(data, age), with six parts labelled in colour: the name, the keyword function, the arguments, an intermediate value called data_summary, the body, and the return value, which is the bare data_summary line at the end." width=100%}
 
 ::: {.callout-tip title="Going deeper: side effects" collapse="true"}
 
-A **side effect** is anything a function does other than return a value. Printing to the console, writing a file, drawing a plot, setting an option.
+A **side effect** is anything a function does other than return a value.
 
-Side effects aren't bad, and plenty of useful functions have them. `plot_study_by_age()` is all side effect.
+`education_path()`, which you wrote last session, does not have a side effect.
+It works something out and hands it back:
+
+```{r}
+education_path(2024)
+```
+
+This function does have a side effect:
+
+```{r}
+hist(rnorm(1000))
+```
+
+Because it plots to the screen. `hist()` also returns a value:
+
+```{r}
+hist_obj <- hist(rnorm(1000))
+
+hist_obj
+```
+
+Side effects aren't bad, and plenty of useful functions have them. All of ggplot2 is drawing a plot, which is a side effect.
 
 The catch is reasoning. A function that returns something useful **and** quietly writes a file is harder to think about than one that does a single one of those things.
 
@@ -183,14 +208,14 @@ We are not calling `mean` there, we are passing it. That is what people mean whe
 
 ### Takehomes
 
-- The parts are the name, the arguments, the body, and the return value
+- The key parts of a function are: the name, the arguments, the body, the return value
 - A function returns whatever its body evaluates last
 - The signature is the name plus the argument names
 - Knowing the words means you can search for them and ask about them
 
 ## Default values
 
-Let's explore defaults using plots.
+Functions can have default values. You've already seen one. Let's explore defaults using plots.
 
 ```{r}
 #| label: fig-plain
@@ -202,9 +227,25 @@ ggplot(tas_2023, aes(x = prop_studying, y = age_group)) +
   geom_col()
 ```
 
-ggplot2 expressed itself well, it is a pleasure to write, so wrapping that in a function would not buy much. **"Make everything a function"** is not always the answer.
+ggplot2 expressed itself well, it is a pleasure to write, so wrapping that in a function would not buy much. **"Make everything a function"** is not always the answer. Like, I'm not sure if we would get out of a function like so:
 
-What changes the calculus is everything you do next. The axis labels are column names, the x axis should be a percentage, and it could use a title and a colour that is not battleship grey. None of that is hard, all of it is fiddly, and none of it is something you want to retype for the ACT and then again for New South Wales.
+```{r}
+plot_study_by_age <- function(data, state){
+  ggplot(data, aes(x = prop_studying, y = age_group)) +
+  geom_col() + 
+    labs(title = state)
+}
+
+plot_study_by_age(tas_2023, state = "Tas.")
+```
+
+But what might tip the balance towards creating a function is if we were really tinkering with a lot of the plotting options. If this plot now does the following:
+
+- The axis labels are column names
+- The x axis should be a percentage
+- It could use a title, and a colour that is not battleship grey
+
+Let's write this as a function. 
 
 ```{r}
 #| label: plot-study-by-age
@@ -230,9 +271,7 @@ Now the fiddly decisions live in one place. But look at how you have to call it.
 plot_study_by_age(tas_2023, state = "Tas.")
 ```
 
-You said Tasmania twice, once to filter the data and again to label the plot. That's exactly the kind of thing that goes wrong later, when you change one and forget the other.
-
-An argument can have a **default**, which is the value it takes when the caller does not give one.
+An argument can have a **default**, which is the value it takes when you do not specify one.
 
 ```{r}
 #| label: default-state
@@ -258,7 +297,7 @@ The default here is "Tas."
 plot_study_by_age(tas_2023)
 ```
 
-The subtitle says "Tas." and I never typed it, because the default was specified
+The subtitle says "Tas." and I never typed it, because the default was specified.
 
 We could change that to:
 
@@ -267,6 +306,96 @@ plot_study_by_age(tas_2023, state = "Tasmania, 2023")
 ```
 
 That's what defaults are for. They make the common case easy without taking away control in the uncommon one.
+
+::: {.callout-tip title="Going deeper: defaults that use the other arguments" collapse="true"}
+
+A default does not have to be a fixed value. It can be worked out from the other
+arguments, because defaults are evaluated inside the function, after the
+caller's values have arrived.
+
+```{r}
+#| label: fig-computed-default
+#| fig-alt: "A horizontal bar chart of study rates by age group in Tasmania, titled Proportion studying in Tas., where the title was built from the state argument rather than typed."
+plot_study_titled <- function(data,
+                              state,
+                              title = glue("Proportion studying in {state}")) {
+  ggplot(data, aes(x = prop_studying, y = age_group)) +
+    geom_col(fill = "#1B9E77") +
+    scale_x_continuous(labels = scales::percent) +
+    labs(x = "Studying", y = "Age group", title = title) +
+    theme_minimal(base_size = 12)
+}
+
+plot_study_titled(tas_2023, state = "Tas.")
+```
+
+The title writes itself from `state`, so the common case needs one argument
+instead of two.
+
+The catch is that you can now pass two things that disagree, and nothing stops
+you:
+
+```{r}
+#| label: fig-disagreeing-args
+#| fig-alt: "The same bar chart, but titled Victoria even though the data is Tasmania, showing that the two arguments can contradict each other."
+plot_study_titled(tas_2023, state = "Tas.", title = "Victoria")
+```
+
+Two arguments that have to agree with each other are a bug waiting to happen.
+Here it is only a wrong title. When it is a filter and a label, it is a wrong
+answer with a confident heading on it.
+
+:::
+
+::: {.callout-note title="Your Turn"}
+
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs", "setup-data", "pct-studying"]
+#| eval: false
+#| echo: true
+```
+
+</details>
+
+1. Call `pct_studying(tas_2023)` with no `age` at all. Which age group did you get?
+2. Ask for an age group that is not in the data, like `"99_99"`. **You should get a number, not an error.** What is it?
+3. Which argument of `pct_studying()` would you never give a default to?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 3)
+```
+
+<details>
+<summary>Answer</summary>
+
+```{r}
+#| label: answer-defaults
+pct_studying(tas_2023)
+
+pct_studying(tas_2023, age = "99_99")
+```
+
+The first is the default, `"25_29"`, which is what you get when you do not say.
+
+The second is the interesting one. No rows match `"99_99"`, so both sums are
+zero, and zero divided by zero is `NaN`. No error and no warning.
+
+A default makes the common case easy. It will just as happily make a wrong case
+quiet.
+
+For step 3, `data`. A default for it would mean the function had an opinion
+about whose data you meant.
+
+</details>
+
+:::
+
+<!-- UP TO HERE -->
 
 ### Takehomes
 
@@ -315,6 +444,49 @@ All four give `r pct_studying(tas_2023, age = "15_19")`. What differs is how muc
 
 I leave the first argument positional, because it's nearly always the data and nobody is confused by it. Everything after that, I name.
 
+::: {.callout-note title="Your Turn"}
+
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs", "setup-data", "pct-studying"]
+#| eval: false
+#| echo: true
+```
+
+</details>
+
+1. Call `pct_studying()` on `tas_2023` for 20 to 24 year olds, naming both arguments.
+2. Swap the order of those two named arguments. Does it still work?
+3. Now guess before you run it: does `pct_studying("20_24", data = tas_2023)` work?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 3)
+```
+
+<details>
+<summary>Answer</summary>
+
+```{r}
+#| label: answer-argument-order
+pct_studying(data = tas_2023, age = "20_24")
+pct_studying(age = "20_24", data = tas_2023)
+pct_studying("20_24", data = tas_2023)
+```
+
+All three give the same answer. The third one works because `data` was named, so
+the only slot left for `"20_24"` is `age`.
+
+I would not write that third one. But it is worth knowing that R takes the named
+arguments first, then pours whatever is left into the gaps in order.
+
+</details>
+
+:::
+
 ### Takehomes
 
 - You can pass arguments by position or by name
@@ -362,6 +534,20 @@ plot_study_by(tas_2023, y = age_group)
 ```
 
 `{{ y }}` means "do not look this up yet, pass it through to the data". That's all you need to know today, and it works the same way in `dplyr`.
+
+::: {.callout-tip title="Going deeper: why curly braces?" collapse="true"}
+
+I think the braces are a deliberate echo of `glue()`.
+
+In `glue("education_{year}.csv")` last session, `{ }` meant "look this up and
+put the value here". In `{{ y }}` they mean much the same thing. What gets put
+there is the column the caller named, and it gets looked up inside the data
+rather than in your workspace.
+
+So if `glue()` made sense last session, curly curly is the same instinct with
+one more layer of braces.
+
+:::
 
 ```{r}
 #| label: mean-by
@@ -440,8 +626,14 @@ plot_study_by <- function(data, y) {
 </details>
 
 1. Use `plot_study_by()` on the ACT in 2023, broken down by `age_group`.
-2. Write `mean_by()` yourself, and use it to get the mean by `age_group`.
+2. Write `median_by()` yourself, on the same shape as `mean_by()`, and use it to get the median by `age_group`.
 3. Give `plot_study_by()` a default for `y`, so that `plot_study_by(tas_2023)` works with no second argument.
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
 
 <details>
 <summary>Answer</summary>
@@ -450,14 +642,17 @@ plot_study_by <- function(data, y) {
 act_2023 <- education |> filter(year == 2023, state_territory == "ACT")
 plot_study_by(act_2023, y = age_group)
 
-mean_by <- function(data, group) {
+median_by <- function(data, group) {
   data |>
     group_by({{ group }}) |>
-    summarise(mean_prop = round(mean(prop_studying), 3), .groups = "drop")
+    summarise(median_prop = round(median(prop_studying), 3), .groups = "drop")
 }
 
-mean_by(filter(education, year == 2023), group = age_group)
+median_by(filter(education, year == 2023), group = age_group)
 ```
+
+The only thing that changed from `mean_by()` is the summary function. `{{ }}`
+does the same job either way.
 
 For step 3, the default goes in the signature the same as any other:
 
@@ -497,7 +692,7 @@ Two habits worth having.
 
 **Name for the question, not the method.** `pct_studying()`, not `sum_divide_round()`. The method will change, and the question won't.
 
-**Name the insides too.** Look back at `pct_studying()`. It says `studying <- sum(...)` and `people <- sum(...)`, so the division reads as studying over people. That is a choice, and I think it is worth it
+**Name the insides too.** Look back at `pct_studying()`. It says `studying = sum(...)` and `people = sum(...)`, so the division reads as studying over people. That is a choice, and I think it is worth it.
 
 ### Takehomes
 
