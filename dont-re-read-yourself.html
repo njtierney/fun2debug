@@ -360,10 +360,8 @@ dbl (3): n_studying, population, prop_studying
 <p>If we want all 10 files read in, how should we do this?</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2023.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ol type="1">
-<li>How would you read in these ten files? Sketch it out.</li>
 <li>What is different between the ten file paths? What is the same?</li>
 </ol>
-<p>Here is one way to solve this:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>ed_2014 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2014.csv"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-label="2"></a>ed_2015 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2015.csv"</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-label="3"></a>ed_2016 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2016.csv"</span>)</span>
@@ -374,13 +372,13 @@ dbl (3): n_studying, population, prop_studying
 <span id="cb12-8"><a href="#cb12-8" aria-label="8"></a>ed_2021 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2021.csv"</span>)</span>
 <span id="cb12-9"><a href="#cb12-9" aria-label="9"></a>ed_2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2022.csv"</span>)</span>
 <span id="cb12-10"><a href="#cb12-10" aria-label="10"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2023.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ol start="3" type="1">
+<ol start="2" type="1">
 <li>Are there any potential problems you can foresee?</li>
 </ol>
 <p>There are no wrong answers!</p>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_b0536cc9" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_b6d1ab0f" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 </div>
@@ -675,7 +673,7 @@ Setup code
 </ol>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_d4ae81f8" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_cab07877" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 </div>
@@ -853,7 +851,7 @@ Setup code
 </ol>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_2e02bd60" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_679f9cfe" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <details>
@@ -983,25 +981,22 @@ Answer
 <pre><code>[1] 2014</code></pre>
 </div>
 </div>
-<p>And <code>as.character()</code> turns it into text:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-label="1"></a><span class="fu">basename</span>(path) <span class="sc">|&gt;</span> <span class="fu">parse_number</span>() <span class="sc">|&gt;</span> <span class="fu">as.character</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-label="1"></a><span class="fu">basename</span>(path) <span class="sc">|&gt;</span> <span class="fu">parse_number</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "2014"</code></pre>
+<pre><code>[1] 2014</code></pre>
 </div>
 </div>
-<p>Why text? Because a year is a label, not a quantity. You are never going to want the mean of it.</p>
-<p>Those three steps are one idea. Get the year out of a path. So let’s give that idea a name:</p>
+<p>Those steps are one idea. Get the year out of a path. So let’s give that idea a name:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-label="1"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
 <span id="cb78-2"><a href="#cb78-2" aria-label="2"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
-<span id="cb78-3"><a href="#cb78-3" aria-label="3"></a>    <span class="fu">parse_number</span>() <span class="sc">|&gt;</span></span>
-<span id="cb78-4"><a href="#cb78-4" aria-label="4"></a>    <span class="fu">as.character</span>()</span>
-<span id="cb78-5"><a href="#cb78-5" aria-label="5"></a>}</span>
-<span id="cb78-6"><a href="#cb78-6" aria-label="6"></a></span>
-<span id="cb78-7"><a href="#cb78-7" aria-label="7"></a><span class="fu">year_from_path</span>(path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb78-3"><a href="#cb78-3" aria-label="3"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb78-4"><a href="#cb78-4" aria-label="4"></a>}</span>
+<span id="cb78-5"><a href="#cb78-5" aria-label="5"></a></span>
+<span id="cb78-6"><a href="#cb78-6" aria-label="6"></a><span class="fu">year_from_path</span>(path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "2014"</code></pre>
+<pre><code>[1] 2014</code></pre>
 </div>
 </div>
 <p>Now let’s put all of that inside the function.</p>
@@ -1020,18 +1015,18 @@ Answer
 <span id="cb80-12"><a href="#cb80-12" aria-label="12"></a>education</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 720 × 6
-   state_territory age_group n_studying population prop_studying year 
-   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;
- 1 ACT             15_19           19.3       23.8        0.811  2014 
- 2 ACT             20_24           18.1       31.6        0.573  2014 
- 3 ACT             25_29            9.4       34.9        0.269  2014 
- 4 ACT             30_34            4.5       32.8        0.137  2014 
- 5 ACT             35_39            4.5       28.7        0.157  2014 
- 6 ACT             40_44            2.6       28.4        0.0915 2014 
- 7 ACT             45_49            1         24.2        0.0413 2014 
- 8 ACT             50_54            3         24          0.125  2014 
- 9 ACT             55_74            2.1       67.2        0.0312 2014 
-10 NSW             15_19          388.       462.         0.841  2014 
+   state_territory age_group n_studying population prop_studying  year
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;
+ 1 ACT             15_19           19.3       23.8        0.811   2014
+ 2 ACT             20_24           18.1       31.6        0.573   2014
+ 3 ACT             25_29            9.4       34.9        0.269   2014
+ 4 ACT             30_34            4.5       32.8        0.137   2014
+ 5 ACT             35_39            4.5       28.7        0.157   2014
+ 6 ACT             40_44            2.6       28.4        0.0915  2014
+ 7 ACT             45_49            1         24.2        0.0413  2014
+ 8 ACT             50_54            3         24          0.125   2014
+ 9 ACT             55_74            2.1       67.2        0.0312  2014
+10 NSW             15_19          388.       462.         0.841   2014
 # ℹ 710 more rows</code></pre>
 </div>
 </div>
@@ -1068,7 +1063,6 @@ Answer
 <li>DRY says do not repeat yourself, and it is right</li>
 <li>DRRY says do not re-read yourself, and it fires earlier and more often</li>
 <li>Everything DRY catches, DRRY catches too</li>
-<li>If you cannot name it, you do not have an idea yet, you have some code</li>
 </ul>
 </section>
 </section>
