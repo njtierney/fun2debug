@@ -32,13 +32,16 @@
 - Outside-in approach
   - Imagining the ideal function interface
   - What am I trying to do? What inputs do I need? What should it return?
+  - Writing the call, then making it true, with `{fnmate}`
 - Inside-out approach
   - Starting with working code
+  - A warning that names a symptom, not the cause
   - Identifying the parts that change
   - Abstracting complexity step-by-step
-- Moving between outside and inside views
-  - Up and down the ladder of abstraction
-  - Street-level vs map-level understanding
+- Which way, and whether to bother
+  - Outside-in for planning, inside-out for exploring
+  - When not to write a function at all
+- Iteration is normal, and expected
 
 ## Looking inside a function
 
@@ -49,6 +52,8 @@
   - `rlang::last_trace()`
 - Stopping inside a function
   - `browser()`: setting breakpoints and stepping through code
+  - Up and down the ladder of abstraction
+  - Street-level vs map-level understanding
   - `debug()` and `debugonce()`
   - `options(error = recover)`
   - The RStudio debugging interface
