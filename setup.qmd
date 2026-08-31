@@ -170,7 +170,7 @@ install.packages(pkgs)
 
 ### Installing {fnmate}
 
-`{fnmate}` writes the skeleton of a function for you, from the call you wish you could make. We use it in @sec-anatomy.
+`{fnmate}` writes the skeleton of a function for you, from the call you wish you could make. We use it in @sec-outside-in.
 
 It is not on CRAN. It lives on [Miles McBain's](https://milesmcbain.xyz) r-universe, which is an ordinary website that R installs from, so there is no git and no compiler involved.
 
