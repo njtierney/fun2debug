@@ -27,9 +27,11 @@ book:
   page-footer: "Copyright 2026, Nicholas Tierney"
   page-navigation: true
   search: true
-  # PDF turned off 31 Aug 2026, on the morning of teaching. It was for
-  # printing, but it doubles the render time and the course runs from the
-  # website. The format block below is kept, commented out, to turn back on.
+  # PDF is OFF. HTML only. To turn it back on, uncomment the line below and
+  # the pdf block at the bottom of this file. Both are commented with a single
+  # leading `#` at column zero, so `sed 's/^#//'` on those lines restores the
+  # indentation exactly. Do not re-comment them by stripping indentation, that
+  # is how the block got mangled on 31 Aug.
   # downloads: [pdf]
   # The book opens and closes on the same idea: chapter 1 is why you should
   # not have to re-read your own code, chapter 7 is who does the re-reading.
@@ -67,34 +69,34 @@ format:
     # to 80 characters and scrolls beyond that; wrapping instead would
     # destroy the indentation that shows the shape of a pipeline.
   # PDF. Plain KOMA scrbook with wide margins, NOT tufte-book - see the note
-  # at the top of pdf-preamble.tex for why. Enabled 30 Aug 2026; the settings
-  # below are the ones rbestpractices arrived at, and the comments are the
-  # reasons they cannot be simplified away.
-  # pdf:
-  # documentclass: scrbook
-  # classoption: [a4paper]
-  # include-in-header: pdf-preamble.tex
-  # keep-tex: true
-  # # The mono font needs box-drawing glyphs. The project layout tree in
-  # # "Getting set up" uses U+2500, U+251C, U+2514 and U+2502, and a font
-  # # without them drops every one silently, leaving an indented list of
-  # # names with no structure. TinyTeX ships no such font, so the machine
-  # # rendering this needs Fira Code installed - see .github/workflows/.
-  # monofont: "Fira Code"
-  # # The margin is the point of this layout. Figure captions go out there,
-  # # and what is left is room to write on a printed page.
-  # #
-  # # `reference-location: margin` would put footnotes out there too, and it
-  # # is deliberately NOT set: on the rbestpractices book it makes Quarto's
-  # # own filter die with "attempt to get length of a Block value". Narrowed
-  # # to that one option - every other margin setting is fine - but the cause
-  # # is still unknown, so it stays off here too.
-  # cap-location: margin
-  # geometry:
-  # - left=2.2cm
-  # - right=7cm
-  # - top=2.5cm
-  # - bottom=2.5cm
-  # - marginparwidth=5.2cm
-  # - marginparsep=0.6cm
-  #
+  # at the top of pdf-preamble.tex for why. Enabled 30 Aug 2026, turned off on
+  # the morning of the 31st, turned back on the same afternoon for printing.
+  # The settings below are the ones rbestpractices arrived at, and the comments
+  # are the reasons they cannot be simplified away.
+#  pdf:
+#    documentclass: scrbook
+#    classoption: [a4paper]
+#    include-in-header: pdf-preamble.tex
+#    keep-tex: true
+    # The mono font needs box-drawing glyphs. The project layout tree in
+    # "Getting set up" uses U+2500, U+251C, U+2514 and U+2502, and a font
+    # without them drops every one silently, leaving an indented list of
+    # names with no structure. TinyTeX ships no such font, so the machine
+    # rendering this needs Fira Code installed - see .github/workflows/.
+#    monofont: "Fira Code"
+    # The margin is the point of this layout. Figure captions go out there,
+    # and what is left is room to write on a printed page.
+    #
+    # `reference-location: margin` would put footnotes out there too, and it
+    # is deliberately NOT set: on the rbestpractices book it makes Quarto's
+    # own filter die with "attempt to get length of a Block value". Narrowed
+    # to that one option - every other margin setting is fine - but the cause
+    # is still unknown, so it stays off here too.
+#    cap-location: margin
+#    geometry:
+#      - left=2.2cm
+#      - right=7cm
+#      - top=2.5cm
+#      - bottom=2.5cm
+#      - marginparwidth=5.2cm
+#      - marginparsep=0.6cm

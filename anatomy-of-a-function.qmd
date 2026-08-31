@@ -1,8 +1,8 @@
 # Anatomy of a function {#sec-anatomy}
 
-This chapter goes into a bit more depth on the naming of different parts of a function, and the other bits and pieces that go with how it is created. 
+This chapter goes into a bit more depth on the naming of different parts of a function, and some other bits and pieces. Knowing the names of these things helps set you up to understand them better because you can look them up, ask an LLM, and read the help page (which is where I recommend you start!)
 
-Once we know the names of the particular parts of functions, and the terminology in functions, it will set you up well to look them up, ask about it, and read the help page.
+We also touch on some more practical ideas - like how to use functions with packages like ggplot and dplyr. There are some tricky things there, which I hope will be a little bit clearer
 
 ::: {.overview}
 
@@ -17,12 +17,13 @@ Once we know the names of the particular parts of functions, and the terminology
 - What are the parts of a function called?
 - How do I give an argument a sensible default?
 - How do I pass values in, and does the order matter?
-- How do I write one function that works on any column?
-- How do I choose a good name?
+- How do I use functions that work with packages like ggplot and dplyr?
+- How do I choose a good function name?
 
 **What you need this session**
 
 - A session of RStudio open, in the same folder as last time
+- The following R packages:
 
 ```{r}
 #| label: pkgs
@@ -33,6 +34,7 @@ library(readr)
 library(ggplot2)
 library(glue)
 library(here)
+library(scales)
 ```
 
 ```{r}
@@ -64,53 +66,77 @@ ed_2023 <- education |>
 
 tas_2023 <- education |>
   filter(year == 2023, state_territory == "Tas.")
+
+plot_study_by <- function(data, y) {
+  ggplot(data, aes(x = n_studying, y = {{ y }})) +
+    geom_col(fill = "#1B9E77") +
+    scale_x_continuous(labels = label_number(scale = 1000, big.mark = ","),
+                       expand = expansion(mult = c(0, 0.05)), limits = c(0,NA)) +
+    labs(x = "# Studying", y = "Age Group") +
+    theme_minimal(base_size = 16) +
+    theme_sub_panel(grid.major.y = element_blank()) +
+    theme_sub_axis_y(title = element_text(margin = margin(r = 20)))
+}
+
 ```
 
 :::
 
 ## What we are making
 
-Today we are focussing on these two plots. Let's look at them, and the code underneath them.
+Today we are focussing on two key functions, and the plots they make.
+
+Let's get some of the data ready:
+
+```{r}
+ducation_path <- function(year) {
+  here(glue("data/tidy/education_{year}.csv"))
+}
+
+year_from_path <- function(path) {
+  basename(path) |>
+    parse_number()
+}
+
+read_education <- function(year) {
+  files <- education_path(year)
+  education_raw <- read_csv(files, id = "path")
+
+  education_raw |>
+    mutate(year = year_from_path(path)) |>
+    select(-path)
+}
+
+education <- read_education(2014:2023)
+
+ed_2023 <- education |>
+  filter(year == 2023)
+
+ed_2023
+
+tas_2023 <- education |>
+  filter(year == 2023, state_territory == "Tas.")
+
+tas_2023
+```
+
+And now let's demonstrate these plotting functions:
 
 ```{r}
 #| label: fig-teaser-age
-#| echo: false
+#| echo: true
 #| fig-alt: "A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels."
-plot_study_by <- function(data, y) {
-  ggplot(data, aes(x = prop_studying, y = {{ y }})) +
-    geom_col(fill = "#1B9E77") +
-    scale_x_continuous(labels = scales::percent) +
-    labs(x = "Studying", y = NULL) +
-    theme_minimal(base_size = 12)
-}
-
-plot_study_by(tas_2023, y = age_group)
+plot_study_by(ed_2023, y = age_group)
+plot_study_by(ed_2023, y = state_territory)
 ```
 
-```{r}
-#| label: fig-teaser-state
-#| echo: false
-#| fig-alt: "A horizontal bar chart of the proportion of 15 to 19 year olds studying in 2023, broken down by state and territory, in the same style as the previous plot."
-education |>
-  filter(year == 2023, age_group == "15_19") |>
-  plot_study_by(y = state_territory)
-```
-
-```r
-plot_study_by(tas_2023, y = age_group)
-
-education |>
-  filter(year == 2023, age_group == "15_19") |>
-  plot_study_by(y = state_territory)
-```
-
-This is just **one function**, with two pretty different plots! The thing that changed is what variable goes on the y axis.
+This is just **one function**, with two pretty different plots! The number studying for each age group, or for each state. The thing that changed is what variable goes on the y axis.
 
 This can be tricky! Have you ever tried to write a function around `dplyr` or `ggplot2`? We will talk through how to solve this.
 
-First, the parts of a function.
+Now, the anatomy of a function.
 
-## The parts of a function
+## The Anatomy of a function
 
 Let's answer a question with the data you read in last session. What percentage of 15 to 19 year olds are studying?
 
@@ -126,6 +152,15 @@ ed_2023 |>
 ```
 
 What if we want this to be __for any age group?__
+
+Like I want to be able to write code that looks like this:
+
+```{r}
+#| eval: false
+#| echo: true
+pct_studying(ed_2023, age = "25_29")
+```
+
 
 We can express this as a function:
 
@@ -148,10 +183,10 @@ pct_studying(ed_2023, age = "25_29")
 Here are the key parts:
 
 - **The name** is `pct_studying`. This is how you call it later.
-- **`function()`** is what makes a function. The `pct_studying <-` bit just gives it a name, the same way you'd name any other value.
+- **`function()`** is what makes a function. The `pct_studying <-` bit just gives it a name, the same way you'd name any other object.
 - **The arguments** are `data` and `age`. These are the parts that change between calls.
-- **The body** is everything between the braces. This is the code that runs.
-- **The return value** is whatever the body evaluates last, so here that is the one row table coming out of `mutate()`. You can write `return()` if you want, and you'll rarely need to.
+- **The body** is everything between the braces. This is the code that runs. When we use single braces like this, we are saying: Run multiple lines of code.
+- **The return value** is whatever the body evaluates last, so here that is the one row table coming out of `mutate()`.
 
 The **signature** is the name plus the argument names: `pct_studying(data, age)`.
 
@@ -184,27 +219,96 @@ hist_obj
 
 Side effects aren't bad, and plenty of useful functions have them. All of ggplot2 is drawing a plot, which is a side effect.
 
-The catch is reasoning. A function that returns something useful **and** quietly writes a file is harder to think about than one that does a single one of those things.
+The catch is reasoning. We only want functions to do one thing, generally. Return one plot. Return a data frame. Once functions start returning multiple things, it can be harder to reason with them.
+
+So, in the case of `hist()`, it might be better to have two functions:
+
+- `hist_plot()` which does the histogram plotting
+- `hist_data()` which gives us the statistics, etc
+
+A function that returns something useful **and** quietly writes a file is harder to think about than one that does a single one of those things.
 
 :::
 
 ::: {.callout-tip title="Going deeper: functions are values" collapse="true"}
 
-An argument can be a function. You hand it over without brackets, the same way you would hand over a number.
+An **argument** can be a function. You hand it over without brackets, the same way you would hand over a number.
 
 ```{r}
 #| label: functions-as-values
-summarise_column <- function(x, f) {
-  f(x, na.rm = TRUE)
+summarise_column <- function(values, fun) {
+  fun(values)
 }
 
-summarise_column(education$prop_studying, f = mean)
-summarise_column(education$prop_studying, f = max)
+summarise_column(values = education$n_studying, fun = mean)
+summarise_column(values = education$n_studying, fun = max)
 ```
 
-We are not calling `mean` there, we are passing it. That is what people mean when they say functions are values, and it is how `map()` and `lapply()` work.
+We are not calling `mean` there, we are passing it to the function. There are many powerful usecases of this. We will touch more on them later. For now, just know this kind of thing is possible.
 
 :::
+
+:::{.callout-note title="Your Turn: What do these return?"}
+
+What do these functions return? Have a think about it, then run them and see!
+
+```{r}
+my_summary <- function(values){
+  list(
+    min = min(values, na.rm = TRUE),
+    median = median(values, na.rm = TRUE),
+    mean = mean(values, na.rm = TRUE),
+    max = max(values, na.rm = TRUE)
+  )
+}
+
+# try running this with
+# my_summary(ed_2023$n_studying)
+```
+
+
+```{r}
+my_summary2 <- function(values){
+  summary_values <- list(
+    min = min(values, na.rm = TRUE),
+    q1 = quantile(values, probs = 0.25, na.rm = TRUE),
+    median = median(values, na.rm = TRUE),
+    mean = mean(values, na.rm = TRUE),
+    q3 = quantile(values, probs = 0.75, na.rm = TRUE),
+    max = max(values, na.rm = TRUE)
+  )
+}
+
+# try running this with
+# my_summary2(ed_2023$n_studying)
+```
+
+
+```{r}
+my_hist <- function(values){
+  hist(values, main = "Histogram of values", breaks = "FD")
+}
+# try running this on
+# ed_2023$n_studying
+```
+
+```{r}
+my_hist2 <- function(values){
+  the_plot <- hist(values, main = "Histogram of values", breaks = "FD")
+}
+# try running this on
+# ed_2023$n_studying
+```
+
+
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+:::
+
 
 ### Takehomes
 
@@ -223,15 +327,25 @@ Functions can have default values. You've already seen one. Let's explore defaul
 
 tas_2023
 
-ggplot(tas_2023, aes(x = prop_studying, y = age_group)) +
+ggplot(tas_2023, aes(x = n_studying, y = age_group)) +
   geom_col()
 ```
 
-ggplot2 expressed itself well, it is a pleasure to write, so wrapping that in a function would not buy much. **"Make everything a function"** is not always the answer. Like, I'm not sure if we would get out of a function like so:
+Should we make that code above a function? My feeling is: probably not.
+
+My reasons:
+
+- ggplot expressed itself well
+- I'm unlikely to run the same thing again
+- There isn't that much code - so I can understand what it is expressing easily
+
+We don't need to always **"make everything a function"**.
+
+Like, I'm not sure if we would get out of a function like so:
 
 ```{r}
 plot_study_by_age <- function(data, state){
-  ggplot(data, aes(x = prop_studying, y = age_group)) +
+  ggplot(data, aes(x = n_studying, y = age_group)) +
   geom_col() + 
     labs(title = state)
 }
@@ -242,24 +356,35 @@ plot_study_by_age(tas_2023, state = "Tas.")
 But what might tip the balance towards creating a function is if we were really tinkering with a lot of the plotting options. If this plot now does the following:
 
 - The axis labels are column names
-- The x axis should be a percentage
+- The x axis should be in increments of 1,000
 - It could use a title, and a colour that is not battleship grey
+- The left axis of the bars should be aligned
 
-Let's write this as a function. 
+```{r}
+ggplot(tas_2023, aes(x = n_studying, y = age_group)) +
+    geom_col(fill = "#1B9E77") +
+    labs(x = "# Studying", y = "Age Group") +
+    theme_minimal(base_size = 16) +
+    theme_sub_panel(grid.major.y = element_blank()) +
+    scale_x_continuous(labels = label_number(scale = 1000, big.mark = ","),
+                       expand = expansion(mult = c(0, 0.05)), limits = c(0,NA)) +
+    theme_sub_axis_y(title = element_text(margin = margin(r = 20)))
+```
+
+
+Let's write this as a function - we want to change the data, but have everything else the same
 
 ```{r}
 #| label: plot-study-by-age
 plot_study_by_age <- function(data, state) {
-  ggplot(data, aes(x = prop_studying, y = age_group)) +
+  ggplot(data, aes(x = n_studying, y = age_group)) +
     geom_col(fill = "#1B9E77") +
-    scale_x_continuous(labels = scales::percent) +
-    labs(
-      x = "Studying",
-      y = "Age group",
-      title = "Proportion of people studying, by age group",
-      subtitle = state
-    ) +
-    theme_minimal(base_size = 12)
+    labs(x = "# Studying", y = "Age Group") +
+    theme_minimal(base_size = 16) +
+    theme_sub_panel(grid.major.y = element_blank()) +
+    scale_x_continuous(labels = label_number(scale = 1000, big.mark = ","),
+                       expand = expansion(mult = c(0, 0.05)), limits = c(0,NA)) +
+    theme_sub_axis_y(title = element_text(margin = margin(r = 20)))
 }
 
 plot_study_by_age(tas_2023, state = "Tas.")
@@ -276,16 +401,19 @@ An argument can have a **default**, which is the value it takes when you do not 
 ```{r}
 #| label: default-state
 plot_study_by_age <- function(data, state = "Tas.") {
-  ggplot(data, aes(x = prop_studying, y = age_group)) +
+  ggplot(tas_2023, aes(x = n_studying, y = age_group)) +
     geom_col(fill = "#1B9E77") +
-    scale_x_continuous(labels = scales::percent) +
+    theme_minimal(base_size = 16) +
+    theme_sub_panel(grid.major.y = element_blank()) +
+    scale_x_continuous(labels = label_number(scale = 1000, big.mark = ","),
+                       expand = expansion(mult = c(0, 0.05)), limits = c(0,NA)) +
+    theme_sub_axis_y(title = element_text(margin = margin(r = 20))) +
     labs(
       x = "Studying",
       y = "Age group",
       title = "Proportion of people studying, by age group",
       subtitle = state
-    ) +
-    theme_minimal(base_size = 12)
+    )
 }
 ```
 
@@ -316,14 +444,18 @@ caller's values have arrived.
 ```{r}
 #| label: fig-computed-default
 #| fig-alt: "A horizontal bar chart of study rates by age group in Tasmania, titled Proportion studying in Tas., where the title was built from the state argument rather than typed."
-plot_study_titled <- function(data,
-                              state,
-                              title = glue("Proportion studying in {state}")) {
-  ggplot(data, aes(x = prop_studying, y = age_group)) +
+plot_study_titled <- function(
+  data,
+  state,
+  title = glue("Proportion studying in {state}")
+) {
+  ggplot(data, aes(x = n_studying, y = age_group)) +
     geom_col(fill = "#1B9E77") +
-    scale_x_continuous(labels = scales::percent) +
+    scale_x_continuous(labels = label_number(scale = 1000, big.mark = ","),
+                       expand = expansion(mult = c(0, 0.05)), limits = c(0,NA)) +
+    theme_sub_axis_y(title = element_text(margin = margin(r = 20))) +
     labs(x = "Studying", y = "Age group", title = title) +
-    theme_minimal(base_size = 12)
+    theme_minimal(base_size = 16)
 }
 
 plot_study_titled(tas_2023, state = "Tas.")
@@ -362,7 +494,6 @@ answer with a confident heading on it.
 
 1. Call `pct_studying(tas_2023)` with no `age` at all. Which age group did you get?
 2. Ask for an age group that is not in the data, like `"99_99"`. **You should get a number, not an error.** What is it?
-3. Which argument of `pct_studying()` would you never give a default to?
 
 ```{r}
 #| echo: false
@@ -385,17 +516,10 @@ The first is the default, `"25_29"`, which is what you get when you do not say.
 The second is the interesting one. No rows match `"99_99"`, so both sums are
 zero, and zero divided by zero is `NaN`. No error and no warning.
 
-A default makes the common case easy. It will just as happily make a wrong case
-quiet.
-
-For step 3, `data`. A default for it would mean the function had an opinion
-about whose data you meant.
 
 </details>
 
 :::
-
-<!-- UP TO HERE -->
 
 ### Takehomes
 
@@ -404,16 +528,12 @@ about whose data you meant.
 - Give the common case a default, and let people override it
 - Two arguments that must agree with each other are a bug waiting to happen
 
-## Giving values to arguments
+## Arguments by position and by order
 
-Arguments are names waiting for a value. The values turn up when you call the function, and you can hand them over two ways.
+Arguments can be given:
 
-**By position**, in the order the definition lists them:
-
-```{r}
-#| label: by-position
-pct_studying(tas_2023, "15_19")
-```
+- By name
+- By position
 
 **By name**, using `name = value`:
 
@@ -422,11 +542,19 @@ pct_studying(tas_2023, "15_19")
 pct_studying(data = tas_2023, age = "15_19")
 ```
 
-Once they're named, the order stops mattering:
+**By position**, in the order the definition lists them:
+
+```{r}
+#| label: by-position
+pct_studying(tas_2023, "15_19")
+```
+
+Once they're named, the order/position doesn't matter:
 
 ```{r}
 #| label: by-name-reordered
 pct_studying(age = "15_19", data = tas_2023)
+pct_studying(data = tas_2023, age = "15_19")
 ```
 
 And you can mix the two:
@@ -496,9 +624,41 @@ arguments first, then pours whatever is left into the gaps in order.
 
 ## Making a function work on any column
 
-`plot_study_by_age()` has a problem. It always plots `age_group`.
+`plot_study_by_age()` always plots `age_group`.
 
-If I want the same plot broken down by state instead, I'm back to copying the whole function and changing one word, which is where we came in.
+If I want the same plot broken down by state instead?
+
+I could copy the whole function and change one word, which is where we came in.
+
+:::{.callout-note title="Your Turn: plotting functions"}
+
+How would you change `plot_study_by_age()` to be plotted by state, or age group, or some other variable?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+
+```{r}
+plot_study_by_age <- function(data, state = "Tas.") {
+  ggplot(tas_2023, aes(x = n_studying, y = age_group)) +
+    geom_col(fill = "#1B9E77") +
+    theme_minimal(base_size = 16) +
+    theme_sub_panel(grid.major.y = element_blank()) +
+    scale_x_continuous(labels = label_number(scale = 1000, big.mark = ","),
+                       expand = expansion(mult = c(0, 0.05)), limits = c(0,NA)) +
+    theme_sub_axis_y(title = element_text(margin = margin(r = 20))) +
+    labs(
+      x = "Studying",
+      y = "Age group",
+      title = "Proportion of people studying, by age group",
+      subtitle = state
+    )
+}
+```
+
+:::
 
 So let's try the obvious thing and pass the column as an argument.
 
@@ -506,7 +666,7 @@ So let's try the obvious thing and pass the column as an argument.
 #| label: broken-column
 #| error: true
 plot_study_by <- function(data, y) {
-  ggplot(data, aes(x = prop_studying, y = y)) +
+  ggplot(data, aes(x = n_studying, y = y)) +
     geom_col()
 }
 
@@ -523,7 +683,7 @@ The fix is to wrap the argument in two sets of braces, which people say out loud
 #| label: fig-curly-curly
 #| fig-alt: "A horizontal bar chart of study rates by age group in Tasmania, produced by a function that takes the column to plot as an argument."
 plot_study_by <- function(data, y) {
-  ggplot(data, aes(x = prop_studying, y = {{ y }})) +
+  ggplot(data, aes(x = n_studying, y = {{ y }})) +
     geom_col(fill = "#1B9E77") +
     scale_x_continuous(labels = scales::percent) +
     labs(x = "Studying", y = NULL) +
@@ -533,14 +693,20 @@ plot_study_by <- function(data, y) {
 plot_study_by(tas_2023, y = age_group)
 ```
 
-`{{ y }}` means "do not look this up yet, pass it through to the data". That's all you need to know today, and it works the same way in `dplyr`.
+`{{{ y }}}` means "do not look this up yet, pass it through to the data". That's all you need to know today, and it works the same way in `dplyr`.
+
+Some terms to be aware of, and discuss, if time:
+
+- standard evaluation vs Non-standard evaluation
+- quasiquotation - quoting/unquoting
+- 
 
 ::: {.callout-tip title="Going deeper: why curly braces?" collapse="true"}
 
-I think the braces are a deliberate echo of `glue()`.
+The braces are a deliberate echo of `glue()`.
 
 In `glue("education_{year}.csv")` last session, `{ }` meant "look this up and
-put the value here". In `{{ y }}` they mean much the same thing. What gets put
+put the value here". In `{{{ y }}}` they mean much the same thing. What gets put
 there is the column the caller named, and it gets looked up inside the data
 rather than in your workspace.
 
@@ -549,16 +715,6 @@ one more layer of braces.
 
 :::
 
-```{r}
-#| label: mean-by
-mean_by <- function(data, group) {
-  data |>
-    group_by({{ group }}) |>
-    summarise(mean_prop = round(mean(prop_studying), 3), .groups = "drop")
-}
-
-mean_by(filter(education, year == 2023), group = state_territory)
-```
 
 And now the same plotting function does a different job entirely:
 
@@ -570,9 +726,9 @@ education |>
   plot_study_by(y = state_territory)
 ```
 
-Notice I renamed it. `plot_study_by_age()` was true when it only did age groups, and it stopped being true the moment we added that argument. `plot_study_by()` is honest again.
+Notice I renamed it. `plot_study_by_age()` was true when it only did age groups, but now it is more general.
 
-That's normal. The first name you pick is rarely the one you keep, and renaming is part of writing a function rather than a sign you've got it wrong.
+It is normal to iterate on a plot name. The first name you pick is rarely the one you keep, and renaming is part of writing a function rather than a sign you've got it wrong.
 
 You can read more about curly curly at:
 
@@ -615,7 +771,7 @@ education <- read_education(2014:2023)
 tas_2023 <- education |> filter(year == 2023, state_territory == "Tas.")
 
 plot_study_by <- function(data, y) {
-  ggplot(data, aes(x = prop_studying, y = {{ y }})) +
+  ggplot(data, aes(x = n_studying, y = {{ y }})) +
     geom_col(fill = "#1B9E77") +
     scale_x_continuous(labels = scales::percent) +
     labs(x = "Studying", y = NULL) +
@@ -645,20 +801,20 @@ plot_study_by(act_2023, y = age_group)
 median_by <- function(data, group) {
   data |>
     group_by({{ group }}) |>
-    summarise(median_prop = round(median(prop_studying), 3), .groups = "drop")
+    summarise(median_prop = round(median(n_studying), 3), .groups = "drop")
 }
 
 median_by(filter(education, year == 2023), group = age_group)
 ```
 
-The only thing that changed from `mean_by()` is the summary function. `{{ }}`
+The only thing that changed from `mean_by()` is the summary function. `{{{ }}}`
 does the same job either way.
 
 For step 3, the default goes in the signature the same as any other:
 
 ```r
 plot_study_by <- function(data, y = age_group) {
-  ggplot(data, aes(x = prop_studying, y = {{ y }})) +
+  ggplot(data, aes(x = n_studying, y = {{ y }})) +
     geom_col(fill = "#1B9E77")
 }
 ```
@@ -670,15 +826,17 @@ plot_study_by <- function(data, y = age_group) {
 ### Takehomes
 
 - Column names are not values, so passing them straight in does not work
-- Wrap the argument in `{{ }}` to pass a column through to `dplyr` or `ggplot2`
+- Wrap the argument in `{{{ }}}` to pass a column through to `dplyr` or `ggplot2`
 - One function then covers every column instead of one
 - When a function outgrows its name, rename it
 
 ## Naming things
 
-A function does something, so its name should say what.
+Is hard!
 
-Watch this one improve.
+A function **does** something, it is us expressing out intention! So take a moment to think about that when you give something a name.
+
+There is a process, it might take iteration:
 
 ```r
 myfun()            # what?
@@ -686,13 +844,12 @@ study_plot()       # better, but what does it do with it?
 plot_study_by()    # now I do not have to read the body
 ```
 
-The pattern that gets you there is **`verb_noun()`**. Not every function fits it, and reaching for it is still the fastest way to find out whether you know what your function does. If you can't fill in the verb, you probably have two functions.
+A template I like is: **`verb_noun()`**. 
 
-Two habits worth having.
+- the thing you do
+- the thing it happens on
 
-**Name for the question, not the method.** `pct_studying()`, not `sum_divide_round()`. The method will change, and the question won't.
-
-**Name the insides too.** Look back at `pct_studying()`. It says `studying = sum(...)` and `people = sum(...)`, so the division reads as studying over people. That is a choice, and I think it is worth it.
+Let's discuss.
 
 ### Takehomes
 
@@ -706,5 +863,5 @@ Two habits worth having.
 1. **The parts are name, arguments, body, return value.** The signature is the name plus the argument names.
 2. **Defaults make the common case easy.** They can be worked out from the other arguments.
 3. **Name your arguments** when you call something, except the first.
-4. **`{{ }}` passes a column name through** to `dplyr` and `ggplot2`.
+4. **`{{{ }}}` passes a column name through** to `dplyr` and `ggplot2`.
 5. **Renaming is part of writing.** When a function outgrows its name, change it.
