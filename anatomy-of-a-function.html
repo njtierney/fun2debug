@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Anatomy of a function – Introduction to Functions and Debugging</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./dont-re-read-yourself.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b45b7b0fa9169e986df15f1ef60a279c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-020cafe2c5162b14dfdb8f310a12914a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./anatomy-of-a-function.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Anatomy of a function</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Functions and Debugging</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/njtierney/fun2debug" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dont-re-read-yourself.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Don’t re-read yourself</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anatomy-of-a-function.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Anatomy of a function</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#what-we-are-making" id="toc-what-we-are-making" class="nav-link" data-scroll-target="#what-we-are-making"><span class="header-section-number">2.1</span> What we are making</a></li>
+  <li><a href="#the-parts-of-a-function" id="toc-the-parts-of-a-function" class="nav-link" data-scroll-target="#the-parts-of-a-function"><span class="header-section-number">2.2</span> The parts of a function</a>
+  <ul class="collapse">
+  <li><a href="#takehomes" id="toc-takehomes" class="nav-link" data-scroll-target="#takehomes">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#default-values" id="toc-default-values" class="nav-link" data-scroll-target="#default-values"><span class="header-section-number">2.3</span> Default values</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-1" id="toc-takehomes-1" class="nav-link" data-scroll-target="#takehomes-1">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#giving-values-to-arguments" id="toc-giving-values-to-arguments" class="nav-link" data-scroll-target="#giving-values-to-arguments"><span class="header-section-number">2.4</span> Giving values to arguments</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-2" id="toc-takehomes-2" class="nav-link" data-scroll-target="#takehomes-2">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#making-a-function-work-on-any-column" id="toc-making-a-function-work-on-any-column" class="nav-link" data-scroll-target="#making-a-function-work-on-any-column"><span class="header-section-number">2.5</span> Making a function work on any column</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-3" id="toc-takehomes-3" class="nav-link" data-scroll-target="#takehomes-3">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#naming-things" id="toc-naming-things" class="nav-link" data-scroll-target="#naming-things"><span class="header-section-number">2.6</span> Naming things</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-4" id="toc-takehomes-4" class="nav-link" data-scroll-target="#takehomes-4">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li>Links</li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/anatomy-of-a-function.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-anatomy" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Anatomy of a function</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This chapter is more specifically about naming the parts of a function.</p>
+<p>Knowing the name of something, means you can look it up, ask about it, and read the help page.</p>
+<section id="overview" class="level2 unnumbered overview">
+<h2 class="unnumbered anchored" data-anchor-id="overview">Overview</h2>
+<p><strong>Duration</strong> 60 minutes</p>
+<p><strong>Questions</strong></p>
+<!-- These map onto the sections below, in order. If you move a section, move its question. -->
+<ul>
+<li>What are the parts of a function called?</li>
+<li>How do I give an argument a sensible default?</li>
+<li>How do I pass values in, and does the order matter?</li>
+<li>How do I write one function that works on any column?</li>
+<li>How do I choose a good name?</li>
+</ul>
+<p><strong>What you need this session</strong></p>
+<ul>
+<li>A session of RStudio open, in the same folder as last time</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-label="2"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-label="3"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-label="4"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-label="5"></a><span class="fu">library</span>(here)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-label="2"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-label="3"></a>}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-label="4"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-label="5"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb2-6"><a href="#cb2-6" aria-label="6"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-label="7"></a>    <span class="fu">parse_number</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-label="8"></a>    <span class="fu">as.character</span>()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-label="9"></a>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-label="10"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-label="11"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb2-12"><a href="#cb2-12" aria-label="12"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-label="13"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-label="14"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-label="15"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-label="16"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-label="17"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-label="18"></a>}</span>
+<span id="cb2-19"><a href="#cb2-19" aria-label="19"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-label="20"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-label="21"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-label="22"></a>ed_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-label="23"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-label="24"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-label="25"></a>tas_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-label="26"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="what-we-are-making" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="what-we-are-making"><span class="header-section-number">2.1</span> What we are making</h2>
+<p>Two plots. Look at them, and then look at the code underneath.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-teaser-age" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-teaser-age-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="anatomy-of-a-function_files/figure-html/fig-teaser-age-1.png" id="fig-teaser-age" class="img-fluid figure-img" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels." width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-teaser-age-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-teaser-state" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of the proportion of 15 to 19 year olds studying in 2023, broken down by state and territory, in the same style as the previous plot.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-teaser-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="anatomy-of-a-function_files/figure-html/fig-teaser-state-1.png" id="fig-teaser-state" class="img-fluid figure-img" alt="A horizontal bar chart of the proportion of 15 to 19 year olds studying in 2023, broken down by state and territory, in the same style as the previous plot." width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-teaser-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a><span class="fu">plot_study_by</span>(tas_2023, <span class="at">y =</span> age_group)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-label="2"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-label="3"></a>education <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-label="4"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-label="5"></a>  <span class="fu">plot_study_by</span>(<span class="at">y =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>One function.</strong> Two different plots! What changed is what variable goes on the y axis.</p>
+<p>That can be tricky! Have you ever tried to write a function around <code>dplyr</code> or <code>ggplot2</code>? We will talk through how to solve this.</p>
+<p>First, the parts of a function.</p>
+</section>
+<section id="the-parts-of-a-function" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="the-parts-of-a-function"><span class="header-section-number">2.2</span> The parts of a function</h2>
+<p>Let’s answer a question with the data you read in last session. What percentage of 15 to 19 year olds are studying?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-label="1"></a>ed_2023 <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-label="2"></a>  <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-label="3"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-label="4"></a>    <span class="at">total_studying =</span> <span class="fu">sum</span>(n_studying),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-label="5"></a>    <span class="at">total_population =</span> <span class="fu">sum</span>(population)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-label="6"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-label="7"></a>  <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(total_studying <span class="sc">/</span> total_population <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  total_studying total_population   pct
+           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+1          1252.            1542.  81.2</code></pre>
+</div>
+</div>
+<p>Now I want it for another age group, and I am not typing that again. So it becomes a function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-label="1"></a>pct_studying <span class="ot">&lt;-</span> <span class="cf">function</span>(data, age) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-label="3"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-label="4"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-label="5"></a>      <span class="at">total_studying =</span> <span class="fu">sum</span>(n_studying),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-label="6"></a>      <span class="at">total_population =</span> <span class="fu">sum</span>(population)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-label="7"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-label="8"></a>    <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(total_studying <span class="sc">/</span> total_population <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-label="9"></a>}</span>
+<span id="cb6-10"><a href="#cb6-10" aria-label="10"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-label="11"></a><span class="fu">pct_studying</span>(ed_2023, <span class="at">age =</span> <span class="st">"25_29"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  total_studying total_population   pct
+           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+1           340.            1880.  18.1</code></pre>
+</div>
+</div>
+<p>Five parts, and here they are.</p>
+<ul>
+<li><strong>The name</strong> is <code>pct_studying</code>. This is how you call it later.</li>
+<li><strong><code>function()</code></strong> is what makes a function. The <code>pct_studying &lt;-</code> bit just gives it a name, the same way you’d name any other value.</li>
+<li><strong>The arguments</strong> are <code>data</code> and <code>age</code>. These are the parts that change between calls.</li>
+<li><strong>The body</strong> is everything between the braces. This is the code that runs.</li>
+<li><strong>The return value</strong> is whatever the body evaluates last, so here that is the one row table coming out of <code>mutate()</code>. You can write <code>return()</code> if you want, and you’ll rarely need to.</li>
+</ul>
+<p>The <strong>signature</strong> is the name plus the argument names: <code>pct_studying(data, age)</code>. That one line is what most people read before deciding whether they can use your function, so it is worth more thought than the body.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/function-anatomy.png" class="img-fluid figure-img" style="width:100.0%" alt="The function pct_studying, defined as function(data, age), with five parts labelled in colour: the name, the keyword function, the arguments, the body, and the return value, which is the final mutate line."></p>
+<figcaption>The same parts, drawn out.</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Going deeper: side effects">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Going deeper: side effects
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>A <strong>side effect</strong> is anything a function does other than return a value. Printing to the console, writing a file, drawing a plot, setting an option.</p>
+<p>Side effects aren’t bad, and plenty of useful functions have them. <code>plot_study_by_age()</code> is all side effect.</p>
+<p>The catch is reasoning. A function that returns something useful <strong>and</strong> quietly writes a file is harder to think about than one that does a single one of those things.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Going deeper: functions are values">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Going deeper: functions are values
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>An argument can be a function. You hand it over without brackets, the same way you would hand over a number.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a>summarise_column <span class="ot">&lt;-</span> <span class="cf">function</span>(x, f) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-label="2"></a>  <span class="fu">f</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-label="3"></a>}</span>
+<span id="cb8-4"><a href="#cb8-4" aria-label="4"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-label="5"></a><span class="fu">summarise_column</span>(education<span class="sc">$</span>prop_studying, <span class="at">f =</span> mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2088695</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a><span class="fu">summarise_column</span>(education<span class="sc">$</span>prop_studying, <span class="at">f =</span> max)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9291667</code></pre>
+</div>
+</div>
+<p>We are not calling <code>mean</code> there, we are passing it. That is what people mean when they say functions are values, and it is how <code>map()</code> and <code>lapply()</code> work.</p>
+</div>
+</div>
+</div>
+<section id="takehomes" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes">Takehomes</h3>
+<ul>
+<li>The parts are the name, the arguments, the body, and the return value</li>
+<li>A function returns whatever its body evaluates last</li>
+<li>The signature is the name plus the argument names</li>
+<li>Knowing the words means you can search for them and ask about them</li>
+</ul>
+</section>
+</section>
+<section id="default-values" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="default-values"><span class="header-section-number">2.3</span> Default values</h2>
+<p>Let’s explore defaults using plots.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>tas_2023</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 6
+  state_territory age_group n_studying population prop_studying year 
+  &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;
+1 Tas.            15_19           24.8       31.3       0.792   2023 
+2 Tas.            20_24            9.8       30.4       0.322   2023 
+3 Tas.            25_29            9         38.6       0.233   2023 
+4 Tas.            30_34            4.2       41.1       0.102   2023 
+5 Tas.            35_39            2         37.1       0.0539  2023 
+6 Tas.            40_44            3.5       34.2       0.102   2023 
+7 Tas.            45_49            2         32         0.0625  2023 
+8 Tas.            50_54            1.6       36.7       0.0436  2023 
+9 Tas.            55_74            1.3      143.        0.00907 2023 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_2023, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-label="2"></a>  <span class="fu">geom_col</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-plain" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A plain horizontal bar chart of the proportion studying in Tasmania in 2023 by age group, with raw column names as axis labels.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="anatomy-of-a-function_files/figure-html/fig-plain-1.png" id="fig-plain" class="img-fluid figure-img" alt="A plain horizontal bar chart of the proportion studying in Tasmania in 2023 by age group, with raw column names as axis labels." width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-plain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>ggplot2 expressed itself well, it is a pleasure to write, so wrapping that in a function would not buy much. <strong>“Make everything a function”</strong> is not always the answer.</p>
+<p>What changes the calculus is everything you do next. The axis labels are column names, the x axis should be a percentage, and it could use a title and a colour that is not battleship grey. None of that is hard, all of it is fiddly, and none of it is something you want to retype for the ACT and then again for New South Wales.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-label="1"></a>plot_study_by_age <span class="ot">&lt;-</span> <span class="cf">function</span>(data, state) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-label="5"></a>    <span class="fu">labs</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" aria-label="6"></a>      <span class="at">x =</span> <span class="st">"Studying"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-label="7"></a>      <span class="at">y =</span> <span class="st">"Age group"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-label="8"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-label="9"></a>      <span class="at">subtitle =</span> state</span>
+<span id="cb15-10"><a href="#cb15-10" aria-label="10"></a>    ) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-label="11"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-label="12"></a>}</span>
+<span id="cb15-13"><a href="#cb15-13" aria-label="13"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-label="14"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="anatomy-of-a-function_files/figure-html/plot-study-by-age-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now the fiddly decisions live in one place. But look at how you have to call it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You said Tasmania twice, once to filter the data and again to label the plot. That’s exactly the kind of thing that goes wrong later, when you change one and forget the other.</p>
+<p>An argument can have a <strong>default</strong>, which is the value it takes when the caller does not give one.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a>plot_study_by_age <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">state =</span> <span class="st">"Tas."</span>) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-label="5"></a>    <span class="fu">labs</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-label="6"></a>      <span class="at">x =</span> <span class="st">"Studying"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-label="7"></a>      <span class="at">y =</span> <span class="st">"Age group"</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-label="8"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-label="9"></a>      <span class="at">subtitle =</span> state</span>
+<span id="cb17-10"><a href="#cb17-10" aria-label="10"></a>    ) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-label="11"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-label="12"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The default here is “Tas.”</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-default-state" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by age group in Tasmania in 2023, with the subtitle reading Tas. filled in automatically from the data.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-default-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="anatomy-of-a-function_files/figure-html/fig-default-state-1.png" id="fig-default-state" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by age group in Tasmania in 2023, with the subtitle reading Tas. filled in automatically from the data." width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-default-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The subtitle says “Tas.” and I never typed it, because the default was specified</p>
+<p>We could change that to:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tasmania, 2023"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="anatomy-of-a-function_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>That’s what defaults are for. They make the common case easy without taking away control in the uncommon one.</p>
+<section id="takehomes-1" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-1">Takehomes</h3>
+<ul>
+<li>A default is the value an argument takes when the caller does not supply one</li>
+<li>Defaults can be worked out from the other arguments</li>
+<li>Give the common case a default, and let people override it</li>
+<li>Two arguments that must agree with each other are a bug waiting to happen</li>
+</ul>
+</section>
+</section>
+<section id="giving-values-to-arguments" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="giving-values-to-arguments"><span class="header-section-number">2.4</span> Giving values to arguments</h2>
+<p>Arguments are names waiting for a value. The values turn up when you call the function, and you can hand them over two ways.</p>
+<p><strong>By position</strong>, in the order the definition lists them:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-label="1"></a><span class="fu">pct_studying</span>(tas_2023, <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  total_studying total_population   pct
+           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+1           24.8             31.3  79.2</code></pre>
+</div>
+</div>
+<p><strong>By name</strong>, using <code>name = value</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="at">data =</span> tas_2023, <span class="at">age =</span> <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  total_studying total_population   pct
+           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+1           24.8             31.3  79.2</code></pre>
+</div>
+</div>
+<p>Once they’re named, the order stops mattering:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="at">age =</span> <span class="st">"15_19"</span>, <span class="at">data =</span> tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  total_studying total_population   pct
+           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+1           24.8             31.3  79.2</code></pre>
+</div>
+</div>
+<p>And you can mix the two:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-label="1"></a><span class="fu">pct_studying</span>(tas_2023, <span class="at">age =</span> <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  total_studying total_population   pct
+           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+1           24.8             31.3  79.2</code></pre>
+</div>
+</div>
+<p>All four give 24.8, 31.3, 79.2. What differs is how much you need to already know in order to read the line.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/argument-order.png" class="img-fluid figure-img" style="width:100.0%" alt="A function definition shown at the top, then three calls that all return the same answer. The first passes both values by position and is marked by position, with a note that you have to know the definition to read it. The second names both arguments and is marked by name. The third names both in the opposite order and is marked by name, any order."></p>
+<figcaption>Naming arguments costs a few keystrokes and buys a line that reads on its own.</figcaption>
+</figure>
+</div>
+<p><code>pct_studying(tas_2023, "15_19")</code> needs you to remember what the second slot is for. <code>pct_studying(tas_2023, age = "15_19")</code> tells you.</p>
+<p>I leave the first argument positional, because it’s nearly always the data and nobody is confused by it. Everything after that, I name.</p>
+<section id="takehomes-2" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-2">Takehomes</h3>
+<ul>
+<li>You can pass arguments by position or by name</li>
+<li>Naming them means the order does not matter</li>
+<li>Leave the first one positional, name the rest</li>
+<li>A named argument saves your reader a trip to the definition</li>
+</ul>
+</section>
+</section>
+<section id="making-a-function-work-on-any-column" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="making-a-function-work-on-any-column"><span class="header-section-number">2.5</span> Making a function work on any column</h2>
+<p><code>plot_study_by_age()</code> has a problem. It always plots <code>age_group</code>.</p>
+<p>If I want the same plot broken down by state instead, I’m back to copying the whole function and changing one word, which is where we came in.</p>
+<p>So let’s try the obvious thing and pass the column as an argument.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-label="3"></a>    <span class="fu">geom_col</span>()</span>
+<span id="cb28-4"><a href="#cb28-4" aria-label="4"></a>}</span>
+<span id="cb28-5"><a href="#cb28-5" aria-label="5"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-label="6"></a><span class="fu">plot_study_by</span>(tas_2023, <span class="at">y =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `geom_col()`:
+! Problem while computing aesthetics.
+ℹ Error occurred in the 1st layer.
+Caused by error:
+! object 'age_group' not found</code></pre>
+</div>
+</div>
+<p><strong>You should get an error.</strong> That isn’t you doing it wrong, and it’s the wall that stops a lot of people writing functions around <code>dplyr</code> and <code>ggplot2</code>.</p>
+<p>The problem is that <code>age_group</code> is not a value sitting in your workspace. It’s a column name, and it only means anything once you’re inside the data. R tries to look it up before it ever gets there.</p>
+<p>The fix is to wrap the argument in two sets of braces, which people say out loud as <strong>curly curly</strong>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
+<span id="cb30-2"><a href="#cb30-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-label="5"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Studying"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-label="6"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-label="7"></a>}</span>
+<span id="cb30-8"><a href="#cb30-8" aria-label="8"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-label="9"></a><span class="fu">plot_study_by</span>(tas_2023, <span class="at">y =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-curly-curly" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by age group in Tasmania, produced by a function that takes the column to plot as an argument.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-curly-curly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="anatomy-of-a-function_files/figure-html/fig-curly-curly-1.png" id="fig-curly-curly" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by age group in Tasmania, produced by a function that takes the column to plot as an argument." width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-curly-curly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.5
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><code>{ y }</code> means “do not look this up yet, pass it through to the data”. That’s all you need to know today, and it works the same way in <code>dplyr</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-label="1"></a>mean_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, group) {</span>
+<span id="cb31-2"><a href="#cb31-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-label="3"></a>    <span class="fu">group_by</span>({{ group }}) <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-label="4"></a>    <span class="fu">summarise</span>(<span class="at">mean_prop =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prop_studying), <span class="dv">3</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-label="5"></a>}</span>
+<span id="cb31-6"><a href="#cb31-6" aria-label="6"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-label="7"></a><span class="fu">mean_by</span>(<span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>), <span class="at">group =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+  state_territory mean_prop
+  &lt;chr&gt;               &lt;dbl&gt;
+1 ACT                 0.216
+2 NSW                 0.208
+3 NT                  0.215
+4 Qld                 0.193
+5 SA                  0.194
+6 Tas.                0.191
+7 Vic.                0.208
+8 WA                  0.184</code></pre>
+</div>
+</div>
+<p>And now the same plotting function does a different job entirely:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-label="1"></a>education <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-label="2"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-label="3"></a>  <span class="fu">plot_study_by</span>(<span class="at">y =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-by-state" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by state and territory for 15 to 19 year olds in 2023, produced by the same function used for the age group plot.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-by-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="anatomy-of-a-function_files/figure-html/fig-by-state-1.png" id="fig-by-state" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by state and territory for 15 to 19 year olds in 2023, produced by the same function used for the age group plot." width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-by-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.6
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Notice I renamed it. <code>plot_study_by_age()</code> was true when it only did age groups, and it stopped being true the moment we added that argument. <code>plot_study_by()</code> is honest again.</p>
+<p>That’s normal. The first name you pick is rarely the one you keep, and renaming is part of writing a function rather than a sign you’ve got it wrong.</p>
+<p>You can read more about curly curly at:</p>
+<ul>
+<li>My blog post: <a href="https://www.njtierney.com/posts/2019-07-06-curly-curly-bare-vars/">Curly Curly: How to pass bare variable arguments to things?</a></li>
+<li>The dplyr documentation: <a href="https://dplyr.tidyverse.org/articles/programming.html">Programming with dplyr</a></li>
+<li>ggplot2 docs: <a href="https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html">ggplot2 in packages</a></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-label="1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-label="2"></a><span class="fu">library</span>(readr)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-label="3"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-label="4"></a><span class="fu">library</span>(glue)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-label="5"></a><span class="fu">library</span>(here)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-label="6"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-label="7"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb34-8"><a href="#cb34-8" aria-label="8"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb34-9"><a href="#cb34-9" aria-label="9"></a>}</span>
+<span id="cb34-10"><a href="#cb34-10" aria-label="10"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-label="11"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb34-12"><a href="#cb34-12" aria-label="12"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-label="13"></a>    <span class="fu">parse_number</span>() <span class="sc">|&gt;</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-label="14"></a>    <span class="fu">as.character</span>()</span>
+<span id="cb34-15"><a href="#cb34-15" aria-label="15"></a>}</span>
+<span id="cb34-16"><a href="#cb34-16" aria-label="16"></a></span>
+<span id="cb34-17"><a href="#cb34-17" aria-label="17"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb34-18"><a href="#cb34-18" aria-label="18"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb34-19"><a href="#cb34-19" aria-label="19"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-label="20"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-label="21"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-label="22"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-label="23"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb34-24"><a href="#cb34-24" aria-label="24"></a>}</span>
+<span id="cb34-25"><a href="#cb34-25" aria-label="25"></a></span>
+<span id="cb34-26"><a href="#cb34-26" aria-label="26"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb34-27"><a href="#cb34-27" aria-label="27"></a>tas_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
+<span id="cb34-28"><a href="#cb34-28" aria-label="28"></a></span>
+<span id="cb34-29"><a href="#cb34-29" aria-label="29"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
+<span id="cb34-30"><a href="#cb34-30" aria-label="30"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
+<span id="cb34-31"><a href="#cb34-31" aria-label="31"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-label="32"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb34-33"><a href="#cb34-33" aria-label="33"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Studying"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-label="34"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb34-35"><a href="#cb34-35" aria-label="35"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<ol type="1">
+<li>Use <code>plot_study_by()</code> on the ACT in 2023, broken down by <code>age_group</code>.</li>
+<li>Write <code>mean_by()</code> yourself, and use it to get the mean by <code>age_group</code>.</li>
+<li>Give <code>plot_study_by()</code> a default for <code>y</code>, so that <code>plot_study_by(tas_2023)</code> works with no second argument.</li>
+</ol>
+<details>
+<summary>
+Answer
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-label="1"></a>act_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"ACT"</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-label="2"></a><span class="fu">plot_study_by</span>(act_2023, <span class="at">y =</span> age_group)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-label="3"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-label="4"></a>mean_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, group) {</span>
+<span id="cb35-5"><a href="#cb35-5" aria-label="5"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-label="6"></a>    <span class="fu">group_by</span>({{ group }}) <span class="sc">|&gt;</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-label="7"></a>    <span class="fu">summarise</span>(<span class="at">mean_prop =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prop_studying), <span class="dv">3</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-label="8"></a>}</span>
+<span id="cb35-9"><a href="#cb35-9" aria-label="9"></a></span>
+<span id="cb35-10"><a href="#cb35-10" aria-label="10"></a><span class="fu">mean_by</span>(<span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>), <span class="at">group =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For step 3, the default goes in the signature the same as any other:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">y =</span> age_group) {</span>
+<span id="cb36-2"><a href="#cb36-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-label="4"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+<section id="takehomes-3" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-3">Takehomes</h3>
+<ul>
+<li>Column names are not values, so passing them straight in does not work</li>
+<li>Wrap the argument in <code>{ }</code> to pass a column through to <code>dplyr</code> or <code>ggplot2</code></li>
+<li>One function then covers every column instead of one</li>
+<li>When a function outgrows its name, rename it</li>
+</ul>
+</section>
+</section>
+<section id="naming-things" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="naming-things"><span class="header-section-number">2.6</span> Naming things</h2>
+<p>A function does something, so its name should say what.</p>
+<p>Watch this one improve.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-label="1"></a><span class="fu">myfun</span>()            <span class="co"># what?</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-label="2"></a><span class="fu">study_plot</span>()       <span class="co"># better, but what does it do with it?</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-label="3"></a><span class="fu">plot_study_by</span>()    <span class="co"># now I do not have to read the body</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The pattern that gets you there is <strong><code>verb_noun()</code></strong>. Not every function fits it, and reaching for it is still the fastest way to find out whether you know what your function does. If you can’t fill in the verb, you probably have two functions.</p>
+<p>Two habits worth having.</p>
+<p><strong>Name for the question, not the method.</strong> <code>pct_studying()</code>, not <code>sum_divide_round()</code>. The method will change, and the question won’t.</p>
+<p><strong>Name the insides too.</strong> Look back at <code>pct_studying()</code>. It says <code>studying &lt;- sum(...)</code> and <code>people &lt;- sum(...)</code>, so the division reads as studying over people. That is a choice, and I think it is worth it</p>
+<section id="takehomes-4" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-4">Takehomes</h3>
+<ul>
+<li><code>verb_noun()</code> is a good default shape</li>
+<li>Name for the question, not the method</li>
+<li>The names inside the body matter as much as the one outside</li>
+<li>If you cannot name it, you probably have two functions</li>
+</ul>
+</section>
+</section>
+<section id="summary" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="summary">Summary</h2>
+<ol type="1">
+<li><strong>The parts are name, arguments, body, return value.</strong> The signature is the name plus the argument names.</li>
+<li><strong>Defaults make the common case easy.</strong> They can be worked out from the other arguments.</li>
+<li><strong>Name your arguments</strong> when you call something, except the first.</li>
+<li><strong><code>{ }</code> passes a column name through</strong> to <code>dplyr</code> and <code>ggplot2</code>.</li>
+<li><strong>Renaming is part of writing.</strong> When a function outgrows its name, change it.</li>
+</ol>
+
+
+</section>
+<section class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="">Links</h2>
+<ul>
+<li><a href="https://www.njtierney.com/posts/2019-07-06-curly-curly-bare-vars/">Curly Curly: How to pass bare variable arguments to things?</a></li>
+<li><a href="https://dplyr.tidyverse.org/articles/programming.html">Programming with dplyr</a></li>
+<li><a href="https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html">ggplot2 in packages</a></li>
+</ul>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/fun2debug\.njtierney\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./dont-re-read-yourself.html" class="pagination-link" aria-label="Don't re-read yourself">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Don’t re-read yourself</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2026, Nicholas Tierney</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/anatomy-of-a-function.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -2,10 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://fun2debug.njtierney.com/index.html</loc>
-    <lastmod>2026-08-28T06:05:43.437Z</lastmod>
+    <lastmod>2026-08-30T23:59:38.932Z</lastmod>
   </url>
   <url>
     <loc>https://fun2debug.njtierney.com/setup.html</loc>
-    <lastmod>2026-08-28T06:05:43.438Z</lastmod>
+    <lastmod>2026-08-30T23:59:38.933Z</lastmod>
+  </url>
+  <url>
+    <loc>https://fun2debug.njtierney.com/dont-re-read-yourself.html</loc>
+    <lastmod>2026-08-30T23:59:38.927Z</lastmod>
+  </url>
+  <url>
+    <loc>https://fun2debug.njtierney.com/anatomy-of-a-function.html</loc>
+    <lastmod>2026-08-30T23:59:38.924Z</lastmod>
   </url>
 </urlset>

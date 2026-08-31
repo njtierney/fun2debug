@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Don’t re-read yourself – Introduction to Functions and Debugging</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./anatomy-of-a-function.html" rel="next">
+<link href="./setup.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b45b7b0fa9169e986df15f1ef60a279c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-020cafe2c5162b14dfdb8f310a12914a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/countdown-0.6.0/countdown.css" rel="stylesheet">
+<script src="site_libs/countdown-0.6.0/countdown.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dont-re-read-yourself.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Don’t re-read yourself</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Functions and Debugging</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/njtierney/fun2debug" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dont-re-read-yourself.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Don’t re-read yourself</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anatomy-of-a-function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Anatomy of a function</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#where-we-are-going" id="toc-where-we-are-going" class="nav-link" data-scroll-target="#where-we-are-going"><span class="header-section-number">1.1</span> Where we are going</a></li>
+  <li><a href="#reading-ten-files" id="toc-reading-ten-files" class="nav-link" data-scroll-target="#reading-ten-files"><span class="header-section-number">1.2</span> Reading ten files</a>
+  <ul class="collapse">
+  <li><a href="#takehomes" id="toc-takehomes" class="nav-link" data-scroll-target="#takehomes">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#building-the-path" id="toc-building-the-path" class="nav-link" data-scroll-target="#building-the-path"><span class="header-section-number">1.3</span> Building the path</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-1" id="toc-takehomes-1" class="nav-link" data-scroll-target="#takehomes-1">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#turning-it-into-a-function" id="toc-turning-it-into-a-function" class="nav-link" data-scroll-target="#turning-it-into-a-function"><span class="header-section-number">1.4</span> Turning it into a function</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-2" id="toc-takehomes-2" class="nav-link" data-scroll-target="#takehomes-2">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#reading-more-than-one-year" id="toc-reading-more-than-one-year" class="nav-link" data-scroll-target="#reading-more-than-one-year"><span class="header-section-number">1.5</span> Reading more than one year</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-3" id="toc-takehomes-3" class="nav-link" data-scroll-target="#takehomes-3">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#what-read_csv-already-does" id="toc-what-read_csv-already-does" class="nav-link" data-scroll-target="#what-read_csv-already-does"><span class="header-section-number">1.6</span> What read_csv already does</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-4" id="toc-takehomes-4" class="nav-link" data-scroll-target="#takehomes-4">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#dont-re-read-yourself" id="toc-dont-re-read-yourself" class="nav-link" data-scroll-target="#dont-re-read-yourself"><span class="header-section-number">1.7</span> Don’t re-read yourself</a>
+  <ul class="collapse">
+  <li><a href="#takehomes-5" id="toc-takehomes-5" class="nav-link" data-scroll-target="#takehomes-5">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li>Links</li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/dont-re-read-yourself.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-drry" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Don’t re-read yourself</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Imagine you open an R script you wrote a few months ago, and you cannot follow it. Well, you can read it, but it takes you a couple of goes. This chapter is about writing code you do not have to re-read. We are going to look at ways to say what you meant the first time.</p>
+<section id="overview" class="level2 unnumbered overview">
+<h2 class="unnumbered anchored" data-anchor-id="overview">Overview</h2>
+<p><strong>Duration</strong> 60 minutes</p>
+<p><strong>Questions</strong></p>
+<!-- These map onto the sections below, in order. If you move a section, move its question. -->
+<ul>
+<li>What can you do by the end of this course?</li>
+<li>What is wrong with writing the same line of code many times?</li>
+<li>How do I build a file path without typing it out?</li>
+<li>How do I turn working code into a function?</li>
+<li>What is DRRY, and how is it different from DRY?</li>
+</ul>
+<p><strong>What you need this session</strong></p>
+<ul>
+<li>A session of RStudio open</li>
+<li>The course data. Download <code>fun2debug-data.zip</code> from <a href="https://fun2debug.njtierney.com/data/" class="uri">https://fun2debug.njtierney.com/data/</a> and unzip it so that a folder called <code>data</code> sits next to the script you are writing in. Then open that folder as an RStudio project, or set your working directory to it, so that <code>list.files("data/tidy")</code> shows you ten files.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-label="2"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-label="3"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-label="4"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-label="5"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-label="6"></a><span class="fu">library</span>(here)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="where-we-are-going" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="where-we-are-going"><span class="header-section-number">1.1</span> Where we are going</h2>
+<p>Somewhat like a cooking show, we are going to show you what we are making first. It is a short script, with a few functions. By the end of the course week, you will be able to write code like this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a><span class="fu">source</span>(<span class="st">"ch1/read_education.R"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-label="2"></a><span class="fu">source</span>(<span class="st">"ch1/plot_study.R"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-label="3"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-label="4"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-label="5"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-label="6"></a><span class="fu">plot_study_by</span>(education, <span class="at">y =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dont-re-read-yourself_files/figure-html/where-we-are-going-1.png" class="img-fluid figure-img" alt="Bar chart of the proportion of people studying in each age group. It is highest for 15 to 19 year olds and falls with age." width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a><span class="fu">plot_study_over_time</span>(education, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dont-re-read-yourself_files/figure-html/where-we-are-going-2.png" class="img-fluid figure-img" alt="Nine small line charts, one per age group, of the proportion studying in Tasmania from 2014 to 2023. Each line is fairly flat." width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The reason I think this is a worthwhile goal is that you can reason with each of these lines of code. Each line tells you what it is doing. This is sometimes called “self-documenting code”.</p>
+<p>This is education data from the <a href="https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release">Australian Bureau of Statistics</a>. It felt apt, since we had the census somewhat recently, on August 11, 2026.</p>
+<p>To give us a direction, we are going to focus on answering this question:</p>
+<p><strong>How many Australians are studying, by age group and by state, and is that changing?</strong></p>
+<p>Let’s talk about reading in some education data.</p>
+</section>
+<section id="reading-ten-files" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="reading-ten-files"><span class="header-section-number">1.2</span> Reading ten files</h2>
+<p>The data is one file per year, from 2014 to 2023.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-label="1"></a><span class="fu">list.files</span>(<span class="st">"data/tidy"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "education_2014.csv" "education_2015.csv" "education_2016.csv"
+ [4] "education_2017.csv" "education_2018.csv" "education_2019.csv"
+ [7] "education_2020.csv" "education_2021.csv" "education_2022.csv"
+[10] "education_2023.csv"</code></pre>
+</div>
+</div>
+<p>Let’s read one of them:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-label="1"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2023.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 72 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a>ed_2023</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 72 × 5
+   state_territory age_group n_studying population prop_studying
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+ 1 ACT             15_19           22.9       25.8        0.888 
+ 2 ACT             20_24           17.1       35.2        0.486 
+ 3 ACT             25_29            7.5       40.1        0.187 
+ 4 ACT             30_34            3.6       40          0.09  
+ 5 ACT             35_39            3.5       36.8        0.0951
+ 6 ACT             40_44            3.6       34          0.106 
+ 7 ACT             45_49            1.2       28.8        0.0417
+ 8 ACT             50_54            0.9       27.1        0.0332
+ 9 ACT             55_74            1.5       79.1        0.0190
+10 NSW             15_19          400.       487.         0.820 
+# ℹ 62 more rows</code></pre>
+</div>
+</div>
+<p>Each row is for a given age group (<code>age_group</code>) at a given state (<code>state_territory</code>). It contains information on the number of people studying (<code>n_studying</code>), the population (<code>population</code>), and the proportion studying (<code>prop_studying</code>). The counts are in the thousands. So the first row has 22,900 people, and is not 22.9 people(!).</p>
+<p>Notice that <strong>year</strong> is not in there?</p>
+<p>That lives in the file name:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2023.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is pretty common. But still a bit annoying. We will get back to it.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If we want all 10 files read in, how should we do this?</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2023.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="1">
+<li>How would you read in these ten files? Sketch it out.</li>
+<li>What is different between the ten file paths? What is the same?</li>
+</ol>
+<p>Here is one way to solve this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>ed_2014 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2014.csv"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-label="2"></a>ed_2015 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2015.csv"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-label="3"></a>ed_2016 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2016.csv"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-label="4"></a>ed_2017 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2017.csv"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-label="5"></a>ed_2018 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2018.csv"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-label="6"></a>ed_2019 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2019.csv"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-label="7"></a>ed_2020 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2020.csv"</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-label="8"></a>ed_2021 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2021.csv"</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-label="9"></a>ed_2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2022.csv"</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-label="10"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2023.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol start="3" type="1">
+<li>Are there any potential problems you can foresee?</li>
+</ol>
+<p>There are no wrong answers!</p>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_b0536cc9" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+</div>
+</div>
+<p>There are issues with code like:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-label="1"></a>ed_2014 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2014.csv"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-label="2"></a>ed_2015 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2015.csv"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-label="3"></a>ed_2016 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2016.csv"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-label="4"></a>ed_2017 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2017.csv"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-label="5"></a>ed_2018 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2018.csv"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-label="6"></a>ed_2019 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2019.csv"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-label="7"></a>ed_2020 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2020.csv"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-label="8"></a>ed_2021 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2021.csv"</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-label="9"></a>ed_2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2022.csv"</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-label="10"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/education_2023.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>it feels a bit safe. But it is a bit repetitive!</p>
+<p>But what is the thing that is changing across all of these lines of code?</p>
+<p>What if we had 50, 100, or 1,000 files like this? The typing starts to become a problem. You might make a mistake in aligning the code with the object. So we start to re-read it just to make sure we haven’t made an easy to make mistake (we didn’t though, but you don’t know that)</p>
+<section id="takehomes" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes">Takehomes</h3>
+<ul>
+<li>Repeated code is cheap to write, but can cost you time.</li>
+<li>Identifying problems takes energy, even if there are no problems.</li>
+</ul>
+</section>
+</section>
+<section id="building-the-path" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="building-the-path"><span class="header-section-number">1.3</span> Building the path</h2>
+<p>Let’s start with the part that changes, which is the file path.</p>
+<p>Rather than typing the whole file path out each time, can you identify the pattern? Here’s the code again, with just the file path:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a><span class="st">"data/tidy/education_2014.csv"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-label="2"></a><span class="st">"data/tidy/education_2015.csv"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-label="3"></a><span class="st">"data/tidy/education_2016.csv"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-label="4"></a><span class="st">"data/tidy/education_2017.csv"</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-label="5"></a><span class="st">"data/tidy/education_2018.csv"</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-label="6"></a><span class="st">"data/tidy/education_2019.csv"</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-label="7"></a><span class="st">"data/tidy/education_2020.csv"</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-label="8"></a><span class="st">"data/tidy/education_2021.csv"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-label="9"></a><span class="st">"data/tidy/education_2022.csv"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-label="10"></a><span class="st">"data/tidy/education_2023.csv"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We can use the <code>{glue}</code> package to make these file paths:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-label="1"></a>year <span class="ot">&lt;-</span> <span class="dv">2023</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-label="2"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-label="3"></a><span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data/tidy/education_2023.csv</code></pre>
+</div>
+</div>
+<p><code>glue()</code> will build it for you. Anything inside curly braces gets swapped for its value.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a>year <span class="ot">&lt;-</span> <span class="dv">2023</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-label="2"></a><span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data/tidy/education_2023.csv</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-label="1"></a>year <span class="ot">&lt;-</span> <span class="dv">2020</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-label="2"></a><span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data/tidy/education_2020.csv</code></pre>
+</div>
+</div>
+<p>It reads like the sentence you would say out loud.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Going deeper: paste and paste0">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Going deeper: paste and paste0
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You could also use <code>paste()</code> and <code>paste0()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-label="1"></a>year <span class="ot">&lt;-</span> <span class="dv">2023</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-label="2"></a><span class="fu">paste</span>(<span class="st">"data/tidy/education_"</span>, year, <span class="st">".csv"</span>, <span class="at">sep =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/tidy/education_2023.csv"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-label="1"></a><span class="co"># paste, but with sep = "" (zero spaces, hence, paste0)</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-label="2"></a><span class="fu">paste0</span>(<span class="st">"data/tidy/education_"</span>, year, <span class="st">".csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/tidy/education_2023.csv"</code></pre>
+</div>
+</div>
+<p>But I think <code>glue</code> is worth learning about! You can read a bit more at a blog post I wrote, <a href="https://www.njtierney.com/posts/2019-07-07-glue-magic-pt1/">“Glue Magic Part I”</a>.</p>
+</div>
+</div>
+</div>
+<p>One more thing about file paths! The path above is relative to wherever R happens to be sitting. Which can be not where you always expect.</p>
+<p>We can use the <code>here()</code> function from <code>{here}</code> to anchor the path to where your “.RProj” is.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-label="1"></a><span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data/tidy/education_2023.csv</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-label="1"></a><span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>) <span class="sc">|&gt;</span> <span class="fu">here</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2023.csv"</code></pre>
+</div>
+</div>
+<p>Now pipe that into <code>read_csv()</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-label="1"></a><span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-label="2"></a>  <span class="fu">here</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-label="3"></a>  <span class="fu">read_csv</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 72 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 72 × 5
+   state_territory age_group n_studying population prop_studying
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+ 1 ACT             15_19           22.9       25.8        0.888 
+ 2 ACT             20_24           17.1       35.2        0.486 
+ 3 ACT             25_29            7.5       40.1        0.187 
+ 4 ACT             30_34            3.6       40          0.09  
+ 5 ACT             35_39            3.5       36.8        0.0951
+ 6 ACT             40_44            3.6       34          0.106 
+ 7 ACT             45_49            1.2       28.8        0.0417
+ 8 ACT             50_54            0.9       27.1        0.0332
+ 9 ACT             55_74            1.5       79.1        0.0190
+10 NSW             15_19          400.       487.         0.820 
+# ℹ 62 more rows</code></pre>
+</div>
+</div>
+<p>Notice that we have separated the file path out into its own step. But it requires specifying what year is each time:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-label="1"></a>year <span class="ot">&lt;-</span> <span class="dv">2023</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-label="2"></a>year_path <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>) <span class="sc">|&gt;</span> <span class="fu">here</span>()</span>
+<span id="cb32-3"><a href="#cb32-3" aria-label="3"></a>education_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(year_path)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-label="4"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-label="5"></a>year <span class="ot">&lt;-</span> <span class="dv">2022</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-label="6"></a>year_path <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>) <span class="sc">|&gt;</span> <span class="fu">here</span>()</span>
+<span id="cb32-7"><a href="#cb32-7" aria-label="7"></a>education_2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(year_path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>So we’ve sort of taken one step forward, two steps back, right now.</p>
+<p>Let’s talk about turning that part into a function.</p>
+<section id="takehomes-1" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-1">Takehomes</h3>
+<ul>
+<li><code>glue()</code> builds a string by putting values inside <code>{ }</code></li>
+<li><code>here()</code> anchors a path to the top of your project</li>
+<li>Pulling the changing part into its own step is a start, not the finish</li>
+</ul>
+</section>
+</section>
+<section id="turning-it-into-a-function" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="turning-it-into-a-function"><span class="header-section-number">1.4</span> Turning it into a function</h2>
+<p>A function in R has three parts:</p>
+<ol type="1">
+<li>A <strong>name</strong>.</li>
+<li><strong>arguments</strong>, the things that change, and</li>
+<li><strong>body</strong>, the code that runs</li>
+</ol>
+<p>Let’s make a function that creates the file path:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-label="1"></a><span class="co"># function name ------  # arguments: year</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-label="2"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year){</span>
+<span id="cb33-3"><a href="#cb33-3" aria-label="3"></a>  <span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>) <span class="sc">|&gt;</span> <span class="fu">here</span>()</span>
+<span id="cb33-4"><a href="#cb33-4" aria-label="4"></a>}</span>
+<span id="cb33-5"><a href="#cb33-5" aria-label="5"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-label="6"></a><span class="fu">education_path</span>(<span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2023.csv"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-label="1"></a><span class="fu">education_path</span>(<span class="dv">2022</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2022.csv"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-label="1"></a><span class="fu">education_path</span>(<span class="dv">2021</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2021.csv"</code></pre>
+</div>
+</div>
+<p>Now we can use that like so:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-label="1"></a>education_2023 <span class="ot">&lt;-</span> <span class="fu">education_path</span>(<span class="dv">2023</span>) <span class="sc">|&gt;</span> <span class="fu">read_csv</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 72 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-label="1"></a>education_2022 <span class="ot">&lt;-</span> <span class="fu">education_path</span>(<span class="dv">2022</span>) <span class="sc">|&gt;</span> <span class="fu">read_csv</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 72 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-label="1"></a>education_2021 <span class="ot">&lt;-</span> <span class="fu">education_path</span>(<span class="dv">2021</span>) <span class="sc">|&gt;</span> <span class="fu">read_csv</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 72 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Notice that <code>read_csv()</code> is repeated each time. Let’s combine those together:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-label="1"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb45-2"><a href="#cb45-2" aria-label="2"></a>  <span class="fu">education_path</span>(year) <span class="sc">|&gt;</span> <span class="fu">read_csv</span>()</span>
+<span id="cb45-3"><a href="#cb45-3" aria-label="3"></a>}</span>
+<span id="cb45-4"><a href="#cb45-4" aria-label="4"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-label="5"></a>education_2023 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 72 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-label="1"></a>education_2022 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2022</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 72 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-label="1"></a>education_2021 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2021</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 72 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p><code>education_path()</code> knows how the files are named.</p>
+<p><code>read_education()</code> knows how to read a path.</p>
+<p>This idea that we can put functions together is called: “composing” functions.</p>
+<p>It’s a good thing!</p>
+<p>We are still doing some repetition, but bear with me here.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-label="1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-label="2"></a><span class="fu">library</span>(readr)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-label="3"></a><span class="fu">library</span>(glue)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-label="4"></a><span class="fu">library</span>(here)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<ol type="1">
+<li>Type out both the <code>education_path()</code> and <code>read_education()</code> functions yourself, and run <code>read_education(2019)</code>. Check you get 72 rows.</li>
+<li>What happens if you ask for a year that does not exist, like 2005?</li>
+<li>Are there some other ways to list file names?</li>
+<li>Are there any potential issues with the way we have written this?</li>
+<li>What are the benefits of composing functions like this, where they are separate?</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_d4ae81f8" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+</div>
+</div>
+<section id="takehomes-2" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-2">Takehomes</h3>
+<ul>
+<li>A function has a name, arguments, and a body</li>
+<li>Small functions can be composed together</li>
+<li><code>education_path()</code> knows the naming, <code>read_education()</code> knows the reading</li>
+</ul>
+</section>
+</section>
+<section id="reading-more-than-one-year" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="reading-more-than-one-year"><span class="header-section-number">1.5</span> Reading more than one year</h2>
+<p>Let’s read in three years again:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-label="1"></a>ed_2021 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2021</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-label="2"></a>ed_2022 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2022</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-label="3"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Each line is now readable. But I cannot do much with them until they are in one table.</p>
+<p>But hang on, what is missing? There is no <code>year</code> column, so once these three sit on top of each other there is nothing to tell them apart.</p>
+<p>We know which year we asked for, though. So we can put it back by hand, with <code>mutate()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-label="1"></a>ed_2021 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2021</span>) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2021</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-label="2"></a>ed_2022 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2022</span>) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2022</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-label="3"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2023</span>) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2023</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-label="4"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-label="5"></a>ed_2023</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 72 × 6
+   state_territory age_group n_studying population prop_studying  year
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;
+ 1 ACT             15_19           22.9       25.8        0.888   2023
+ 2 ACT             20_24           17.1       35.2        0.486   2023
+ 3 ACT             25_29            7.5       40.1        0.187   2023
+ 4 ACT             30_34            3.6       40          0.09    2023
+ 5 ACT             35_39            3.5       36.8        0.0951  2023
+ 6 ACT             40_44            3.6       34          0.106   2023
+ 7 ACT             45_49            1.2       28.8        0.0417  2023
+ 8 ACT             50_54            0.9       27.1        0.0332  2023
+ 9 ACT             55_74            1.5       79.1        0.0190  2023
+10 NSW             15_19          400.       487.         0.820   2023
+# ℹ 62 more rows</code></pre>
+</div>
+</div>
+<p>Now we can stack them, and every row still knows where it came from:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-label="1"></a>education_2021_2023 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(ed_2021, ed_2022, ed_2023)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-label="2"></a></span>
+<span id="cb55-3"><a href="#cb55-3" aria-label="3"></a>education_2021_2023</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 216 × 6
+   state_territory age_group n_studying population prop_studying  year
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;
+ 1 ACT             15_19           22         23.8        0.924   2021
+ 2 ACT             20_24           15.2       30.3        0.502   2021
+ 3 ACT             25_29            6.7       32.1        0.209   2021
+ 4 ACT             30_34            5.3       34.6        0.153   2021
+ 5 ACT             35_39            2.7       35.3        0.0765  2021
+ 6 ACT             40_44            2.4       31          0.0774  2021
+ 7 ACT             45_49            1.5       28.6        0.0524  2021
+ 8 ACT             50_54            0.7       26.4        0.0265  2021
+ 9 ACT             55_74            0.8       78.7        0.0102  2021
+10 NSW             15_19          407        462.         0.880   2021
+# ℹ 206 more rows</code></pre>
+</div>
+</div>
+<p>Have a look at those three lines again, though. The year is typed twice on each one, once to read the file and once to label it.</p>
+<p>Two copies of the same fact is exactly the thing you have to re-read to check.</p>
+<p>So let’s move it into the function, where it only has to be right once:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-label="1"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb57-2"><a href="#cb57-2" aria-label="2"></a>  <span class="fu">education_path</span>(year) <span class="sc">|&gt;</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-label="3"></a>    <span class="fu">read_csv</span>() <span class="sc">|&gt;</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-label="4"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> year)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-label="5"></a>}</span>
+<span id="cb57-6"><a href="#cb57-6" aria-label="6"></a></span>
+<span id="cb57-7"><a href="#cb57-7" aria-label="7"></a><span class="fu">read_education</span>(<span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 72 × 6
+   state_territory age_group n_studying population prop_studying  year
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;
+ 1 ACT             15_19           22.9       25.8        0.888   2023
+ 2 ACT             20_24           17.1       35.2        0.486   2023
+ 3 ACT             25_29            7.5       40.1        0.187   2023
+ 4 ACT             30_34            3.6       40          0.09    2023
+ 5 ACT             35_39            3.5       36.8        0.0951  2023
+ 6 ACT             40_44            3.6       34          0.106   2023
+ 7 ACT             45_49            1.2       28.8        0.0417  2023
+ 8 ACT             50_54            0.9       27.1        0.0332  2023
+ 9 ACT             55_74            1.5       79.1        0.0190  2023
+10 NSW             15_19          400.       487.         0.820   2023
+# ℹ 62 more rows</code></pre>
+</div>
+</div>
+<p>Nobody who calls <code>read_education()</code> has to remember the labelling step now. They just get a year column.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Going deeper: letting bind_rows() do the labelling">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Going deeper: letting bind_rows() do the labelling
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>bind_rows()</code> will label the pieces for you. Give it names, and <code>.id</code> writes those names into a column:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-label="1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb59-2"><a href="#cb59-2" aria-label="2"></a>  <span class="st">"2021"</span> <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="fu">education_path</span>(<span class="dv">2021</span>)),</span>
+<span id="cb59-3"><a href="#cb59-3" aria-label="3"></a>  <span class="st">"2022"</span> <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="fu">education_path</span>(<span class="dv">2022</span>)),</span>
+<span id="cb59-4"><a href="#cb59-4" aria-label="4"></a>  <span class="st">"2023"</span> <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="fu">education_path</span>(<span class="dv">2023</span>)),</span>
+<span id="cb59-5"><a href="#cb59-5" aria-label="5"></a>  <span class="at">.id =</span> <span class="st">"year"</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 216 × 6
+   year  state_territory age_group n_studying population prop_studying
+   &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+ 1 2021  ACT             15_19           22         23.8        0.924 
+ 2 2021  ACT             20_24           15.2       30.3        0.502 
+ 3 2021  ACT             25_29            6.7       32.1        0.209 
+ 4 2021  ACT             30_34            5.3       34.6        0.153 
+ 5 2021  ACT             35_39            2.7       35.3        0.0765
+ 6 2021  ACT             40_44            2.4       31          0.0774
+ 7 2021  ACT             45_49            1.5       28.6        0.0524
+ 8 2021  ACT             50_54            0.7       26.4        0.0265
+ 9 2021  ACT             55_74            0.8       78.7        0.0102
+10 2021  NSW             15_19          407        462.         0.880 
+# ℹ 206 more rows</code></pre>
+</div>
+</div>
+<p>One thing to notice. That <code>year</code> column is character, not a number, because names are always text.</p>
+<p>The names have to actually reach <code>bind_rows()</code>, too. Hand it three unnamed data frames and <code>.id</code> has nothing to write, so you get 1, 2 and 3 instead of the years. It will not warn you.</p>
+<p>This is still one line per year, though, and the year is still typed twice on each of them. We do better than that in the next section.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-label="1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-label="2"></a><span class="fu">library</span>(readr)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-label="3"></a><span class="fu">library</span>(glue)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-label="4"></a><span class="fu">library</span>(here)</span>
+<span id="cb61-5"><a href="#cb61-5" aria-label="5"></a></span>
+<span id="cb61-6"><a href="#cb61-6" aria-label="6"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb61-7"><a href="#cb61-7" aria-label="7"></a>  <span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>) <span class="sc">|&gt;</span> <span class="fu">here</span>()</span>
+<span id="cb61-8"><a href="#cb61-8" aria-label="8"></a>}</span>
+<span id="cb61-9"><a href="#cb61-9" aria-label="9"></a></span>
+<span id="cb61-10"><a href="#cb61-10" aria-label="10"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb61-11"><a href="#cb61-11" aria-label="11"></a>  <span class="fu">education_path</span>(year) <span class="sc">|&gt;</span></span>
+<span id="cb61-12"><a href="#cb61-12" aria-label="12"></a>    <span class="fu">read_csv</span>() <span class="sc">|&gt;</span></span>
+<span id="cb61-13"><a href="#cb61-13" aria-label="13"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> year)</span>
+<span id="cb61-14"><a href="#cb61-14" aria-label="14"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<ol type="1">
+<li>Read 2014 and 2015, and bind them together.</li>
+<li>What class is that <code>year</code> column? Use <code>class()</code> to check. Is it what you expected?</li>
+<li>What would you have to type to do all ten years this way?</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_2e02bd60" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<details>
+<summary>
+Answer
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-label="1"></a>ed_2014 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-label="2"></a>ed_2015 <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2015</span>)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-label="3"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-label="4"></a>two_years <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(ed_2014, ed_2015)</span>
+<span id="cb62-5"><a href="#cb62-5" aria-label="5"></a></span>
+<span id="cb62-6"><a href="#cb62-6" aria-label="6"></a><span class="fu">class</span>(two_years<span class="sc">$</span>year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+</div>
+<p>It is a number, because we typed a number into <code>mutate()</code>.</p>
+<p>That will not stay true. The version we finish this chapter with reads the year out of the file name instead, and that arrives as text. It comes back to bite one of us in <span class="quarto-unresolved-ref">?sec-outside-in</span>.</p>
+<p>For step 3, ten years this way is eleven lines. Which is roughly where we came in.</p>
+</details>
+</div>
+</div>
+<section id="takehomes-3" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-3">Takehomes</h3>
+<ul>
+<li>The year lived in the file name, so we have to put it back deliberately</li>
+<li><code>mutate()</code> will add it, one year at a time</li>
+<li><code>bind_rows()</code> stacks tables on top of each other</li>
+<li>Updating a function means you don’t need to make changes multiple times</li>
+</ul>
+</section>
+</section>
+<section id="what-read_csv-already-does" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="what-read_csv-already-does"><span class="header-section-number">1.6</span> What read_csv already does</h2>
+<p>Before you write any more of this, try asking <code>education_path()</code> for all ten years at once.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-label="1"></a><span class="fu">education_path</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2014.csv"
+ [2] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2015.csv"
+ [3] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2016.csv"
+ [4] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2017.csv"
+ [5] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2018.csv"
+ [6] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2019.csv"
+ [7] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2020.csv"
+ [8] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2021.csv"
+ [9] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2022.csv"
+[10] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2023.csv"</code></pre>
+</div>
+</div>
+<p>Neat!</p>
+<p>Can we hand all of them to <code>read_csv()</code>?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-label="1"></a>ten_years <span class="ot">&lt;-</span> <span class="fu">education_path</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>) <span class="sc">|&gt;</span> <span class="fu">read_csv</span>()</span>
+<span id="cb66-2"><a href="#cb66-2" aria-label="2"></a></span>
+<span id="cb66-3"><a href="#cb66-3" aria-label="3"></a>ten_years</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 720 × 5
+   state_territory age_group n_studying population prop_studying
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+ 1 ACT             15_19           19.3       23.8        0.811 
+ 2 ACT             20_24           18.1       31.6        0.573 
+ 3 ACT             25_29            9.4       34.9        0.269 
+ 4 ACT             30_34            4.5       32.8        0.137 
+ 5 ACT             35_39            4.5       28.7        0.157 
+ 6 ACT             40_44            2.6       28.4        0.0915
+ 7 ACT             45_49            1         24.2        0.0413
+ 8 ACT             50_54            3         24          0.125 
+ 9 ACT             55_74            2.1       67.2        0.0312
+10 NSW             15_19          388.       462.         0.841 
+# ℹ 710 more rows</code></pre>
+</div>
+</div>
+<p>720 rows. Wow!</p>
+<p>This works for two reasons:</p>
+<ol type="1">
+<li><code>glue()</code> builds ten paths when you give it ten years, and</li>
+<li><code>read_csv()</code> will take all ten and stack them for you.</li>
+</ol>
+<p><code>read_csv()</code> will also tell you where each row came from, using <code>id</code> (similar to <code>bind_rows()</code>).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-label="1"></a><span class="fu">education_path</span>(<span class="dv">2022</span><span class="sc">:</span><span class="dv">2023</span>) <span class="sc">|&gt;</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-label="2"></a>  <span class="fu">read_csv</span>(<span class="at">id =</span> <span class="st">"path"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 144 × 6
+   path            state_territory age_group n_studying population prop_studying
+   &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+ 1 /home/runner/w… ACT             15_19           19.9       23.9        0.833 
+ 2 /home/runner/w… ACT             20_24           13.9       27.8        0.5   
+ 3 /home/runner/w… ACT             25_29            7.3       33.1        0.221 
+ 4 /home/runner/w… ACT             30_34            4.1       33.3        0.123 
+ 5 /home/runner/w… ACT             35_39            2.1       34.1        0.0616
+ 6 /home/runner/w… ACT             40_44            3.1       32.3        0.0960
+ 7 /home/runner/w… ACT             45_49            1.2       27.9        0.0430
+ 8 /home/runner/w… ACT             50_54            2.5       26.8        0.0933
+ 9 /home/runner/w… ACT             55_74            1.9       77.3        0.0246
+10 /home/runner/w… NSW             15_19          402.       473.         0.849 
+# ℹ 134 more rows</code></pre>
+</div>
+</div>
+<p>So a good deal of what I was about to write by hand is already sitting in <code>readr</code>.</p>
+<p>This is a good outcome rather than a waste of time!</p>
+<p>Checking whether the problem is solved already is a habit worth having, and having a go yourself first is a decent way to find out what words to search for.</p>
+<p>The year is still sitting in that path. Let’s get it back out, one step at a time.</p>
+<p>Here is a single path to work with:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-label="1"></a>path <span class="ot">&lt;-</span> <span class="fu">education_path</span>(<span class="dv">2014</span>)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-label="2"></a></span>
+<span id="cb70-3"><a href="#cb70-3" aria-label="3"></a>path</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2014.csv"</code></pre>
+</div>
+</div>
+<p><code>basename()</code> throws away the folders and keeps the file name:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-label="1"></a><span class="fu">basename</span>(path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "education_2014.csv"</code></pre>
+</div>
+</div>
+<p>That step matters more than it looks. <code>parse_number()</code> takes the first number it finds, and my home folder is called <code>nick_1</code>. Skip <code>basename()</code> and the year comes out as 1.</p>
+<p><code>parse_number()</code> pulls the number out of what is left:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-label="1"></a><span class="fu">basename</span>(path) <span class="sc">|&gt;</span> <span class="fu">parse_number</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2014</code></pre>
+</div>
+</div>
+<p>And <code>as.character()</code> turns it into text:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-label="1"></a><span class="fu">basename</span>(path) <span class="sc">|&gt;</span> <span class="fu">parse_number</span>() <span class="sc">|&gt;</span> <span class="fu">as.character</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2014"</code></pre>
+</div>
+</div>
+<p>Why text? Because a year is a label, not a quantity. You are never going to want the mean of it.</p>
+<p>Those three steps are one idea. Get the year out of a path. So let’s give that idea a name:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-label="1"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb78-2"><a href="#cb78-2" aria-label="2"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-label="3"></a>    <span class="fu">parse_number</span>() <span class="sc">|&gt;</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-label="4"></a>    <span class="fu">as.character</span>()</span>
+<span id="cb78-5"><a href="#cb78-5" aria-label="5"></a>}</span>
+<span id="cb78-6"><a href="#cb78-6" aria-label="6"></a></span>
+<span id="cb78-7"><a href="#cb78-7" aria-label="7"></a><span class="fu">year_from_path</span>(path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2014"</code></pre>
+</div>
+</div>
+<p>Now let’s put all of that inside the function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-label="1"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb80-2"><a href="#cb80-2" aria-label="2"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb80-3"><a href="#cb80-3" aria-label="3"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-label="4"></a></span>
+<span id="cb80-5"><a href="#cb80-5" aria-label="5"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb80-6"><a href="#cb80-6" aria-label="6"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-label="7"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb80-8"><a href="#cb80-8" aria-label="8"></a>}</span>
+<span id="cb80-9"><a href="#cb80-9" aria-label="9"></a></span>
+<span id="cb80-10"><a href="#cb80-10" aria-label="10"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb80-11"><a href="#cb80-11" aria-label="11"></a></span>
+<span id="cb80-12"><a href="#cb80-12" aria-label="12"></a>education</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 720 × 6
+   state_territory age_group n_studying population prop_studying year 
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;
+ 1 ACT             15_19           19.3       23.8        0.811  2014 
+ 2 ACT             20_24           18.1       31.6        0.573  2014 
+ 3 ACT             25_29            9.4       34.9        0.269  2014 
+ 4 ACT             30_34            4.5       32.8        0.137  2014 
+ 5 ACT             35_39            4.5       28.7        0.157  2014 
+ 6 ACT             40_44            2.6       28.4        0.0915 2014 
+ 7 ACT             45_49            1         24.2        0.0413 2014 
+ 8 ACT             50_54            3         24          0.125  2014 
+ 9 ACT             55_74            2.1       67.2        0.0312 2014 
+10 NSW             15_19          388.       462.         0.841  2014 
+# ℹ 710 more rows</code></pre>
+</div>
+</div>
+<p>One line now gets you every year, with the year labelled.</p>
+<p>Three functions now, and each one knows a single thing. <code>education_path()</code> knows how the files are named, <code>year_from_path()</code> knows how to undo that, and <code>read_education()</code> knows how to read.</p>
+<p>And notice where the fix went. It went <strong>inside</strong> <code>read_education()</code>, so everything that ever calls it gets the year column, and nobody who calls it had to change.</p>
+<section id="takehomes-4" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-4">Takehomes</h3>
+<ul>
+<li><code>read_csv()</code> takes a vector of paths and stacks them for you</li>
+<li><code>read_csv(id = )</code> records which file each row came from</li>
+<li>Run <code>basename()</code> before <code>parse_number()</code>, or you parse a number out of a folder name</li>
+<li>A chain of steps with one job between them is a function waiting for a name</li>
+<li>Check whether somebody has solved it already</li>
+<li>When a function grows a fix, every caller gets it for free</li>
+</ul>
+</section>
+</section>
+<section id="dont-re-read-yourself" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="dont-re-read-yourself"><span class="header-section-number">1.7</span> Don’t re-read yourself</h2>
+<p>We started this hour with ten lines, and we have finished with one line that says what it does.</p>
+<p>In programming, the term DRY comes up a bit</p>
+<p><strong>DRY</strong> stands for Don’t Repeat Yourself. It says that if you find yourself copying and pasting the same code, write a function instead. Ten <code>read_csv()</code> lines, one function. DRY is right about that, and I am not arguing with it.</p>
+<p>But I do not think repetition was ever the real problem. Repetition is a symptom.</p>
+<p>You end up repeating yourself because you couldn’t say the idea in one go. If the idea had a name, you’d have used the name. So the cause is expression, and repeated code is what unexpressed ideas look like from outside.</p>
+<p>The version I prefer is <strong>DRRY</strong>: Don’t Re-Read Yourself.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>The trigger is not “have I typed this three times”. It is “will I have to read this again to work out what it does”.</p>
+<p>That fires earlier, and it fires more often. Look back at the version we finished with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-label="1"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You do not re-read that. You read the name, you believe it, and you get on with the analysis.</p>
+<section id="takehomes-5" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-5">Takehomes</h3>
+<ul>
+<li>DRY says do not repeat yourself, and it is right</li>
+<li>DRRY says do not re-read yourself, and it fires earlier and more often</li>
+<li>Everything DRY catches, DRRY catches too</li>
+<li>If you cannot name it, you do not have an idea yet, you have some code</li>
+</ul>
+</section>
+</section>
+<section id="summary" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="summary">Summary</h2>
+<ol type="1">
+<li><strong>Re-reading is the cost.</strong> Repetition is one way to pay it, and not the only one.</li>
+<li><strong><code>glue()</code> and <code>here()</code></strong> build a path that reads like a sentence and works from anywhere.</li>
+<li><strong>Split what changes from what reads.</strong> <code>education_path()</code> and <code>read_education()</code> know different things.</li>
+<li><strong><code>read_csv(id = )</code> and <code>parse_number()</code></strong> put back the information that lived in the file name.</li>
+<li><strong>Check whether it exists first.</strong> <code>read_csv()</code> reads ten files on its own.</li>
+<li><strong>A function is where a fix goes</strong>, so every caller gets it without asking.</li>
+</ol>
+<p>Next session we pull a function apart properly, and start doing something with all this data.</p>
+
+
+</section>
+<section class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="">Links</h2>
+<ul>
+<li><a href="https://fun2debug.njtierney.com/data/" class="uri">https://fun2debug.njtierney.com/data/</a></li>
+<li><a href="https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release">Australian Bureau of Statistics</a></li>
+<li><a href="https://www.njtierney.com/posts/2019-07-07-glue-magic-pt1/">“Glue Magic Part I”</a></li>
+<li><a href="https://milesmcbain.xyz/">Miles McBain</a></li>
+</ul>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Naming credit to <a href="https://milesmcbain.xyz/">Miles McBain</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/fun2debug\.njtierney\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./setup.html" class="pagination-link" aria-label="Setup">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Setup</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./anatomy-of-a-function.html" class="pagination-link" aria-label="Anatomy of a function">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Anatomy of a function</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2026, Nicholas Tierney</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/dont-re-read-yourself.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

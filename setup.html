@@ -71,6 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./dont-re-read-yourself.html" rel="next">
 <link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -160,6 +161,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./setup.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dont-re-read-yourself.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Don’t re-read yourself</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anatomy-of-a-function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Anatomy of a function</span></span></a>
   </div>
 </li>
     </ul>
@@ -369,25 +382,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-label="1"></a>pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-label="2"></a>  <span class="st">"bench"</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-label="3"></a>  <span class="st">"broom"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-label="4"></a>  <span class="st">"devtools"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a>  <span class="st">"here"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a>  <span class="st">"knitr"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a>  <span class="st">"palmerpenguins"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-label="8"></a>  <span class="st">"profvis"</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-label="9"></a>  <span class="st">"purrr"</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-label="10"></a>  <span class="st">"rmarkdown"</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-label="11"></a>  <span class="st">"spelling"</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-label="12"></a>  <span class="st">"testthat"</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-label="13"></a>  <span class="st">"tictoc"</span>,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-label="14"></a>  <span class="st">"tidyverse"</span>,</span>
-<span id="cb5-15"><a href="#cb5-15" aria-label="15"></a>  <span class="st">"usethis"</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-label="16"></a>  )</span>
-<span id="cb5-17"><a href="#cb5-17" aria-label="17"></a>  </span>
-<span id="cb5-18"><a href="#cb5-18" aria-label="18"></a><span class="fu">install.packages</span>(pkgs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-4"><a href="#cb5-4" aria-label="4"></a>  <span class="st">"countdown"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a>  <span class="st">"devtools"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a>  <span class="st">"glue"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a>  <span class="st">"here"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-label="8"></a>  <span class="st">"knitr"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-label="9"></a>  <span class="st">"palmerpenguins"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-label="10"></a>  <span class="st">"profvis"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-label="11"></a>  <span class="st">"purrr"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-label="12"></a>  <span class="st">"rmarkdown"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-label="13"></a>  <span class="st">"spelling"</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-label="14"></a>  <span class="st">"testthat"</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-label="15"></a>  <span class="st">"tictoc"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-label="16"></a>  <span class="st">"tidyverse"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-label="17"></a>  <span class="st">"usethis"</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-label="18"></a>  )</span>
+<span id="cb5-19"><a href="#cb5-19" aria-label="19"></a>  </span>
+<span id="cb5-20"><a href="#cb5-20" aria-label="20"></a><span class="fu">install.packages</span>(pkgs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="installing-fnmate" class="level3">
 <h3 class="anchored" data-anchor-id="installing-fnmate">Installing {fnmate}</h3>
-<p><code>{fnmate}</code> writes the skeleton of a function for you, from the call you wish you could make. We use it in <span class="quarto-unresolved-ref">?sec-anatomy</span>.</p>
+<p><code>{fnmate}</code> writes the skeleton of a function for you, from the call you wish you could make. We use it in <a href="anatomy-of-a-function.html" class="quarto-xref"><span>2&nbsp; Anatomy of a function</span></a>.</p>
 <p>It is not on CRAN. It lives on <a href="https://milesmcbain.xyz">Miles McBain’s</a> r-universe, which is an ordinary website that R installs from, so there is no git and no compiler involved.</p>
 <p>Try this first:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-label="1"></a><span class="fu">install.packages</span>(</span>
@@ -458,21 +473,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-label="2"></a>  <span class="st">"bench"</span>,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-label="3"></a>  <span class="st">"broom"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-label="4"></a>  <span class="st">"devtools"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-label="5"></a>  <span class="st">"here"</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-label="6"></a>  <span class="st">"knitr"</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-label="7"></a>  <span class="st">"palmerpenguins"</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-label="8"></a>  <span class="st">"profvis"</span>,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-label="9"></a>  <span class="st">"purrr"</span>,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-label="10"></a>  <span class="st">"rmarkdown"</span>,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-label="11"></a>  <span class="st">"spelling"</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-label="12"></a>  <span class="st">"testthat"</span>,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-label="13"></a>  <span class="st">"tictoc"</span>,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-label="14"></a>  <span class="st">"tidyverse"</span>,</span>
-<span id="cb12-15"><a href="#cb12-15" aria-label="15"></a>  <span class="st">"usethis"</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-label="16"></a>)</span>
-<span id="cb12-17"><a href="#cb12-17" aria-label="17"></a></span>
-<span id="cb12-18"><a href="#cb12-18" aria-label="18"></a><span class="fu">sapply</span>(pkgs, requireNamespace, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-4"><a href="#cb12-4" aria-label="4"></a>  <span class="st">"countdown"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-label="5"></a>  <span class="st">"devtools"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-label="6"></a>  <span class="st">"glue"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-label="7"></a>  <span class="st">"here"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-label="8"></a>  <span class="st">"knitr"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-label="9"></a>  <span class="st">"palmerpenguins"</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-label="10"></a>  <span class="st">"profvis"</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-label="11"></a>  <span class="st">"purrr"</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-label="12"></a>  <span class="st">"rmarkdown"</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-label="13"></a>  <span class="st">"spelling"</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-label="14"></a>  <span class="st">"testthat"</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-label="15"></a>  <span class="st">"tictoc"</span>,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-label="16"></a>  <span class="st">"tidyverse"</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-label="17"></a>  <span class="st">"usethis"</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-label="18"></a>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-label="19"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-label="20"></a><span class="fu">sapply</span>(pkgs, requireNamespace, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If that looks right, you are set.</p>
 </section>
 <section id="if-something-will-not-install" class="level3">
@@ -931,6 +948,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./dont-re-read-yourself.html" class="pagination-link" aria-label="Don't re-read yourself">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Don’t re-read yourself</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
