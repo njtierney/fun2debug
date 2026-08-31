@@ -107,10 +107,7 @@ If we want all 10 files read in, how should we do this?
 ed_2023 <- read_csv("data/tidy/education_2023.csv")
 ```
 
-1. How would you read in these ten files? Sketch it out.
-2. What is different between the ten file paths? What is the same?
-
-Here is one way to solve this:
+1. What is different between the ten file paths? What is the same?
 
 ```r
 ed_2014 <- read_csv("data/tidy/education_2014.csv")
@@ -125,7 +122,7 @@ ed_2022 <- read_csv("data/tidy/education_2022.csv")
 ed_2023 <- read_csv("data/tidy/education_2023.csv")
 ```
 
-3. Are there any potential problems you can foresee?
+2. Are there any potential problems you can foresee?
 
 There are no wrong answers!
 
@@ -562,23 +559,18 @@ That step matters more than it looks. `parse_number()` takes the first number it
 basename(path) |> parse_number()
 ```
 
-And `as.character()` turns it into text:
-
 ```{r}
 #| label: step-character
-basename(path) |> parse_number() |> as.character()
+basename(path) |> parse_number()
 ```
 
-Why text? Because a year is a label, not a quantity. You are never going to want the mean of it.
-
-Those three steps are one idea. Get the year out of a path. So let's give that idea a name:
+Those steps are one idea. Get the year out of a path. So let's give that idea a name:
 
 ```{r}
 #| label: year-from-path
 year_from_path <- function(path) {
   basename(path) |>
-    parse_number() |>
-    as.character()
+    parse_number()
 }
 
 year_from_path(path)
@@ -647,7 +639,6 @@ You do not re-read that. You read the name, you believe it, and you get on with 
 - DRY says do not repeat yourself, and it is right
 - DRRY says do not re-read yourself, and it fires earlier and more often
 - Everything DRY catches, DRRY catches too
-- If you cannot name it, you do not have an idea yet, you have some code
 
 ## Summary {.unnumbered}
 
