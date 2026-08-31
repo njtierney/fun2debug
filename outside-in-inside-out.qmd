@@ -1,60 +1,6 @@
 # Outside-in, inside-out {#sec-outside-in}
 
-I think there are two ways to arrive at a function:
-
-1. Outside in
-2. Inside out
-
-You can also think of these as "top-down" and "bottom up".
-
-**Outside in** means you write out functions as pseudo code that doesn't actually exist yet:
-
-```{r}
-#| eval: false
-education_2014_raw <- read_education("data/education_2014.csv")
-tidy_education_2014 <- tidy_education(education_2014_raw)
-gg_education_by_age_state <- plot_education_state_age(tidy_education_2014)
-```
-
-**Inside out** is where you write the code, get it working, then wrap it up in a script.
-
-```{r}
-#| eval: false
-education_2014_raw <- read_csv(
-    "data/education_2014.csv", 
-    col_types = c("i", "c", "c", "d", "d", "d")
-    ) |> 
-    janitor::clean_names() |> 
-    mutate(
-        year = as.integer(year),
-        state_territory = as.character(state_territory),
-        age_group = as.character(age_group),
-        n_studying = as.numeric(n_studying),
-        population = as.numeric(population),
-        prop_studying = as.numeric(prop_studying)
-    )
-
-# ... eventually
-education_2014_raw <- read_csv(
-    "data/education_2014.csv", 
-    name_repair = janitor::make_clean_names,
-    col_types = c("i", "c", "c", "d", "d", "d")
-    )
-
-# ... wrap it up in a function when you are happy with ti
-read_education <- function(path){
-    education_raw <- read_csv(
-    path, 
-    name_repair = janitor::make_clean_names,
-    col_types = c("i", "c", "c", "d", "d", "d")
-    )
-    
-    education_raw
-}
-```
-
-
-It's not that one is better than the other, but I think knowing that there are these two different ways to think about functions helps you move faster and more efficiently towards solving a problem.
+There are two ways I get from a blank script to a function. Sometimes I write the call I wish I could make, and then go and make it true. Other times I have code that already works, and I pull a function out of it. This chapter does both, on the same question, and it finishes with the plot that chapter 1 promised you.
 
 ::: {.overview}
 
@@ -64,49 +10,443 @@ It's not that one is better than the other, but I think knowing that there are t
 
 **Questions**
 
+<!-- These map onto the sections below, in order. If you move a section, move its question. -->
+
 - How do I write a function before I know how it works?
-- How do I pull a function out of code I have already got working?
-- How do I know which way to start?
-- What does it mean to move up and down the ladder of abstraction?
+- How do I pull a function out of code that already works?
+- Which way should I start, and should I write one at all?
+- What do I do when the first version is wrong?
 
 **What you need this session**
 
-- A session of RStudio open
-- A script of your own, if you have one
+- A session of RStudio open, in the same folder as last time
+- `{fnmate}`, if it installed for you. Nothing here depends on it.
+
+```{r}
+#| label: pkgs
+#| output: false
+library(countdown)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(glue)
+library(here)
+```
+
+```{r}
+#| label: setup-data
+#| output: false
+education_path <- function(year) {
+  here(glue("data/tidy/education_{year}.csv"))
+}
+
+year_from_path <- function(path) {
+  basename(path) |>
+    parse_number() |>
+    as.character()
+}
+
+read_education <- function(year) {
+  files <- education_path(year)
+  education_raw <- read_csv(files, id = "path")
+
+  education_raw |>
+    mutate(year = year_from_path(path)) |>
+    select(-path)
+}
+
+pct_studying <- function(data, age = "25_29") {
+  data_summary <- data |>
+    filter(age_group == age) |>
+    summarise(
+      total_studying = sum(n_studying),
+      total_population = sum(population)
+    ) |>
+    mutate(pct = round(total_studying / total_population * 100, 1))
+  data_summary
+}
+
+education <- read_education(2014:2023)
+
+tas_2023 <- education |>
+  filter(year == 2023, state_territory == "Tas.")
+```
 
 :::
 
 ## Outside-in
 
-- Useful for planning
-- introduce example with data set
-- reading in data
-- Where does the read in data get used
-- What kinds of analysis, or plot would I want to do
-- What happens as a result of the output of that function
-- using outside-in with fnmate
-- Exercise: practice writing out functions without implementing them
+Outside-in means you write the call before you write the function.
 
-<!--
-TODO: imagine the ideal call first. What am I trying to do? What inputs do I
-need? What should it return? Write the call, then make it true.
--->
+You start from what you want to type, rather than from what you know how to do. A call is a promise: a name, some inputs, and something back. Then you go and keep it.
 
-<!--
-MOVED FROM CHAPTER 2, 30 Aug 2026. This was chapter 2's capstone. It belongs
-here because extracting a function from working code is what this chapter is
-about, and chapter 2 had no room. Make the code fences executable when it goes
-live. Do not write a backtick followed by r and a space anywhere in a comment:
-knitr reads that as inline R and stops the render, which is how this note got
-written twice.
+Here is the question we set ourselves in chapter 1:
 
-## Your Turn: putting it together {.unnumbered}
+**How many Australians are studying, by age group and by state, and is that changing?**
+
+We can do most of that already, and the changing part is still open. So what do I actually want to type?
+
+```r
+education <- read_education(2014:2023)
+
+tas <- filter(education, state_territory == "Tas.")
+
+plot_study_over_time(tas)
+```
+
+That took about twenty seconds, and none of it needed me to know anything about ggplot2.
+
+Two of those three lines already work. We wrote `read_education()` in chapter 1, and `filter()` is `filter()`.
+
+So outside-in has handed me exactly one thing to build. It has also told me its name, what goes into it, and what comes back out.
+
+Have a look at what I didn't have to decide. Nothing about `aes()`, nothing about facets, nothing about whether the colour is any good. Those are all real questions, and none of them are the question I'm holding right now.
+
+That's the bit I like. Writing the call keeps you at the level of the analysis while you still care about the analysis.
+
+### Letting fnmate do the typing
+
+`{fnmate}` writes the skeleton for you, straight from the call.
+
+Put your cursor on `plot_study_over_time(tas)`, run the addin, and it writes this underneath:
+
+```r
+plot_study_over_time <- function(tas) {
+
+  NULL
+
+}
+```
+
+It read the call, worked out the arguments, and left you the body to fill in.
+
+Two things worth noticing. It named the argument `tas`, because `tas` is what I passed, and I would rename that to `data`. And the body is `NULL`, so the function runs today and returns nothing rather than erroring.
+
+::: {.callout-important title="It's OK if fnmate didn't install"}
+
+Look at what it wrote above. That's five lines, and about fifteen seconds of typing.
+
+The addin saves the typing. It doesn't save the thinking, and the thinking is the part we're practising. Everywhere I use it in this book I also show what it wrote, so you can type the same thing yourself.
+
+:::
+
+`{fnmate}` is by [Miles McBain](https://milesmcbain.xyz), who also gave us DRRY.
 
 ::: {.callout-note title="Your Turn"}
 
-Here is some code I actually wrote while making this chapter. It compares the youngest and oldest age groups in a state.
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs", "setup-data"]
+#| eval: false
+#| echo: true
+```
+
+</details>
+
+Somebody asks you which state has the biggest gap between the youngest and the oldest age groups, and whether that gap is closing.
+
+Write the script you wish you could run. Don't write a single function body.
+
+1. Write the calls, top to bottom, and give each one a name.
+2. For each call, say what goes in and what comes out.
+3. Which of them already exist?
+4. Which one would you write first, and why?
 
 ```r
+education <- read_education(2014:2023)
+
+___ <- ___(education, ___)
+
+___(___)
+```
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+
+<details>
+<summary>One possible answer</summary>
+
+```r
+education <- read_education(2014:2023)
+
+gaps <- study_gap_by_state(education)
+
+plot_gap_over_time(gaps)
+```
+
+Yours will look different, and that's fine. What matters is that every line has a name you could say out loud, and that you know what goes in and what comes back.
+
+`read_education()` already exists, and the other two don't.
+
+I would write `study_gap_by_state()` first, because `plot_gap_over_time()` can't be tested until something makes `gaps`.
+
+</details>
+
+:::
+
+### Takehomes
+
+- Outside-in means writing the call before the function
+- A call names the function, its inputs, and what comes back
+- Some of the calls you write already exist, so check before you build
+- `{fnmate}` turns a call into a skeleton, and you can type one in fifteen seconds
+
+## Inside-out
+
+Inside-out goes the other way. You have code that works, and the function comes out of it.
+
+Where do most of my own functions come from? Here, honestly. I didn't plan any of them. I wrote some code, then wrote it again slightly differently, and at some point the shape was obvious.
+
+Let's build `plot_study_over_time()` that way.
+
+Start small, with one state and one age group.
+
+```{r}
+#| label: tas-young
+tas_young <- education |>
+  filter(state_territory == "Tas.", age_group == "15_19")
+
+tas_young
+```
+
+Ten rows, one per year.
+
+**Sketch it before you look.** Put `year` along the bottom and `prop_studying` up the side. Does the line go up, down, or stay flat across the ten years?
+
+Draw your guess, then run this.
+
+```{r}
+#| label: fig-blank
+#| fig-alt: "An empty plot with a category axis of years from 2014 to 2023 along the bottom and proportion studying up the side. No line is drawn."
+ggplot(tas_young, aes(x = year, y = prop_studying)) +
+  geom_line()
+```
+
+Now look at your drawing, because whatever you drew, you did better than that.
+
+There's no error, just a warning and a plot with nothing in it.
+
+### Reading a warning that points at the wrong thing
+
+The warning asks about the group aesthetic. So the obvious move is to go and fiddle with `group =`, and you can lose a while in there.
+
+The group aesthetic is fine.
+
+So where do you go next?
+
+Every message points somewhere, and when the fix isn't where it points, stop reading the message and go and look at the data instead.
+
+```{r}
+#| label: class-year
+class(tas_young$year)
+```
+
+Text.
+
+Chapter 1 warned us this was coming. The year lived in the file name, and file names are text, so that's what `read_education()` hands back.
+
+Look at the bottom axis on that empty plot again. Ten labels, evenly spaced, with no room between them. ggplot2 read `year` as a category rather than a number.
+
+Ten categories, one row in each, so `geom_line()` had nothing to join up. It even said so, and it said it in a way that sends you to the wrong place.
+
+The fix is one `mutate()`.
+
+```{r}
+#| label: fig-fixed
+#| fig-alt: "A line chart of the proportion of 15 to 19 year olds studying in Tasmania from 2014 to 2023. The line zigzags between about 79 and 86 percent with no overall trend."
+tas_young |>
+  mutate(year = as.integer(year)) |>
+  ggplot(aes(x = year, y = prop_studying)) +
+  geom_line()
+```
+
+Now go back to your drawing. If you drew something roughly flat, you were right, and nobody could have picked the zigzag.
+
+Have a look at the axis before you read too much into it, though. The whole picture covers `r round(diff(range(tas_young$prop_studying)) * 100, 1)` percentage points, so the wobble looks far more dramatic than it is.
+
+### Growing it
+
+One age group is a bit thin. What about the other eight?
+
+So drop the age filter, and give each age group its own little panel with `facet_wrap()`.
+
+```{r}
+#| label: fig-facets
+#| fig-alt: "Nine small line charts, one per age group, of the proportion studying in Tasmania from 2014 to 2023. The 15 to 19 panel is near the top of the range and the older panels sit near zero."
+tas <- filter(education, state_territory == "Tas.")
+
+tas |>
+  mutate(year = as.integer(year)) |>
+  ggplot(aes(x = year, y = prop_studying)) +
+  geom_line() +
+  facet_wrap(~age_group)
+```
+
+That's the plot I wanted. Now it can be made nicer, which is fiddly rather than hard.
+
+```{r}
+#| label: fig-polished
+#| fig-alt: "The same nine panels of Tasmanian study rates over time, now in green, with a percentage axis, a title, and a light theme."
+tas |>
+  mutate(year = as.integer(year)) |>
+  ggplot(aes(x = year, y = prop_studying)) +
+  geom_line(colour = "#1B9E77", linewidth = 0.8) +
+  facet_wrap(~age_group) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    x = NULL,
+    y = "Studying",
+    title = "Proportion of people studying, by age group",
+    subtitle = "Tas."
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+Four goes, and the first one drew nothing.
+
+That middle bit is the part nobody shows you, so I'm showing it.
+
+### Wrapping it up
+
+Now ask the inside-out question. What changes between uses?
+
+The state. Everything else in that block is the same for New South Wales as it is for Tasmania.
+
+So the state becomes an argument, and the rest becomes the body.
+
+```{r}
+#| label: fig-plot-study-over-time
+#| fig-alt: "Nine panels of Tasmanian study rates from 2014 to 2023 in green, produced by a function that takes the state as an argument."
+plot_study_over_time <- function(data, state) {
+  data |>
+    filter(state_territory == state) |>
+    mutate(year = as.integer(year)) |>
+    ggplot(aes(x = year, y = prop_studying)) +
+    geom_line(colour = "#1B9E77", linewidth = 0.8) +
+    facet_wrap(~age_group) +
+    scale_y_continuous(labels = scales::percent) +
+    labs(
+      x = NULL,
+      y = "Studying",
+      title = "Proportion of people studying, by age group",
+      subtitle = state
+    ) +
+    theme_minimal(base_size = 12)
+}
+
+plot_study_over_time(education, state = "Tas.")
+```
+
+The filter moved inside, so you hand it all ten years and name the state once.
+
+```{r}
+#| label: fig-nt
+#| fig-alt: "The same nine panels for the Northern Territory. The 15 to 19 panel sits between about 64 and 80 percent, and the 20 to 24 panel climbs from about 26 to 45 percent."
+plot_study_over_time(education, state = "NT")
+```
+
+That is the call chapter 1 opened with, and now it exists.
+
+### Where does the fix go?
+
+That `as.integer()` is inside the function now, so nobody who calls `plot_study_over_time()` will ever see the blank plot.
+
+You could argue it belongs in `read_education()` instead, and I go back and forth on it. Put it there and everything downstream gets an integer year for free. Put it here and `read_education()` keeps handing you exactly what was in the file.
+
+Either way it goes inside a function, and that is three chapters running. A function is where a fix goes.
+
+::: {.callout-note title="Your Turn"}
+
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs", "setup-data"]
+#| eval: false
+#| echo: true
+```
+
+</details>
+
+Here is some code that works. It is the same idea the other way up: one age group, every state.
+
+```{r}
+#| label: fig-yt-working-code
+#| fig-alt: "Eight small line charts, one per state and territory, of the proportion of 15 to 19 year olds studying from 2014 to 2023."
+education |>
+  filter(age_group == "15_19") |>
+  mutate(year = as.integer(year)) |>
+  ggplot(aes(x = year, y = prop_studying)) +
+  geom_line(colour = "#1B9E77") +
+  facet_wrap(~state_territory) +
+  scale_y_continuous(labels = scales::percent)
+```
+
+Turn it into `plot_age_over_time()`.
+
+1. **Copy.** Make an empty function and paste the code into the body. Change nothing yet.
+2. **Identify.** What changes between uses? That is your argument.
+3. **Abstract.** Replace the hard coded part with the argument name.
+4. **Check.** You should get the same plot you started with.
+5. **Default.** Give `age` a default, so `plot_age_over_time(education)` works on its own.
+
+```r
+plot_age_over_time <- function(data, ___) {
+  data |>
+    filter(age_group == ___) |>
+    mutate(year = as.integer(year)) |>
+    ggplot(aes(x = year, y = prop_studying)) +
+    geom_line(colour = "#1B9E77") +
+    facet_wrap(~state_territory) +
+    scale_y_continuous(labels = scales::percent)
+}
+```
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 8)
+```
+
+<details>
+<summary>Answer</summary>
+
+Only open this if you have had a go.
+
+```{r}
+#| label: fig-yt-answer
+#| fig-alt: "Eight small line charts, one per state and territory, of the proportion of 25 to 29 year olds studying from 2014 to 2023, drawn by the new function."
+plot_age_over_time <- function(data, age = "15_19") {
+  data |>
+    filter(age_group == age) |>
+    mutate(year = as.integer(year)) |>
+    ggplot(aes(x = year, y = prop_studying)) +
+    geom_line(colour = "#1B9E77") +
+    facet_wrap(~state_territory) +
+    scale_y_continuous(labels = scales::percent) +
+    labs(x = NULL, y = "Studying", subtitle = age)
+}
+
+plot_age_over_time(education, age = "25_29")
+```
+
+I added a subtitle while I was in there, because a plot of one age group should say which one.
+
+</details>
+
+:::
+
+::: {.callout-tip title="Going deeper: one more to try on your own" collapse="true"}
+
+Here is some code I actually wrote while making this chapter. It compares the youngest and oldest age groups in a state.
+
+```{r}
+#| label: study-gap-by-hand
 young <- tas_2023 |>
   filter(age_group == "15_19") |>
   summarise(pct = sum(n_studying) / sum(population) * 100)
@@ -118,21 +458,17 @@ old <- tas_2023 |>
 round(young$pct - old$pct, 1)
 ```
 
-It works. It's also nine lines, two of which are the same three lines twice, and it only does Tasmania in 2023.
+It works. It's also two blocks of three lines that differ by one string, and it only does Tasmania in 2023.
 
-Turn it into a function.
-
-1. **Copy.** Make an empty function and paste the code into the body. Change nothing yet.
-2. **Identify.** Which parts change between uses? Those are your arguments.
-3. **Abstract.** Replace the hard-coded parts with argument names.
-4. **Iterate.** Get it working first, then improve the names.
+Turn it into a function, using the same four steps: copy, identify, abstract, iterate.
 
 Then check you get the same answer you started with, because it's very easy to tidy something into a different result.
 
 <details>
 <summary>One possible answer</summary>
 
-```r
+```{r}
+#| label: study-gap-fn
 study_gap <- function(data, young = "15_19", old = "55_74") {
   young_pct <- pct_studying(data, age = young)$pct
   old_pct <- pct_studying(data, age = old)$pct
@@ -142,58 +478,110 @@ study_gap <- function(data, young = "15_19", old = "55_74") {
 study_gap(tas_2023)
 ```
 
-This one reuses `pct_studying()` rather than writing the sum out twice, which is the whole idea. If your first answer did write it out twice, that is completely normal, and noticing afterwards is the skill.
+This one reuses `pct_studying()` from chapter 2 rather than writing the sum out twice.
+
+If your first answer did write it out twice, that's completely normal, and noticing afterwards is the skill.
 
 </details>
 
 :::
 
+### Takehomes
 
--->
+- Inside-out means starting from code that works, and finding the function in it
+- Copy, identify what changes, abstract it into an argument, then iterate
+- A warning names a symptom, and not always the cause
+- When the message points somewhere the fix is not, go and look at the data
+- A function is where a fix goes, so every caller gets it
 
-## Inside-out
+## Which way, and whether to bother
 
-- Write some plotting code
-- Get the plotting code nice and clean
-- Is there a part here that would change? Can that be used as a function?
-- Move the part into arguments
-- Exercise: practice creating a function this way
+So which one do you reach for?
 
-<!--
-TODO: start from working code. Find the parts that change. Give them names.
-Lift them into arguments.
--->
+Neither way is better, and I use both, often in the same hour.
 
-## Which way to start
+**Outside-in** when I know what I want and not how. Planning, drafting, the top of a script, the moment somebody asks me a question.
 
-- outside-in for planning and drafting
-- inside out as a natural place to start and roll around it
-- Exercise: discussion around the sorts of project you use, where would you be reaching for which way of writing them?
+**Inside-out** when I have something that works and cannot see the shape yet. Exploring, poking, the second time I paste something.
 
-<!--
-TODO: outside-in when you know what you want. Inside-out when you have
-something that works and cannot see the shape yet.
--->
+There is a third answer, and it comes up more often than either.
 
-## Up and down the ladder of abstraction
+**Don't write one.**
 
-- Claude: This is more a comment around using between levels of functions, I actually think this comment on the ladder of abstraction belongs more in the lessons around debugging
+Chapter 2 showed this with a plain ggplot call. ggplot2 expresses itself well, so wrapping a single call in a function buys you a name and not much else.
 
-<!--
-TODO: street level and map level. The skill is moving, not living at one end.
--->
+Here is when I leave code alone:
+
+- **It's already clear, and I use it once.** `filter(education, state_territory == "Tas.")` does not need to be `filter_state()`. That's a longer name for a shorter idea.
+- **I can't name it.** If the verb won't come, I usually have two functions in there, or I don't understand the thing yet.
+- **Somebody has already written it.** In chapter 1 I was about to write a loop, and `read_csv()` had already done it.
+- **I'm still exploring.** A function I write in the first ten minutes is a guess about an interface I don't want yet.
+
+A function is not free. It costs you a name to remember, a definition to jump to, and an interface you now have to keep working.
+
+Usually worth it. Not always.
+
+::: {.callout-note title="Your Turn"}
+
+Think about a project of your own. No code for this one.
+
+1. Which way did you get there? Did you plan the functions, or did they fall out of code you had already written?
+2. Name one thing in it you would write outside-in now.
+3. Name one function you wrote that you would leave as plain code today. What did it cost you?
+
+There are no wrong answers, and I would like to hear number 3 especially.
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+
+:::
+
+### Takehomes
+
+- Outside-in when you know what you want, inside-out when you have something working
+- Most people do both, often on the same script
+- Not writing a function is a real answer
+- A function costs a name, a definition, and an interface you have to keep
 
 ## Iteration is normal
 
-- link back to writing and polish
-- The exercise here should be for everyone to practice iterating on a function
+`plot_study_over_time()` took four goes in this chapter, and the first one drew nothing.
 
-<!--
-TODO: nobody gets the interface right first go. Say so out loud.
--->
+That's not a teaching device. That's what it looks like.
+
+The interface moved too. Here is the call I wrote outside-in at the top of the chapter, and the one we finished with:
+
+```r
+plot_study_over_time(tas)
+
+plot_study_over_time(education, state = "Tas.")
+```
+
+The first one keeps the filter outside, and the last one pulls it in and grows an argument to do it. I only worked out which one I wanted by writing the body.
+
+Nobody gets the interface right first go. Chapter 2 renamed `plot_study_by_age()` to `plot_study_by()` halfway through, because the name stopped being true the moment we added an argument.
+
+Writing code is like writing anything else. A first draft is meant to be rough, and it exists so there is something to improve.
+
+So how many versions should you expect? Three or four, with the name changing along the way, and a line or two moving out of one function and into another once you work out where they belong.
+
+The thing to avoid isn't the wrong first version. It's waiting until you know the right one before you start.
+
+### Takehomes
+
+- The first version is a draft, and drafts are meant to be rough
+- Names change as functions grow, and that is progress
+- Moving a line into a different function is normal work, not a mistake
 
 ## Summary {.unnumbered}
 
-<!--
-TODO: numbered take-homes.
--->
+1. **Outside-in writes the call first.** Give it a name, say what goes in and what comes back, then make it true.
+2. **Inside-out starts from code that works.** Copy, identify what changes, abstract it, iterate.
+3. **A warning names a symptom.** `geom_line()` blamed the group aesthetic, and `year` was text.
+4. **Not writing a function is a real answer.** Clear, used once, and hard to name are all reasons to leave it.
+5. **Nobody gets it right first go.** Four versions is normal, and renaming is part of writing.
+
+Next session we open a function up and look inside it while it runs.
