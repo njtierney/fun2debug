@@ -225,6 +225,13 @@ glue("data/tidy/education_{year}.csv")
 glue("data/tidy/education_{year}.csv") |> here()
 ```
 
+::: {.callout-tip title="Read more"}
+
+There is a longer treatment of `{here}` and project oriented workflow in R Best
+Practices, at [The {here} package](https://r-best-practices.njtierney.com/project-organisation.html#the-here-package).
+
+:::
+
 Now pipe that into `read_csv()`.
 
 ```{r}
@@ -251,6 +258,33 @@ education_2022 <- read_csv(year_path)
 So we've sort of taken one step forward, two steps back, right now.
 
 Let's talk about turning that part into a function.
+
+:::: {.panel-tabset}
+
+#### Then
+
+```r
+ed_2014 <- read_csv("data/tidy/education_2014.csv")
+ed_2015 <- read_csv("data/tidy/education_2015.csv")
+ed_2016 <- read_csv("data/tidy/education_2016.csv")
+ed_2017 <- read_csv("data/tidy/education_2017.csv")
+ed_2018 <- read_csv("data/tidy/education_2018.csv")
+ed_2019 <- read_csv("data/tidy/education_2019.csv")
+ed_2020 <- read_csv("data/tidy/education_2020.csv")
+ed_2021 <- read_csv("data/tidy/education_2021.csv")
+ed_2022 <- read_csv("data/tidy/education_2022.csv")
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
+```
+
+#### Now
+
+```r
+year <- 2023
+year_path <- glue("data/tidy/education_{year}.csv") |> here()
+ed_2023 <- read_csv(year_path)
+```
+
+::::
 
 ### Takehomes
 
@@ -338,6 +372,33 @@ countdown(minutes = 5)
 
 :::
 
+:::: {.panel-tabset}
+
+#### Then
+
+```r
+ed_2014 <- read_csv("data/tidy/education_2014.csv")
+ed_2015 <- read_csv("data/tidy/education_2015.csv")
+ed_2016 <- read_csv("data/tidy/education_2016.csv")
+ed_2017 <- read_csv("data/tidy/education_2017.csv")
+ed_2018 <- read_csv("data/tidy/education_2018.csv")
+ed_2019 <- read_csv("data/tidy/education_2019.csv")
+ed_2020 <- read_csv("data/tidy/education_2020.csv")
+ed_2021 <- read_csv("data/tidy/education_2021.csv")
+ed_2022 <- read_csv("data/tidy/education_2022.csv")
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
+```
+
+#### Now
+
+```r
+ed_2021 <- read_education(2021)
+ed_2022 <- read_education(2022)
+ed_2023 <- read_education(2023)
+```
+
+::::
+
 ### Takehomes
 
 - A function has a name, arguments, and a body
@@ -371,6 +432,24 @@ ed_2023 <- read_education(2023) |> mutate(year = 2023)
 
 ed_2023
 ```
+
+::: {.callout-tip title="Going deeper: where the new column lands" collapse="true"}
+
+`mutate()` puts a new column on the far right. Often that is fine. When you want
+the year up the front where you can see it, `mutate()` takes `.before` and
+`.after`:
+
+```{r}
+#| label: mutate-before
+#| message: false
+read_education(2021) |>
+  mutate(year = 2021, .before = state_territory)
+```
+
+Name the column you want it next to, rather than a position. `.before = 1` also
+works, but it stops being true the moment somebody reorders the data.
+
+:::
 
 Now we can stack them, and every row still knows where it came from:
 
@@ -482,6 +561,35 @@ For step 3, ten years this way is eleven lines. Which is roughly where we came i
 
 :::
 
+:::: {.panel-tabset}
+
+#### Then
+
+```r
+ed_2014 <- read_csv("data/tidy/education_2014.csv")
+ed_2015 <- read_csv("data/tidy/education_2015.csv")
+ed_2016 <- read_csv("data/tidy/education_2016.csv")
+ed_2017 <- read_csv("data/tidy/education_2017.csv")
+ed_2018 <- read_csv("data/tidy/education_2018.csv")
+ed_2019 <- read_csv("data/tidy/education_2019.csv")
+ed_2020 <- read_csv("data/tidy/education_2020.csv")
+ed_2021 <- read_csv("data/tidy/education_2021.csv")
+ed_2022 <- read_csv("data/tidy/education_2022.csv")
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
+```
+
+#### Now
+
+```r
+ed_2021 <- read_education(2021)
+ed_2022 <- read_education(2022)
+ed_2023 <- read_education(2023)
+
+bind_rows(ed_2021, ed_2022, ed_2023)
+```
+
+::::
+
 ### Takehomes
 
 - The year lived in the file name, so we have to put it back deliberately
@@ -491,7 +599,33 @@ For step 3, ten years this way is eleven lines. Which is roughly where we came i
 
 ## What read_csv already does
 
-Before you write any more of this, try asking `education_path()` for all ten years at once.
+Before you write any more of this, let's go one step at a time.
+
+Here is one year, as a path, and then read in:
+
+```{r}
+#| label: ladder-one
+#| message: false
+education_path(2021)
+
+education_path(2021) |> read_csv()
+```
+
+Now ask for two:
+
+```{r}
+#| label: ladder-two
+#| message: false
+education_path(2021:2022)
+
+two_years <- education_path(2021:2022) |> read_csv()
+
+two_years
+```
+
+`r nrow(two_years)` rows. Two paths went in, one table came out, and I never asked for that.
+
+So what about all ten?
 
 ```{r}
 #| label: ten-paths
@@ -517,7 +651,10 @@ This works for two reasons:
 1. `glue()` builds ten paths when you give it ten years, and 
 2. `read_csv()` will take all ten and stack them for you. 
 
-`read_csv()` will also tell you where each row came from, using `id` (similar to `bind_rows()`).
+`read_csv()` will also tell you which file each row came from, with `id`.
+
+That argument only exists because `read_csv()` takes a vector of paths. You give
+it a column name, and it stores the file path in that column.
 
 ```{r}
 #| label: read-csv-id
@@ -525,6 +662,11 @@ This works for two reasons:
 education_path(2022:2023) |>
   read_csv(id = "path")
 ```
+
+Notice what you get. You choose what the column is called, but not what goes in
+it. It is always the path. So `id` is not a way to hand the years through, it is
+a record of which file each row came from, and the year is sitting inside that
+record.
 
 So a good deal of what I was about to write by hand is already sitting in `readr`.
 
@@ -601,6 +743,31 @@ Three functions now, and each one knows a single thing. `education_path()` knows
 
 And notice where the fix went. It went **inside** `read_education()`, so everything that ever calls it gets the year column, and nobody who calls it had to change.
 
+:::: {.panel-tabset}
+
+#### Then
+
+```r
+ed_2014 <- read_csv("data/tidy/education_2014.csv")
+ed_2015 <- read_csv("data/tidy/education_2015.csv")
+ed_2016 <- read_csv("data/tidy/education_2016.csv")
+ed_2017 <- read_csv("data/tidy/education_2017.csv")
+ed_2018 <- read_csv("data/tidy/education_2018.csv")
+ed_2019 <- read_csv("data/tidy/education_2019.csv")
+ed_2020 <- read_csv("data/tidy/education_2020.csv")
+ed_2021 <- read_csv("data/tidy/education_2021.csv")
+ed_2022 <- read_csv("data/tidy/education_2022.csv")
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
+```
+
+#### Now
+
+```r
+education <- read_education(2014:2023)
+```
+
+::::
+
 ### Takehomes
 
 - `read_csv()` takes a vector of paths and stacks them for you
@@ -633,6 +800,33 @@ education <- read_education(2014:2023)
 ```
 
 You do not re-read that. You read the name, you believe it, and you get on with the analysis.
+
+:::: {.panel-tabset}
+
+#### Then
+
+```r
+ed_2014 <- read_csv("data/tidy/education_2014.csv")
+ed_2015 <- read_csv("data/tidy/education_2015.csv")
+ed_2016 <- read_csv("data/tidy/education_2016.csv")
+ed_2017 <- read_csv("data/tidy/education_2017.csv")
+ed_2018 <- read_csv("data/tidy/education_2018.csv")
+ed_2019 <- read_csv("data/tidy/education_2019.csv")
+ed_2020 <- read_csv("data/tidy/education_2020.csv")
+ed_2021 <- read_csv("data/tidy/education_2021.csv")
+ed_2022 <- read_csv("data/tidy/education_2022.csv")
+ed_2023 <- read_csv("data/tidy/education_2023.csv")
+```
+
+#### Now
+
+```r
+source("ch1/read_education.R")
+
+education <- read_education(2014:2023)
+```
+
+::::
 
 ### Takehomes
 
