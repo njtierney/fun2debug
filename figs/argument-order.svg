@@ -17,18 +17,18 @@
 
 <text class="cap" x="40" y="146" fill="#4a5160">THREE CALLS, ONE ANSWER</text>
 
-<rect x="36" y="164" width="560" height="40" rx="7" fill="#D95F02" opacity="0.10"/>
-<text class="code" x="52" y="191" fill="#1b2733">pct_studying(ed_2023, "15_19")</text>
+<rect x="36" y="164" width="570" height="40" rx="7" fill="#D95F02" opacity="0.10"/>
+<text class="code" x="52" y="191" fill="#1b2733">pct_studying(tas_2023, "15_19")</text>
 <text class="head" x="624" y="184" fill="#C25502">By position</text>
 <text class="desc" x="624" y="205" fill="#4a5160">You have to know the definition to read it.</text>
 
-<rect x="36" y="234" width="560" height="40" rx="7" fill="#1B9E77" opacity="0.14"/>
-<text class="code" x="52" y="261" fill="#1b2733">pct_studying(data = ed_2023, age = "15_19")</text>
+<rect x="36" y="234" width="570" height="40" rx="7" fill="#1B9E77" opacity="0.14"/>
+<text class="code" x="52" y="261" fill="#1b2733">pct_studying(data = tas_2023, age = "15_19")</text>
 <text class="head" x="624" y="254" fill="#178665">By name</text>
 <text class="desc" x="624" y="275" fill="#4a5160">The habit worth having.</text>
 
-<rect x="36" y="304" width="560" height="40" rx="7" fill="#1B9E77" opacity="0.14"/>
-<text class="code" x="52" y="331" fill="#1b2733">pct_studying(age = "15_19", data = ed_2023)</text>
+<rect x="36" y="304" width="570" height="40" rx="7" fill="#1B9E77" opacity="0.14"/>
+<text class="code" x="52" y="331" fill="#1b2733">pct_studying(age = "15_19", data = tas_2023)</text>
 <text class="head" x="624" y="324" fill="#178665">By name, any order</text>
 <text class="desc" x="624" y="345" fill="#4a5160">Naming makes the order irrelevant.</text>
 

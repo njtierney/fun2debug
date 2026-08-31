@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 620" width="940" height="620" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 680" width="1040" height="680" role="img" aria-labelledby="t d">
 <title id="t">The anatomy of an R function</title>
-<desc id="d">The function pct_studying, defined as function(data, age), with a body that filters to one age group, summarises the totals, and works out a percentage. Five labels with arrows point to the parts: the name, the keyword function, the arguments, the body, and the return value.</desc>
+<desc id="d">The function pct_studying, defined as function(data, age). The body filters to one age group, summarises studying and people, works out a percentage, and assigns all of that to an intermediate value called data_summary. The last line of the body is data_summary on its own. Six labels with arrows point to the parts: the name, the keyword function, the arguments, the intermediate value, the body, and the return value, which is the final bare data_summary line.</desc>
 <defs><style>
  .code{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:17px}
  .head{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;font-weight:bold}
@@ -10,45 +10,52 @@
 <marker id="a-name" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#178665"/></marker>
 <marker id="a-fn" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#736EB2"/></marker>
 <marker id="a-args" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C25502"/></marker>
+<marker id="a-mid" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8A6A00"/></marker>
 <marker id="a-body" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666666"/></marker>
 <marker id="a-return" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E0197F"/></marker>
 </defs>
-<rect width="940" height="620" fill="#ffffff"/>
-<rect x="165" y="215" width="745" height="300" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
+<rect width="1040" height="680" fill="#ffffff"/>
+<rect x="280" y="215" width="740" height="360" rx="12" fill="#fbfbfb" stroke="#e6e8eb"/>
 
-<rect x="205" y="255" width="690" height="213" rx="7" fill="#666666" opacity="0.09"/>
-<rect x="186" y="226" width="131" height="26" rx="5" fill="#1B9E77" opacity="0.18"/>
-<rect x="350" y="226" width="90" height="26" rx="5" fill="#7570B3" opacity="0.18"/>
-<rect x="442" y="226" width="110" height="26" rx="5" fill="#D95F02" opacity="0.22"/>
-<rect x="205" y="436" width="690" height="26" rx="5" fill="#E7298A" opacity="0.16"/>
+<rect x="315" y="255" width="690" height="272" rx="7" fill="#666666" opacity="0.09"/>
+<rect x="296" y="226" width="131" height="26" rx="5" fill="#1B9E77" opacity="0.18"/>
+<rect x="460" y="226" width="90" height="26" rx="5" fill="#7570B3" opacity="0.18"/>
+<rect x="552" y="226" width="110" height="26" rx="5" fill="#D95F02" opacity="0.22"/>
+<rect x="316" y="258" width="162" height="26" rx="5" fill="#E6AB02" opacity="0.30"/>
+<rect x="315" y="498" width="690" height="26" rx="5" fill="#E7298A" opacity="0.16"/>
 
-<text class="code" xml:space="preserve" x="190" y="245" fill="#1b2733">pct_studying &lt;- function(data, age) {</text>
-<text class="code" xml:space="preserve" x="190" y="275" fill="#1b2733">  data |&gt;</text>
-<text class="code" xml:space="preserve" x="190" y="305" fill="#1b2733">    filter(age_group == age) |&gt;</text>
-<text class="code" xml:space="preserve" x="190" y="335" fill="#1b2733">    summarise(</text>
-<text class="code" xml:space="preserve" x="190" y="365" fill="#1b2733">      total_studying = sum(n_studying),</text>
-<text class="code" xml:space="preserve" x="190" y="395" fill="#1b2733">      total_population = sum(population)</text>
-<text class="code" xml:space="preserve" x="190" y="425" fill="#1b2733">    ) |&gt;</text>
-<text class="code" xml:space="preserve" x="190" y="455" fill="#1b2733">    mutate(pct = round(total_studying / total_population * 100, 1))</text>
-<text class="code" xml:space="preserve" x="190" y="485" fill="#1b2733">}</text>
+<text class="code" xml:space="preserve" x="300" y="245" fill="#1b2733">pct_studying &lt;- function(data, age) {</text>
+<text class="code" xml:space="preserve" x="300" y="275" fill="#1b2733">  data_summary &lt;- data |&gt;</text>
+<text class="code" xml:space="preserve" x="300" y="305" fill="#1b2733">    filter(age_group == age) |&gt;</text>
+<text class="code" xml:space="preserve" x="300" y="335" fill="#1b2733">    summarise(</text>
+<text class="code" xml:space="preserve" x="300" y="365" fill="#1b2733">      studying = sum(n_studying),</text>
+<text class="code" xml:space="preserve" x="300" y="395" fill="#1b2733">      people = sum(population)</text>
+<text class="code" xml:space="preserve" x="300" y="425" fill="#1b2733">    ) |&gt;</text>
+<text class="code" xml:space="preserve" x="300" y="455" fill="#1b2733">    mutate(pct = round(studying / people * 100, 1))</text>
+<text class="code" xml:space="preserve" x="300" y="515" fill="#1b2733">  data_summary</text>
+<text class="code" xml:space="preserve" x="300" y="545" fill="#1b2733">}</text>
 
 <text class="head" x="20" y="96" fill="#178665">The name</text>
 <text class="desc" x="20" y="120" fill="#4a5160">How you call it later.</text>
-<path class="lead" stroke="#178665" marker-end="url(#a-name)" d="M 62,132 Q 110,180 235,222"/>
+<path class="lead" stroke="#178665" marker-end="url(#a-name)" d="M 62,132 Q 130,180 350,222"/>
 
-<text class="head" x="300" y="60" fill="#736EB2">function()</text>
-<text class="desc" x="300" y="84" fill="#4a5160">This is what makes a function.</text>
-<path class="lead" stroke="#736EB2" marker-end="url(#a-fn)" d="M 350,96 Q 380,160 392,222"/>
+<text class="head" x="430" y="60" fill="#736EB2">function()</text>
+<text class="desc" x="430" y="84" fill="#4a5160">This is what makes a function.</text>
+<path class="lead" stroke="#736EB2" marker-end="url(#a-fn)" d="M 480,96 Q 500,160 502,222"/>
 
-<text class="head" x="920" y="60" fill="#C25502" text-anchor="end">The arguments</text>
-<text class="desc" x="920" y="84" fill="#4a5160" text-anchor="end">What changes each time you call it.</text>
-<path class="lead" stroke="#C25502" marker-end="url(#a-args)" d="M 780,96 Q 620,150 505,222"/>
+<text class="head" x="1020" y="60" fill="#C25502" text-anchor="end">The arguments</text>
+<text class="desc" x="1020" y="84" fill="#4a5160" text-anchor="end">What changes each time you call it.</text>
+<path class="lead" stroke="#C25502" marker-end="url(#a-args)" d="M 880,96 Q 750,150 615,222"/>
 
-<text class="head" x="20" y="306" fill="#666666">The body</text>
-<text class="desc" x="20" y="330" fill="#4a5160">The code that runs.</text>
-<path class="lead" stroke="#666666" marker-end="url(#a-body)" d="M 66,344 Q 120,376 197,382"/>
+<text class="head" x="20" y="300" fill="#8A6A00">An intermediate value</text>
+<text class="desc" x="20" y="324" fill="#4a5160">A name for a part-way result.</text>
+<path class="lead" stroke="#8A6A00" marker-end="url(#a-mid)" d="M 240,352 Q 285,340 312,288"/>
 
-<text class="head" x="430" y="560" fill="#E0197F">The return value</text>
-<text class="desc" x="430" y="584" fill="#4a5160">The last thing evaluated, so this line.</text>
-<path class="lead" stroke="#E0197F" marker-end="url(#a-return)" d="M 470,548 Q 450,500 440,468"/>
+<text class="head" x="20" y="420" fill="#666666">The body</text>
+<text class="desc" x="20" y="444" fill="#4a5160">The code that runs.</text>
+<path class="lead" stroke="#666666" marker-end="url(#a-body)" d="M 66,458 Q 180,450 309,430"/>
+
+<text class="head" x="540" y="618" fill="#E0197F">The return value</text>
+<text class="desc" x="540" y="642" fill="#4a5160">The last thing the body evaluates, so this line.</text>
+<path class="lead" stroke="#E0197F" marker-end="url(#a-return)" d="M 580,606 Q 555,565 545,528"/>
 </svg>
