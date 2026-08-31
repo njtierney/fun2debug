@@ -109,6 +109,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<link href="site_libs/countdown-0.6.0/countdown.css" rel="stylesheet">
+<script src="site_libs/countdown-0.6.0/countdown.js"></script>
 
 
 </head>
@@ -233,8 +235,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter is more specifically about naming the parts of a function.</p>
-<p>Knowing the name of something, means you can look it up, ask about it, and read the help page.</p>
+<p>This chapter goes into a bit more depth on the naming of different parts of a function, and the other bits and pieces that go with how it is created.</p>
+<p>Once we know the names of the particular parts of functions, and the terminology in functions, it will set you up well to look them up, ask about it, and read the help page.</p>
 <section id="overview" class="level2 unnumbered overview">
 <h2 class="unnumbered anchored" data-anchor-id="overview">Overview</h2>
 <p><strong>Duration</strong> 60 minutes</p>
@@ -252,11 +254,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>A session of RStudio open, in the same folder as last time</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-label="2"></a><span class="fu">library</span>(readr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-label="3"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-label="4"></a><span class="fu">library</span>(glue)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-label="5"></a><span class="fu">library</span>(here)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-label="2"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-label="3"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-label="4"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-label="5"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-label="6"></a><span class="fu">library</span>(here)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
@@ -289,7 +292,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="what-we-are-making" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="what-we-are-making"><span class="header-section-number">2.1</span> What we are making</h2>
-<p>Two plots. Look at them, and then look at the code underneath.</p>
+<p>Today we are focussing on these two plots. Let’s look at them, and the code underneath them.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-teaser-age" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels.">
@@ -323,8 +326,8 @@ Figure&nbsp;2.2
 <span id="cb3-3"><a href="#cb3-3" aria-label="3"></a>education <span class="sc">|&gt;</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-label="4"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-label="5"></a>  <span class="fu">plot_study_by</span>(<span class="at">y =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>One function.</strong> Two different plots! What changed is what variable goes on the y axis.</p>
-<p>That can be tricky! Have you ever tried to write a function around <code>dplyr</code> or <code>ggplot2</code>? We will talk through how to solve this.</p>
+<p>This is just <strong>one function</strong>, with two pretty different plots! The thing that changed is what variable goes on the y axis.</p>
+<p>This can be tricky! Have you ever tried to write a function around <code>dplyr</code> or <code>ggplot2</code>? We will talk through how to solve this.</p>
 <p>First, the parts of a function.</p>
 </section>
 <section id="the-parts-of-a-function" class="level2" data-number="2.2">
@@ -334,38 +337,40 @@ Figure&nbsp;2.2
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-label="1"></a>ed_2023 <span class="sc">|&gt;</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-label="2"></a>  <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-label="3"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-label="4"></a>    <span class="at">total_studying =</span> <span class="fu">sum</span>(n_studying),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-label="5"></a>    <span class="at">total_population =</span> <span class="fu">sum</span>(population)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-label="4"></a>    <span class="at">studying =</span> <span class="fu">sum</span>(n_studying),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-label="5"></a>    <span class="at">people =</span> <span class="fu">sum</span>(population)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-label="6"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-label="7"></a>  <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(total_studying <span class="sc">/</span> total_population <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-7"><a href="#cb4-7" aria-label="7"></a>  <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(studying <span class="sc">/</span> people <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
-  total_studying total_population   pct
-           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-1          1252.            1542.  81.2</code></pre>
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1    1252.  1542.  81.2</code></pre>
 </div>
 </div>
-<p>Now I want it for another age group, and I am not typing that again. So it becomes a function.</p>
+<p>What if we want this to be <strong>for any age group?</strong></p>
+<p>We can express this as a function:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-label="1"></a>pct_studying <span class="ot">&lt;-</span> <span class="cf">function</span>(data, age) {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-label="1"></a>pct_studying <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">age =</span> <span class="st">"25_29"</span>) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-label="2"></a>  data_summary <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-label="3"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> age) <span class="sc">|&gt;</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-label="4"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb6-5"><a href="#cb6-5" aria-label="5"></a>      <span class="at">total_studying =</span> <span class="fu">sum</span>(n_studying),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-label="6"></a>      <span class="at">total_population =</span> <span class="fu">sum</span>(population)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-label="5"></a>      <span class="at">studying =</span> <span class="fu">sum</span>(n_studying),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-label="6"></a>      <span class="at">people =</span> <span class="fu">sum</span>(population)</span>
 <span id="cb6-7"><a href="#cb6-7" aria-label="7"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-label="8"></a>    <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(total_studying <span class="sc">/</span> total_population <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
-<span id="cb6-9"><a href="#cb6-9" aria-label="9"></a>}</span>
-<span id="cb6-10"><a href="#cb6-10" aria-label="10"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-label="11"></a><span class="fu">pct_studying</span>(ed_2023, <span class="at">age =</span> <span class="st">"25_29"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-8"><a href="#cb6-8" aria-label="8"></a>    <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(studying <span class="sc">/</span> people <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-label="9"></a>  data_summary</span>
+<span id="cb6-10"><a href="#cb6-10" aria-label="10"></a>}</span>
+<span id="cb6-11"><a href="#cb6-11" aria-label="11"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-label="12"></a><span class="fu">pct_studying</span>(ed_2023, <span class="at">age =</span> <span class="st">"25_29"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
-  total_studying total_population   pct
-           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-1           340.            1880.  18.1</code></pre>
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1     340.  1880.  18.1</code></pre>
 </div>
 </div>
-<p>Five parts, and here they are.</p>
+<p>Here are the key parts:</p>
 <ul>
 <li><strong>The name</strong> is <code>pct_studying</code>. This is how you call it later.</li>
 <li><strong><code>function()</code></strong> is what makes a function. The <code>pct_studying &lt;-</code> bit just gives it a name, the same way you’d name any other value.</li>
@@ -373,10 +378,10 @@ Figure&nbsp;2.2
 <li><strong>The body</strong> is everything between the braces. This is the code that runs.</li>
 <li><strong>The return value</strong> is whatever the body evaluates last, so here that is the one row table coming out of <code>mutate()</code>. You can write <code>return()</code> if you want, and you’ll rarely need to.</li>
 </ul>
-<p>The <strong>signature</strong> is the name plus the argument names: <code>pct_studying(data, age)</code>. That one line is what most people read before deciding whether they can use your function, so it is worth more thought than the body.</p>
+<p>The <strong>signature</strong> is the name plus the argument names: <code>pct_studying(data, age)</code>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="figs/function-anatomy.png" class="img-fluid figure-img" style="width:100.0%" alt="The function pct_studying, defined as function(data, age), with five parts labelled in colour: the name, the keyword function, the arguments, the body, and the return value, which is the final mutate line."></p>
+<p><img src="figs/function-anatomy.png" class="img-fluid figure-img" style="width:100.0%" alt="The function pct_studying, defined as function(data, age), with six parts labelled in colour: the name, the keyword function, the arguments, an intermediate value called data_summary, the body, and the return value, which is the bare data_summary line at the end."></p>
 <figcaption>The same parts, drawn out.</figcaption>
 </figure>
 </div>
@@ -392,8 +397,63 @@ Figure&nbsp;2.2
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>A <strong>side effect</strong> is anything a function does other than return a value. Printing to the console, writing a file, drawing a plot, setting an option.</p>
-<p>Side effects aren’t bad, and plenty of useful functions have them. <code>plot_study_by_age()</code> is all side effect.</p>
+<p>A <strong>side effect</strong> is anything a function does other than return a value.</p>
+<p><code>education_path()</code>, which you wrote last session, does not have a side effect. It works something out and hands it back:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a><span class="fu">education_path</span>(<span class="dv">2024</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/home/runner/work/fun2debug/fun2debug/data/tidy/education_2024.csv"</code></pre>
+</div>
+</div>
+<p>This function does have a side effect:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a><span class="fu">hist</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="anatomy-of-a-function_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Because it plots to the screen. <code>hist()</code> also returns a value:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>hist_obj <span class="ot">&lt;-</span> <span class="fu">hist</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="anatomy-of-a-function_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>hist_obj</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$breaks
+ [1] -4.0 -3.5 -3.0 -2.5 -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0  1.5  2.0  2.5  3.0
+[16]  3.5
+
+$counts
+ [1]   1   1   4  17  51  86 150 203 195 134 101  31  20   4   2
+
+$density
+ [1] 0.002 0.002 0.008 0.034 0.102 0.172 0.300 0.406 0.390 0.268 0.202 0.062
+[13] 0.040 0.008 0.004
+
+$mids
+ [1] -3.75 -3.25 -2.75 -2.25 -1.75 -1.25 -0.75 -0.25  0.25  0.75  1.25  1.75
+[13]  2.25  2.75  3.25
+
+$xname
+[1] "rnorm(1000)"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"</code></pre>
+</div>
+</div>
+<p>Side effects aren’t bad, and plenty of useful functions have them. All of ggplot2 is drawing a plot, which is a side effect.</p>
 <p>The catch is reasoning. A function that returns something useful <strong>and</strong> quietly writes a file is harder to think about than one that does a single one of those things.</p>
 </div>
 </div>
@@ -412,15 +472,15 @@ Figure&nbsp;2.2
 <div class="callout-body-container callout-body">
 <p>An argument can be a function. You hand it over without brackets, the same way you would hand over a number.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a>summarise_column <span class="ot">&lt;-</span> <span class="cf">function</span>(x, f) {</span>
-<span id="cb8-2"><a href="#cb8-2" aria-label="2"></a>  <span class="fu">f</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-label="3"></a>}</span>
-<span id="cb8-4"><a href="#cb8-4" aria-label="4"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-label="5"></a><span class="fu">summarise_column</span>(education<span class="sc">$</span>prop_studying, <span class="at">f =</span> mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a>summarise_column <span class="ot">&lt;-</span> <span class="cf">function</span>(x, f) {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-label="2"></a>  <span class="fu">f</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-label="3"></a>}</span>
+<span id="cb14-4"><a href="#cb14-4" aria-label="4"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-label="5"></a><span class="fu">summarise_column</span>(education<span class="sc">$</span>prop_studying, <span class="at">f =</span> mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2088695</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a><span class="fu">summarise_column</span>(education<span class="sc">$</span>prop_studying, <span class="at">f =</span> max)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-label="1"></a><span class="fu">summarise_column</span>(education<span class="sc">$</span>prop_studying, <span class="at">f =</span> max)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9291667</code></pre>
 </div>
@@ -432,7 +492,7 @@ Figure&nbsp;2.2
 <section id="takehomes" class="level3">
 <h3 class="anchored" data-anchor-id="takehomes">Takehomes</h3>
 <ul>
-<li>The parts are the name, the arguments, the body, and the return value</li>
+<li>The key parts of a function are: the name, the arguments, the body, the return value</li>
 <li>A function returns whatever its body evaluates last</li>
 <li>The signature is the name plus the argument names</li>
 <li>Knowing the words means you can search for them and ask about them</li>
@@ -441,9 +501,9 @@ Figure&nbsp;2.2
 </section>
 <section id="default-values" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="default-values"><span class="header-section-number">2.3</span> Default values</h2>
-<p>Let’s explore defaults using plots.</p>
+<p>Functions can have default values. You’ve already seen one. Let’s explore defaults using plots.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>tas_2023</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-label="1"></a>tas_2023</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9 × 6
   state_territory age_group n_studying population prop_studying year 
@@ -458,8 +518,8 @@ Figure&nbsp;2.2
 8 Tas.            50_54            1.6       36.7       0.0436  2023 
 9 Tas.            55_74            1.3      143.        0.00907 2023 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_2023, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-label="2"></a>  <span class="fu">geom_col</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_2023, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-label="2"></a>  <span class="fu">geom_col</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-plain" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A plain horizontal bar chart of the proportion studying in Tasmania in 2023 by age group, with raw column names as axis labels.">
 <figure class="quarto-float quarto-float-fig figure">
@@ -473,23 +533,45 @@ Figure&nbsp;2.3
 </div>
 </div>
 </div>
-<p>ggplot2 expressed itself well, it is a pleasure to write, so wrapping that in a function would not buy much. <strong>“Make everything a function”</strong> is not always the answer.</p>
-<p>What changes the calculus is everything you do next. The axis labels are column names, the x axis should be a percentage, and it could use a title and a colour that is not battleship grey. None of that is hard, all of it is fiddly, and none of it is something you want to retype for the ACT and then again for New South Wales.</p>
+<p>ggplot2 expressed itself well, it is a pleasure to write, so wrapping that in a function would not buy much. <strong>“Make everything a function”</strong> is not always the answer. Like, I’m not sure if we would get out of a function like so:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-label="1"></a>plot_study_by_age <span class="ot">&lt;-</span> <span class="cf">function</span>(data, state) {</span>
-<span id="cb15-2"><a href="#cb15-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-label="5"></a>    <span class="fu">labs</span>(</span>
-<span id="cb15-6"><a href="#cb15-6" aria-label="6"></a>      <span class="at">x =</span> <span class="st">"Studying"</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-label="7"></a>      <span class="at">y =</span> <span class="st">"Age group"</span>,</span>
-<span id="cb15-8"><a href="#cb15-8" aria-label="8"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group"</span>,</span>
-<span id="cb15-9"><a href="#cb15-9" aria-label="9"></a>      <span class="at">subtitle =</span> state</span>
-<span id="cb15-10"><a href="#cb15-10" aria-label="10"></a>    ) <span class="sc">+</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-label="11"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-label="12"></a>}</span>
-<span id="cb15-13"><a href="#cb15-13" aria-label="13"></a></span>
-<span id="cb15-14"><a href="#cb15-14" aria-label="14"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-label="1"></a>plot_study_by_age <span class="ot">&lt;-</span> <span class="cf">function</span>(data, state){</span>
+<span id="cb21-2"><a href="#cb21-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-label="3"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-label="4"></a>    <span class="fu">labs</span>(<span class="at">title =</span> state)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-label="5"></a>}</span>
+<span id="cb21-6"><a href="#cb21-6" aria-label="6"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-label="7"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="anatomy-of-a-function_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>But what might tip the balance towards creating a function is if we were really tinkering with a lot of the plotting options. If this plot now does the following:</p>
+<ul>
+<li>The axis labels are column names</li>
+<li>The x axis should be a percentage</li>
+<li>It could use a title, and a colour that is not battleship grey</li>
+</ul>
+<p>Let’s write this as a function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-label="1"></a>plot_study_by_age <span class="ot">&lt;-</span> <span class="cf">function</span>(data, state) {</span>
+<span id="cb22-2"><a href="#cb22-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-label="5"></a>    <span class="fu">labs</span>(</span>
+<span id="cb22-6"><a href="#cb22-6" aria-label="6"></a>      <span class="at">x =</span> <span class="st">"Studying"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-label="7"></a>      <span class="at">y =</span> <span class="st">"Age group"</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-label="8"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-label="9"></a>      <span class="at">subtitle =</span> state</span>
+<span id="cb22-10"><a href="#cb22-10" aria-label="10"></a>    ) <span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-label="11"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-label="12"></a>}</span>
+<span id="cb22-13"><a href="#cb22-13" aria-label="13"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-label="14"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -499,26 +581,25 @@ Figure&nbsp;2.3
 </div>
 </div>
 <p>Now the fiddly decisions live in one place. But look at how you have to call it.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You said Tasmania twice, once to filter the data and again to label the plot. That’s exactly the kind of thing that goes wrong later, when you change one and forget the other.</p>
-<p>An argument can have a <strong>default</strong>, which is the value it takes when the caller does not give one.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>An argument can have a <strong>default</strong>, which is the value it takes when you do not specify one.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a>plot_study_by_age <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">state =</span> <span class="st">"Tas."</span>) {</span>
-<span id="cb17-2"><a href="#cb17-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-label="5"></a>    <span class="fu">labs</span>(</span>
-<span id="cb17-6"><a href="#cb17-6" aria-label="6"></a>      <span class="at">x =</span> <span class="st">"Studying"</span>,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-label="7"></a>      <span class="at">y =</span> <span class="st">"Age group"</span>,</span>
-<span id="cb17-8"><a href="#cb17-8" aria-label="8"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group"</span>,</span>
-<span id="cb17-9"><a href="#cb17-9" aria-label="9"></a>      <span class="at">subtitle =</span> state</span>
-<span id="cb17-10"><a href="#cb17-10" aria-label="10"></a>    ) <span class="sc">+</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-label="11"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
-<span id="cb17-12"><a href="#cb17-12" aria-label="12"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-label="1"></a>plot_study_by_age <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">state =</span> <span class="st">"Tas."</span>) {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-label="5"></a>    <span class="fu">labs</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-label="6"></a>      <span class="at">x =</span> <span class="st">"Studying"</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-label="7"></a>      <span class="at">y =</span> <span class="st">"Age group"</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-label="8"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group"</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-label="9"></a>      <span class="at">subtitle =</span> state</span>
+<span id="cb24-10"><a href="#cb24-10" aria-label="10"></a>    ) <span class="sc">+</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-label="11"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-label="12"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The default here is “Tas.”</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-default-state" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by age group in Tasmania in 2023, with the subtitle reading Tas. filled in automatically from the data.">
 <figure class="quarto-float quarto-float-fig figure">
@@ -532,19 +613,177 @@ Figure&nbsp;2.4
 </div>
 </div>
 </div>
-<p>The subtitle says “Tas.” and I never typed it, because the default was specified</p>
+<p>The subtitle says “Tas.” and I never typed it, because the default was specified.</p>
 <p>We could change that to:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tasmania, 2023"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tasmania, 2023"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="anatomy-of-a-function_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="anatomy-of-a-function_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>That’s what defaults are for. They make the common case easy without taking away control in the uncommon one.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Going deeper: defaults that use the other arguments">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Going deeper: defaults that use the other arguments
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>A default does not have to be a fixed value. It can be worked out from the other arguments, because defaults are evaluated inside the function, after the caller’s values have arrived.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-label="1"></a>plot_study_titled <span class="ot">&lt;-</span> <span class="cf">function</span>(data,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-label="2"></a>                              state,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-label="3"></a>                              <span class="at">title =</span> <span class="fu">glue</span>(<span class="st">"Proportion studying in {state}"</span>)) {</span>
+<span id="cb27-4"><a href="#cb27-4" aria-label="4"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-label="5"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-label="6"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-label="7"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Studying"</span>, <span class="at">y =</span> <span class="st">"Age group"</span>, <span class="at">title =</span> title) <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-label="8"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-label="9"></a>}</span>
+<span id="cb27-10"><a href="#cb27-10" aria-label="10"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-label="11"></a><span class="fu">plot_study_titled</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-computed-default" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by age group in Tasmania, titled Proportion studying in Tas., where the title was built from the state argument rather than typed.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-computed-default-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="anatomy-of-a-function_files/figure-html/fig-computed-default-1.png" id="fig-computed-default" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by age group in Tasmania, titled Proportion studying in Tas., where the title was built from the state argument rather than typed." width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-computed-default-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.5
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The title writes itself from <code>state</code>, so the common case needs one argument instead of two.</p>
+<p>The catch is that you can now pass two things that disagree, and nothing stops you:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-label="1"></a><span class="fu">plot_study_titled</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>, <span class="at">title =</span> <span class="st">"Victoria"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-disagreeing-args" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="The same bar chart, but titled Victoria even though the data is Tasmania, showing that the two arguments can contradict each other.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-disagreeing-args-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="anatomy-of-a-function_files/figure-html/fig-disagreeing-args-1.png" id="fig-disagreeing-args" class="img-fluid figure-img" alt="The same bar chart, but titled Victoria even though the data is Tasmania, showing that the two arguments can contradict each other." width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-disagreeing-args-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.6
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Two arguments that have to agree with each other are a bug waiting to happen. Here it is only a wrong title. When it is a filter and a label, it is a wrong answer with a confident heading on it.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-label="2"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-label="3"></a><span class="fu">library</span>(readr)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-label="4"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-label="5"></a><span class="fu">library</span>(glue)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-label="6"></a><span class="fu">library</span>(here)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-label="7"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb29-8"><a href="#cb29-8" aria-label="8"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb29-9"><a href="#cb29-9" aria-label="9"></a>}</span>
+<span id="cb29-10"><a href="#cb29-10" aria-label="10"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-label="11"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb29-12"><a href="#cb29-12" aria-label="12"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-label="13"></a>    <span class="fu">parse_number</span>() <span class="sc">|&gt;</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-label="14"></a>    <span class="fu">as.character</span>()</span>
+<span id="cb29-15"><a href="#cb29-15" aria-label="15"></a>}</span>
+<span id="cb29-16"><a href="#cb29-16" aria-label="16"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-label="17"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb29-18"><a href="#cb29-18" aria-label="18"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb29-19"><a href="#cb29-19" aria-label="19"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb29-20"><a href="#cb29-20" aria-label="20"></a></span>
+<span id="cb29-21"><a href="#cb29-21" aria-label="21"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-label="22"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-label="23"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb29-24"><a href="#cb29-24" aria-label="24"></a>}</span>
+<span id="cb29-25"><a href="#cb29-25" aria-label="25"></a></span>
+<span id="cb29-26"><a href="#cb29-26" aria-label="26"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb29-27"><a href="#cb29-27" aria-label="27"></a></span>
+<span id="cb29-28"><a href="#cb29-28" aria-label="28"></a>ed_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-label="29"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>)</span>
+<span id="cb29-30"><a href="#cb29-30" aria-label="30"></a></span>
+<span id="cb29-31"><a href="#cb29-31" aria-label="31"></a>tas_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-label="32"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
+<span id="cb29-33"><a href="#cb29-33" aria-label="33"></a>pct_studying <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">age =</span> <span class="st">"25_29"</span>) {</span>
+<span id="cb29-34"><a href="#cb29-34" aria-label="34"></a>  data_summary <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-label="35"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-label="36"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb29-37"><a href="#cb29-37" aria-label="37"></a>      <span class="at">studying =</span> <span class="fu">sum</span>(n_studying),</span>
+<span id="cb29-38"><a href="#cb29-38" aria-label="38"></a>      <span class="at">people =</span> <span class="fu">sum</span>(population)</span>
+<span id="cb29-39"><a href="#cb29-39" aria-label="39"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb29-40"><a href="#cb29-40" aria-label="40"></a>    <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(studying <span class="sc">/</span> people <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb29-41"><a href="#cb29-41" aria-label="41"></a>  data_summary</span>
+<span id="cb29-42"><a href="#cb29-42" aria-label="42"></a>}</span>
+<span id="cb29-43"><a href="#cb29-43" aria-label="43"></a></span>
+<span id="cb29-44"><a href="#cb29-44" aria-label="44"></a><span class="fu">pct_studying</span>(ed_2023, <span class="at">age =</span> <span class="st">"25_29"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</details>
+<ol type="1">
+<li>Call <code>pct_studying(tas_2023)</code> with no <code>age</code> at all. Which age group did you get?</li>
+<li>Ask for an age group that is not in the data, like <code>"99_99"</code>. <strong>You should get a number, not an error.</strong> What is it?</li>
+<li>Which argument of <code>pct_studying()</code> would you never give a default to?</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_4839fe55" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<details>
+<summary>
+Answer
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-label="1"></a><span class="fu">pct_studying</span>(tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1        9   38.6  23.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-label="1"></a><span class="fu">pct_studying</span>(tas_2023, <span class="at">age =</span> <span class="st">"99_99"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1        0      0   NaN</code></pre>
+</div>
+</div>
+<p>The first is the default, <code>"25_29"</code>, which is what you get when you do not say.</p>
+<p>The second is the interesting one. No rows match <code>"99_99"</code>, so both sums are zero, and zero divided by zero is <code>NaN</code>. No error and no warning.</p>
+<p>A default makes the common case easy. It will just as happily make a wrong case quiet.</p>
+<p>For step 3, <code>data</code>. A default for it would mean the function had an opinion about whose data you meant.</p>
+</details>
+</div>
+</div>
+<!-- UP TO HERE -->
 <section id="takehomes-1" class="level3">
 <h3 class="anchored" data-anchor-id="takehomes-1">Takehomes</h3>
 <ul>
@@ -560,42 +799,42 @@ Figure&nbsp;2.4
 <p>Arguments are names waiting for a value. The values turn up when you call the function, and you can hand them over two ways.</p>
 <p><strong>By position</strong>, in the order the definition lists them:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-label="1"></a><span class="fu">pct_studying</span>(tas_2023, <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-label="1"></a><span class="fu">pct_studying</span>(tas_2023, <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
-  total_studying total_population   pct
-           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-1           24.8             31.3  79.2</code></pre>
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1     24.8   31.3  79.2</code></pre>
 </div>
 </div>
 <p><strong>By name</strong>, using <code>name = value</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="at">data =</span> tas_2023, <span class="at">age =</span> <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="at">data =</span> tas_2023, <span class="at">age =</span> <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
-  total_studying total_population   pct
-           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-1           24.8             31.3  79.2</code></pre>
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1     24.8   31.3  79.2</code></pre>
 </div>
 </div>
 <p>Once they’re named, the order stops mattering:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="at">age =</span> <span class="st">"15_19"</span>, <span class="at">data =</span> tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="at">age =</span> <span class="st">"15_19"</span>, <span class="at">data =</span> tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
-  total_studying total_population   pct
-           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-1           24.8             31.3  79.2</code></pre>
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1     24.8   31.3  79.2</code></pre>
 </div>
 </div>
 <p>And you can mix the two:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-label="1"></a><span class="fu">pct_studying</span>(tas_2023, <span class="at">age =</span> <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-label="1"></a><span class="fu">pct_studying</span>(tas_2023, <span class="at">age =</span> <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
-  total_studying total_population   pct
-           &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
-1           24.8             31.3  79.2</code></pre>
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1     24.8   31.3  79.2</code></pre>
 </div>
 </div>
 <p>All four give 24.8, 31.3, 79.2. What differs is how much you need to already know in order to read the line.</p>
@@ -607,6 +846,109 @@ Figure&nbsp;2.4
 </div>
 <p><code>pct_studying(tas_2023, "15_19")</code> needs you to remember what the second slot is for. <code>pct_studying(tas_2023, age = "15_19")</code> tells you.</p>
 <p>I leave the first argument positional, because it’s nearly always the data and nobody is confused by it. Everything after that, I name.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-label="2"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-label="3"></a><span class="fu">library</span>(readr)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-label="4"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-label="5"></a><span class="fu">library</span>(glue)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-label="6"></a><span class="fu">library</span>(here)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-label="7"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb42-8"><a href="#cb42-8" aria-label="8"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb42-9"><a href="#cb42-9" aria-label="9"></a>}</span>
+<span id="cb42-10"><a href="#cb42-10" aria-label="10"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-label="11"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb42-12"><a href="#cb42-12" aria-label="12"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-label="13"></a>    <span class="fu">parse_number</span>() <span class="sc">|&gt;</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-label="14"></a>    <span class="fu">as.character</span>()</span>
+<span id="cb42-15"><a href="#cb42-15" aria-label="15"></a>}</span>
+<span id="cb42-16"><a href="#cb42-16" aria-label="16"></a></span>
+<span id="cb42-17"><a href="#cb42-17" aria-label="17"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb42-18"><a href="#cb42-18" aria-label="18"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb42-19"><a href="#cb42-19" aria-label="19"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb42-20"><a href="#cb42-20" aria-label="20"></a></span>
+<span id="cb42-21"><a href="#cb42-21" aria-label="21"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-label="22"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb42-23"><a href="#cb42-23" aria-label="23"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb42-24"><a href="#cb42-24" aria-label="24"></a>}</span>
+<span id="cb42-25"><a href="#cb42-25" aria-label="25"></a></span>
+<span id="cb42-26"><a href="#cb42-26" aria-label="26"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb42-27"><a href="#cb42-27" aria-label="27"></a></span>
+<span id="cb42-28"><a href="#cb42-28" aria-label="28"></a>ed_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
+<span id="cb42-29"><a href="#cb42-29" aria-label="29"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>)</span>
+<span id="cb42-30"><a href="#cb42-30" aria-label="30"></a></span>
+<span id="cb42-31"><a href="#cb42-31" aria-label="31"></a>tas_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
+<span id="cb42-32"><a href="#cb42-32" aria-label="32"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
+<span id="cb42-33"><a href="#cb42-33" aria-label="33"></a>pct_studying <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">age =</span> <span class="st">"25_29"</span>) {</span>
+<span id="cb42-34"><a href="#cb42-34" aria-label="34"></a>  data_summary <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb42-35"><a href="#cb42-35" aria-label="35"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb42-36"><a href="#cb42-36" aria-label="36"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb42-37"><a href="#cb42-37" aria-label="37"></a>      <span class="at">studying =</span> <span class="fu">sum</span>(n_studying),</span>
+<span id="cb42-38"><a href="#cb42-38" aria-label="38"></a>      <span class="at">people =</span> <span class="fu">sum</span>(population)</span>
+<span id="cb42-39"><a href="#cb42-39" aria-label="39"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb42-40"><a href="#cb42-40" aria-label="40"></a>    <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(studying <span class="sc">/</span> people <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb42-41"><a href="#cb42-41" aria-label="41"></a>  data_summary</span>
+<span id="cb42-42"><a href="#cb42-42" aria-label="42"></a>}</span>
+<span id="cb42-43"><a href="#cb42-43" aria-label="43"></a></span>
+<span id="cb42-44"><a href="#cb42-44" aria-label="44"></a><span class="fu">pct_studying</span>(ed_2023, <span class="at">age =</span> <span class="st">"25_29"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</details>
+<ol type="1">
+<li>Call <code>pct_studying()</code> on <code>tas_2023</code> for 20 to 24 year olds, naming both arguments.</li>
+<li>Swap the order of those two named arguments. Does it still work?</li>
+<li>Now guess before you run it: does <code>pct_studying("20_24", data = tas_2023)</code> work?</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_67769fe5" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<details>
+<summary>
+Answer
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="at">data =</span> tas_2023, <span class="at">age =</span> <span class="st">"20_24"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1      9.8   30.4  32.2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="at">age =</span> <span class="st">"20_24"</span>, <span class="at">data =</span> tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1      9.8   30.4  32.2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-label="1"></a><span class="fu">pct_studying</span>(<span class="st">"20_24"</span>, <span class="at">data =</span> tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  studying people   pct
+     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1      9.8   30.4  32.2</code></pre>
+</div>
+</div>
+<p>All three give the same answer. The third one works because <code>data</code> was named, so the only slot left for <code>"20_24"</code> is <code>age</code>.</p>
+<p>I would not write that third one. But it is worth knowing that R takes the named arguments first, then pours whatever is left into the gaps in order.</p>
+</details>
+</div>
+</div>
 <section id="takehomes-2" class="level3">
 <h3 class="anchored" data-anchor-id="takehomes-2">Takehomes</h3>
 <ul>
@@ -623,12 +965,12 @@ Figure&nbsp;2.4
 <p>If I want the same plot broken down by state instead, I’m back to copying the whole function and changing one word, which is where we came in.</p>
 <p>So let’s try the obvious thing and pass the column as an argument.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
-<span id="cb28-2"><a href="#cb28-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-label="3"></a>    <span class="fu">geom_col</span>()</span>
-<span id="cb28-4"><a href="#cb28-4" aria-label="4"></a>}</span>
-<span id="cb28-5"><a href="#cb28-5" aria-label="5"></a></span>
-<span id="cb28-6"><a href="#cb28-6" aria-label="6"></a><span class="fu">plot_study_by</span>(tas_2023, <span class="at">y =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
+<span id="cb49-2"><a href="#cb49-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-label="3"></a>    <span class="fu">geom_col</span>()</span>
+<span id="cb49-4"><a href="#cb49-4" aria-label="4"></a>}</span>
+<span id="cb49-5"><a href="#cb49-5" aria-label="5"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-label="6"></a><span class="fu">plot_study_by</span>(tas_2023, <span class="at">y =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `geom_col()`:
 ! Problem while computing aesthetics.
@@ -641,15 +983,15 @@ Caused by error:
 <p>The problem is that <code>age_group</code> is not a value sitting in your workspace. It’s a column name, and it only means anything once you’re inside the data. R tries to look it up before it ever gets there.</p>
 <p>The fix is to wrap the argument in two sets of braces, which people say out loud as <strong>curly curly</strong>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
-<span id="cb30-2"><a href="#cb30-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-label="5"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Studying"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-label="6"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
-<span id="cb30-7"><a href="#cb30-7" aria-label="7"></a>}</span>
-<span id="cb30-8"><a href="#cb30-8" aria-label="8"></a></span>
-<span id="cb30-9"><a href="#cb30-9" aria-label="9"></a><span class="fu">plot_study_by</span>(tas_2023, <span class="at">y =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
+<span id="cb51-2"><a href="#cb51-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-label="4"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-label="5"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Studying"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-label="6"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-label="7"></a>}</span>
+<span id="cb51-8"><a href="#cb51-8" aria-label="8"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-label="9"></a><span class="fu">plot_study_by</span>(tas_2023, <span class="at">y =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-curly-curly" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by age group in Tasmania, produced by a function that takes the column to plot as an argument.">
 <figure class="quarto-float quarto-float-fig figure">
@@ -657,21 +999,39 @@ Caused by error:
 <img src="anatomy-of-a-function_files/figure-html/fig-curly-curly-1.png" id="fig-curly-curly" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by age group in Tasmania, produced by a function that takes the column to plot as an argument." width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-curly-curly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.5
+Figure&nbsp;2.7
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p><code>{ y }</code> means “do not look this up yet, pass it through to the data”. That’s all you need to know today, and it works the same way in <code>dplyr</code>.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Going deeper: why curly braces?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Going deeper: why curly braces?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>I think the braces are a deliberate echo of <code>glue()</code>.</p>
+<p>In <code>glue("education_{year}.csv")</code> last session, <code>{ }</code> meant “look this up and put the value here”. In <code>{ y }</code> they mean much the same thing. What gets put there is the column the caller named, and it gets looked up inside the data rather than in your workspace.</p>
+<p>So if <code>glue()</code> made sense last session, curly curly is the same instinct with one more layer of braces.</p>
+</div>
+</div>
+</div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-label="1"></a>mean_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, group) {</span>
-<span id="cb31-2"><a href="#cb31-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-label="3"></a>    <span class="fu">group_by</span>({{ group }}) <span class="sc">|&gt;</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-label="4"></a>    <span class="fu">summarise</span>(<span class="at">mean_prop =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prop_studying), <span class="dv">3</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-label="5"></a>}</span>
-<span id="cb31-6"><a href="#cb31-6" aria-label="6"></a></span>
-<span id="cb31-7"><a href="#cb31-7" aria-label="7"></a><span class="fu">mean_by</span>(<span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>), <span class="at">group =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-label="1"></a>mean_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, group) {</span>
+<span id="cb52-2"><a href="#cb52-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-label="3"></a>    <span class="fu">group_by</span>({{ group }}) <span class="sc">|&gt;</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-label="4"></a>    <span class="fu">summarise</span>(<span class="at">mean_prop =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prop_studying), <span class="dv">3</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-label="5"></a>}</span>
+<span id="cb52-6"><a href="#cb52-6" aria-label="6"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-label="7"></a><span class="fu">mean_by</span>(<span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>), <span class="at">group =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 2
   state_territory mean_prop
@@ -688,9 +1048,9 @@ Figure&nbsp;2.5
 </div>
 <p>And now the same plotting function does a different job entirely:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-label="1"></a>education <span class="sc">|&gt;</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-label="2"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-label="3"></a>  <span class="fu">plot_study_by</span>(<span class="at">y =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-label="1"></a>education <span class="sc">|&gt;</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-label="2"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-label="3"></a>  <span class="fu">plot_study_by</span>(<span class="at">y =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-by-state" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by state and territory for 15 to 19 year olds in 2023, produced by the same function used for the age group plot.">
 <figure class="quarto-float quarto-float-fig figure">
@@ -698,7 +1058,7 @@ Figure&nbsp;2.5
 <img src="anatomy-of-a-function_files/figure-html/fig-by-state-1.png" id="fig-by-state" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by state and territory for 15 to 19 year olds in 2023, produced by the same function used for the age group plot." width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-by-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.6
+Figure&nbsp;2.8
 </figcaption>
 </figure>
 </div>
@@ -726,66 +1086,72 @@ Figure&nbsp;2.6
 <summary>
 Setup code
 </summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-label="1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-label="2"></a><span class="fu">library</span>(readr)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-label="3"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-label="4"></a><span class="fu">library</span>(glue)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-label="5"></a><span class="fu">library</span>(here)</span>
-<span id="cb34-6"><a href="#cb34-6" aria-label="6"></a></span>
-<span id="cb34-7"><a href="#cb34-7" aria-label="7"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
-<span id="cb34-8"><a href="#cb34-8" aria-label="8"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
-<span id="cb34-9"><a href="#cb34-9" aria-label="9"></a>}</span>
-<span id="cb34-10"><a href="#cb34-10" aria-label="10"></a></span>
-<span id="cb34-11"><a href="#cb34-11" aria-label="11"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
-<span id="cb34-12"><a href="#cb34-12" aria-label="12"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
-<span id="cb34-13"><a href="#cb34-13" aria-label="13"></a>    <span class="fu">parse_number</span>() <span class="sc">|&gt;</span></span>
-<span id="cb34-14"><a href="#cb34-14" aria-label="14"></a>    <span class="fu">as.character</span>()</span>
-<span id="cb34-15"><a href="#cb34-15" aria-label="15"></a>}</span>
-<span id="cb34-16"><a href="#cb34-16" aria-label="16"></a></span>
-<span id="cb34-17"><a href="#cb34-17" aria-label="17"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
-<span id="cb34-18"><a href="#cb34-18" aria-label="18"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
-<span id="cb34-19"><a href="#cb34-19" aria-label="19"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
-<span id="cb34-20"><a href="#cb34-20" aria-label="20"></a></span>
-<span id="cb34-21"><a href="#cb34-21" aria-label="21"></a>  education_raw <span class="sc">|&gt;</span></span>
-<span id="cb34-22"><a href="#cb34-22" aria-label="22"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
-<span id="cb34-23"><a href="#cb34-23" aria-label="23"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
-<span id="cb34-24"><a href="#cb34-24" aria-label="24"></a>}</span>
-<span id="cb34-25"><a href="#cb34-25" aria-label="25"></a></span>
-<span id="cb34-26"><a href="#cb34-26" aria-label="26"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
-<span id="cb34-27"><a href="#cb34-27" aria-label="27"></a>tas_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
-<span id="cb34-28"><a href="#cb34-28" aria-label="28"></a></span>
-<span id="cb34-29"><a href="#cb34-29" aria-label="29"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
-<span id="cb34-30"><a href="#cb34-30" aria-label="30"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
-<span id="cb34-31"><a href="#cb34-31" aria-label="31"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
-<span id="cb34-32"><a href="#cb34-32" aria-label="32"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
-<span id="cb34-33"><a href="#cb34-33" aria-label="33"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Studying"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb34-34"><a href="#cb34-34" aria-label="34"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
-<span id="cb34-35"><a href="#cb34-35" aria-label="35"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-label="1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-label="2"></a><span class="fu">library</span>(readr)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-label="3"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb55-4"><a href="#cb55-4" aria-label="4"></a><span class="fu">library</span>(glue)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-label="5"></a><span class="fu">library</span>(here)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-label="6"></a></span>
+<span id="cb55-7"><a href="#cb55-7" aria-label="7"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb55-8"><a href="#cb55-8" aria-label="8"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb55-9"><a href="#cb55-9" aria-label="9"></a>}</span>
+<span id="cb55-10"><a href="#cb55-10" aria-label="10"></a></span>
+<span id="cb55-11"><a href="#cb55-11" aria-label="11"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb55-12"><a href="#cb55-12" aria-label="12"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb55-13"><a href="#cb55-13" aria-label="13"></a>    <span class="fu">parse_number</span>() <span class="sc">|&gt;</span></span>
+<span id="cb55-14"><a href="#cb55-14" aria-label="14"></a>    <span class="fu">as.character</span>()</span>
+<span id="cb55-15"><a href="#cb55-15" aria-label="15"></a>}</span>
+<span id="cb55-16"><a href="#cb55-16" aria-label="16"></a></span>
+<span id="cb55-17"><a href="#cb55-17" aria-label="17"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb55-18"><a href="#cb55-18" aria-label="18"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb55-19"><a href="#cb55-19" aria-label="19"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb55-20"><a href="#cb55-20" aria-label="20"></a></span>
+<span id="cb55-21"><a href="#cb55-21" aria-label="21"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb55-22"><a href="#cb55-22" aria-label="22"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb55-23"><a href="#cb55-23" aria-label="23"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb55-24"><a href="#cb55-24" aria-label="24"></a>}</span>
+<span id="cb55-25"><a href="#cb55-25" aria-label="25"></a></span>
+<span id="cb55-26"><a href="#cb55-26" aria-label="26"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb55-27"><a href="#cb55-27" aria-label="27"></a>tas_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
+<span id="cb55-28"><a href="#cb55-28" aria-label="28"></a></span>
+<span id="cb55-29"><a href="#cb55-29" aria-label="29"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, y) {</span>
+<span id="cb55-30"><a href="#cb55-30" aria-label="30"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
+<span id="cb55-31"><a href="#cb55-31" aria-label="31"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb55-32"><a href="#cb55-32" aria-label="32"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb55-33"><a href="#cb55-33" aria-label="33"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Studying"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb55-34"><a href="#cb55-34" aria-label="34"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb55-35"><a href="#cb55-35" aria-label="35"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <ol type="1">
 <li>Use <code>plot_study_by()</code> on the ACT in 2023, broken down by <code>age_group</code>.</li>
-<li>Write <code>mean_by()</code> yourself, and use it to get the mean by <code>age_group</code>.</li>
+<li>Write <code>median_by()</code> yourself, on the same shape as <code>mean_by()</code>, and use it to get the median by <code>age_group</code>.</li>
 <li>Give <code>plot_study_by()</code> a default for <code>y</code>, so that <code>plot_study_by(tas_2023)</code> works with no second argument.</li>
 </ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_86066503" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
 <details>
 <summary>
 Answer
 </summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-label="1"></a>act_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"ACT"</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-label="2"></a><span class="fu">plot_study_by</span>(act_2023, <span class="at">y =</span> age_group)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-label="3"></a></span>
-<span id="cb35-4"><a href="#cb35-4" aria-label="4"></a>mean_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, group) {</span>
-<span id="cb35-5"><a href="#cb35-5" aria-label="5"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-label="6"></a>    <span class="fu">group_by</span>({{ group }}) <span class="sc">|&gt;</span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-label="7"></a>    <span class="fu">summarise</span>(<span class="at">mean_prop =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prop_studying), <span class="dv">3</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb35-8"><a href="#cb35-8" aria-label="8"></a>}</span>
-<span id="cb35-9"><a href="#cb35-9" aria-label="9"></a></span>
-<span id="cb35-10"><a href="#cb35-10" aria-label="10"></a><span class="fu">mean_by</span>(<span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>), <span class="at">group =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-label="1"></a>act_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"ACT"</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-label="2"></a><span class="fu">plot_study_by</span>(act_2023, <span class="at">y =</span> age_group)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-label="3"></a></span>
+<span id="cb56-4"><a href="#cb56-4" aria-label="4"></a>median_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, group) {</span>
+<span id="cb56-5"><a href="#cb56-5" aria-label="5"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-label="6"></a>    <span class="fu">group_by</span>({{ group }}) <span class="sc">|&gt;</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-label="7"></a>    <span class="fu">summarise</span>(<span class="at">median_prop =</span> <span class="fu">round</span>(<span class="fu">median</span>(prop_studying), <span class="dv">3</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb56-8"><a href="#cb56-8" aria-label="8"></a>}</span>
+<span id="cb56-9"><a href="#cb56-9" aria-label="9"></a></span>
+<span id="cb56-10"><a href="#cb56-10" aria-label="10"></a><span class="fu">median_by</span>(<span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>), <span class="at">group =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The only thing that changed from <code>mean_by()</code> is the summary function. <code>{ }</code> does the same job either way.</p>
 <p>For step 3, the default goes in the signature the same as any other:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">y =</span> age_group) {</span>
-<span id="cb36-2"><a href="#cb36-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>)</span>
-<span id="cb36-4"><a href="#cb36-4" aria-label="4"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-label="1"></a>plot_study_by <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">y =</span> age_group) {</span>
+<span id="cb57-2"><a href="#cb57-2" aria-label="2"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> prop_studying, <span class="at">y =</span> {{ y }})) <span class="sc">+</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-label="3"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1B9E77"</span>)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-label="4"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </div>
@@ -803,13 +1169,13 @@ Answer
 <h2 data-number="2.6" class="anchored" data-anchor-id="naming-things"><span class="header-section-number">2.6</span> Naming things</h2>
 <p>A function does something, so its name should say what.</p>
 <p>Watch this one improve.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-label="1"></a><span class="fu">myfun</span>()            <span class="co"># what?</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-label="2"></a><span class="fu">study_plot</span>()       <span class="co"># better, but what does it do with it?</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-label="3"></a><span class="fu">plot_study_by</span>()    <span class="co"># now I do not have to read the body</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-label="1"></a><span class="fu">myfun</span>()            <span class="co"># what?</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-label="2"></a><span class="fu">study_plot</span>()       <span class="co"># better, but what does it do with it?</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-label="3"></a><span class="fu">plot_study_by</span>()    <span class="co"># now I do not have to read the body</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The pattern that gets you there is <strong><code>verb_noun()</code></strong>. Not every function fits it, and reaching for it is still the fastest way to find out whether you know what your function does. If you can’t fill in the verb, you probably have two functions.</p>
 <p>Two habits worth having.</p>
 <p><strong>Name for the question, not the method.</strong> <code>pct_studying()</code>, not <code>sum_divide_round()</code>. The method will change, and the question won’t.</p>
-<p><strong>Name the insides too.</strong> Look back at <code>pct_studying()</code>. It says <code>studying &lt;- sum(...)</code> and <code>people &lt;- sum(...)</code>, so the division reads as studying over people. That is a choice, and I think it is worth it</p>
+<p><strong>Name the insides too.</strong> Look back at <code>pct_studying()</code>. It says <code>studying = sum(...)</code> and <code>people = sum(...)</code>, so the division reads as studying over people. That is a choice, and I think it is worth it.</p>
 <section id="takehomes-4" class="level3">
 <h3 class="anchored" data-anchor-id="takehomes-4">Takehomes</h3>
 <ul>
