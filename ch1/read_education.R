@@ -7,8 +7,7 @@ education_path <- function(year) {
 # basename() first, or parse_number() finds a number in the folder names.
 year_from_path <- function(path) {
   basename(path) |>
-    parse_number() |>
-    as.character()
+    parse_number()
 }
 
 # Read any number of years, and put the year back on as a column.
