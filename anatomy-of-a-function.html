@@ -381,7 +381,7 @@ dbl (3): n_studying, population, prop_studying
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-label="1"></a><span class="fu">plot_study_by</span>(ed_2023, <span class="at">y =</span> age_group)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-label="2"></a><span class="fu">plot_study_by</span>(ed_2023, <span class="at">y =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-teaser-age-1" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels.">
+<div id="fig-teaser-age-1" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels." width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-teaser-age-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="anatomy-of-a-function_files/figure-html/fig-teaser-age-1.png" id="fig-teaser-age-1" class="img-fluid figure-img" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels." width="672">
@@ -393,7 +393,7 @@ Figure&nbsp;2.1
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-teaser-age-2" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels.">
+<div id="fig-teaser-age-2" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels." width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-teaser-age-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="anatomy-of-a-function_files/figure-html/fig-teaser-age-2.png" id="fig-teaser-age-2" class="img-fluid figure-img" alt="A horizontal bar chart of the proportion of people studying in Tasmania in 2023, broken down by age group, with green bars and percentage labels." width="672">
@@ -512,18 +512,18 @@ Figure&nbsp;2.2
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-label="1"></a>hist_obj</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$breaks
- [1] -3.5 -3.0 -2.5 -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0  1.5  2.0  2.5  3.0
+ [1] -3.0 -2.5 -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0  1.5  2.0  2.5  3.0  3.5
 
 $counts
- [1]   1   5  20  54  96 155 202 186 146  82  35  14   4
+ [1]   8  16  45 109 126 187 191 143 109  38  22   5   1
 
 $density
- [1] 0.002 0.010 0.040 0.108 0.192 0.310 0.404 0.372 0.292 0.164 0.070 0.028
-[13] 0.008
+ [1] 0.016 0.032 0.090 0.218 0.252 0.374 0.382 0.286 0.218 0.076 0.044 0.010
+[13] 0.002
 
 $mids
- [1] -3.25 -2.75 -2.25 -1.75 -1.25 -0.75 -0.25  0.25  0.75  1.25  1.75  2.25
-[13]  2.75
+ [1] -2.75 -2.25 -1.75 -1.25 -0.75 -0.25  0.25  0.75  1.25  1.75  2.25  2.75
+[13]  3.25
 
 $xname
 [1] "rnorm(1000)"
@@ -632,7 +632,7 @@ attr(,"class")
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_8a507da2" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_d8a54653" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 </div>
@@ -669,7 +669,7 @@ attr(,"class")
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_2023, <span class="fu">aes</span>(<span class="at">x =</span> n_studying, <span class="at">y =</span> age_group)) <span class="sc">+</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-label="2"></a>  <span class="fu">geom_col</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-plain" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A plain horizontal bar chart of the proportion studying in Tasmania in 2023 by age group, with raw column names as axis labels.">
+<div id="fig-plain" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A plain horizontal bar chart of the proportion studying in Tasmania in 2023 by age group, with raw column names as axis labels." width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-plain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="anatomy-of-a-function_files/figure-html/fig-plain-1.png" id="fig-plain" class="img-fluid figure-img" alt="A plain horizontal bar chart of the proportion studying in Tasmania in 2023 by age group, with raw column names as axis labels." width="672">
@@ -776,7 +776,7 @@ Figure&nbsp;2.3
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-label="1"></a><span class="fu">plot_study_by_age</span>(tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-default-state" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by age group in Tasmania in 2023, with the subtitle reading Tas. filled in automatically from the data.">
+<div id="fig-default-state" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A horizontal bar chart of study rates by age group in Tasmania in 2023, with the subtitle reading Tas. filled in automatically from the data." width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-default-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="anatomy-of-a-function_files/figure-html/fig-default-state-1.png" id="fig-default-state" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by age group in Tasmania in 2023, with the subtitle reading Tas. filled in automatically from the data." width="672">
@@ -831,7 +831,7 @@ Figure&nbsp;2.4
 <span id="cb39-14"><a href="#cb39-14" aria-label="14"></a></span>
 <span id="cb39-15"><a href="#cb39-15" aria-label="15"></a><span class="fu">plot_study_titled</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-computed-default" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by age group in Tasmania, titled Proportion studying in Tas., where the title was built from the state argument rather than typed.">
+<div id="fig-computed-default" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A horizontal bar chart of study rates by age group in Tasmania, titled Proportion studying in Tas., where the title was built from the state argument rather than typed." width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-computed-default-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="anatomy-of-a-function_files/figure-html/fig-computed-default-1.png" id="fig-computed-default" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by age group in Tasmania, titled Proportion studying in Tas., where the title was built from the state argument rather than typed." width="672">
@@ -848,7 +848,7 @@ Figure&nbsp;2.5
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-label="1"></a><span class="fu">plot_study_titled</span>(tas_2023, <span class="at">state =</span> <span class="st">"Tas."</span>, <span class="at">title =</span> <span class="st">"Victoria"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-disagreeing-args" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="The same bar chart, but titled Victoria even though the data is Tasmania, showing that the two arguments can contradict each other.">
+<div id="fig-disagreeing-args" class="quarto-float quarto-figure quarto-figure-center anchored" alt="The same bar chart, but titled Victoria even though the data is Tasmania, showing that the two arguments can contradict each other." width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-disagreeing-args-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="anatomy-of-a-function_files/figure-html/fig-disagreeing-args-1.png" id="fig-disagreeing-args" class="img-fluid figure-img" alt="The same bar chart, but titled Victoria even though the data is Tasmania, showing that the two arguments can contradict each other." width="672">
@@ -944,7 +944,7 @@ Setup code
 </ol>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_7a31c690" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_4c1fddb8" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <details>
@@ -1126,7 +1126,7 @@ Setup code
 </ol>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_10c8ac08" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_6cf86c8d" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <details>
@@ -1189,7 +1189,7 @@ Answer
 <p>How would you change <code>plot_study_by_age()</code> to be plotted by state, or age group, or some other variable?</p>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_554a36b2" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_51164e24" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <div class="cell">
@@ -1241,7 +1241,7 @@ Caused by error:
 <span id="cb66-8"><a href="#cb66-8" aria-label="8"></a></span>
 <span id="cb66-9"><a href="#cb66-9" aria-label="9"></a><span class="fu">plot_study_by</span>(tas_2023, <span class="at">y =</span> age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-curly-curly" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by age group in Tasmania, produced by a function that takes the column to plot as an argument.">
+<div id="fig-curly-curly" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A horizontal bar chart of study rates by age group in Tasmania, produced by a function that takes the column to plot as an argument." width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-curly-curly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="anatomy-of-a-function_files/figure-html/fig-curly-curly-1.png" id="fig-curly-curly" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by age group in Tasmania, produced by a function that takes the column to plot as an argument." width="672">
@@ -1284,7 +1284,7 @@ Figure&nbsp;2.7
 <span id="cb67-2"><a href="#cb67-2" aria-label="2"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb67-3"><a href="#cb67-3" aria-label="3"></a>  <span class="fu">plot_study_by</span>(<span class="at">y =</span> state_territory)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-by-state" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A horizontal bar chart of study rates by state and territory for 15 to 19 year olds in 2023, produced by the same function used for the age group plot.">
+<div id="fig-by-state" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A horizontal bar chart of study rates by state and territory for 15 to 19 year olds in 2023, produced by the same function used for the age group plot." width="672">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-by-state-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="anatomy-of-a-function_files/figure-html/fig-by-state-1.png" id="fig-by-state" class="img-fluid figure-img" alt="A horizontal bar chart of study rates by state and territory for 15 to 19 year olds in 2023, produced by the same function used for the age group plot." width="672">
@@ -1361,7 +1361,7 @@ Setup code
 </ol>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_e2e73a06" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_6be3f295" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <details>
