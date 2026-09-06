@@ -1,6 +1,16 @@
 # Looking inside a function {#sec-looking-inside}
 
-Writing a function puts your code in a box. That is mostly what you want, right up until something goes wrong in there and you cannot see it. This session is about opening the box, both when your code breaks and when it works fine and you just want to know what it is doing.
+Writing a function is like putting your code into a box. Or, like going from a bunch of complex writing and circuitry, and building a box around it, and only adding the dials and buttons you need it to do the task. You want to use a TV remote and only touch the relevant buttons to change the channel, increase the volume, and use the arrow buttons to browse the right streaming service. You don't want to hold a circuit board, battery, and wires. You want the nice sleek remote someone designed.
+
+<!-- ![](placeholder scrappy drawing of this) -->
+
+I think the main benefit of the function is you express a sequence of steps into something easier to reason with. You are simplifying the complex. This is sometimes called "abstracting away complexity".
+
+Making your function be something that removes complexity is good, but you also need to be able to look inside your function to understand how it works - especially when something breaks.
+
+If we teach you how to build a nice box, but don't teach you how to open it, we aren't really teaching you how to write functions.
+
+This chapter is about how to look inside a function, so understand how it works, and how to unpack some of the errors or common failure points.
 
 ::: {.overview}
 
@@ -10,93 +20,511 @@ Writing a function puts your code in a box. That is mostly what you want, right 
 
 **Questions**
 
-- How do I read an R error message?
-- How do I find out where the error actually came from?
-- How do I stop inside a function and look around?
-- How do I do this to a function I did not write?
-- What if I want to look inside code that isn't broken?
+<!-- These map onto the sections below, in order. If you move a section, move its question. -->
+
+- How do I look inside a function I wrote and look around?
+- How do I look inside a function I did not write?
 
 **What you need this session**
 
-- A session of RStudio open
+- A session of RStudio open, in the same folder as last time
+- The following R packages:
+
+```{r}
+#| label: pkgs
+#| output: false
+library(countdown)
+library(glue)
+library(here)
+library(scales)
+library(tidyverse)
+```
+
+```{r}
+#| label: setup-data
+#| output: false
+education_path <- function(year) {
+  here(glue("data/tidy/education_{year}.csv"))
+}
+
+year_from_path <- function(path) {
+  basename(path) |>
+    parse_number()
+}
+
+read_education <- function(year) {
+  files <- education_path(year)
+  education_raw <- read_csv(files, id = "path")
+
+  education_raw |>
+    mutate(year = year_from_path(path)) |>
+    select(-path)
+}
+
+education <- read_education(2014:2023)
+
+ed_2023 <- filter(education, year == 2023)
+```
 
 :::
 
-## Errors are normal, not punishment
+## Errors are normal
 
-<!--
-TODO: set the tone before any tools. An error is R telling you something, not
-marking your work.
--->
+I need you to know that errors are normal, and that I run into them all the time. The thing that you get better at with experience, is knowing how to read the error messages, diagnose issues, and solve them. You get faster.
+
+But, for fun, here are the some most recent R error messages:
+
+```
+Error: unexpected symbol in:
+"    y = "Studying"
+    title"
+```
+
+
+
+So, errors are normal. But they can still be frustrating! I want you to practice **reframing** errors. They are R trying its best to help you. 
+
+But let's talk through breaking down an error message.
+
+:::{.callout-note title="Your Turn: errors and you"}
+
+I'm curious to learn more about your experience with errors. Can you answer the following:
+
+- How do you view errors?
+- What was your most recent error?
+- How did you resolve a recent error message?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+:::
+
+### Takehomes
+
+- An error means R stopped rather than guessed
+- Red text is not a judgement
+- Read the message before you change anything
 
 ## Reading an error message
 
-<!--
-TODO: anatomy of an error. Which part names the problem, which part names the
-place, and why the place is often a lie.
--->
+Here's one from the function you wrote in chapter 1. I've asked for a year we don't have.
 
-## Where did it come from?
+```{r}
+#| label: err-2005
+#| error: true
+read_education(2005)
+```
 
-<!--
-TODO: `traceback()` and `rlang::last_trace()`.
+The error says (something like)
 
-TODO: `ozed`'s `script_00_1.R` and `script_00_3.R` both fail with
-`object 'raw_data' not found`, on a stale reference left behind by a refactor.
-That is a real error from a real refactor, which is better than one I invented.
+```
+Error:
+! /Users/nick_1/consulting/training/course-materials/fun2debug/data/tidy/education_2005.csv does
+  not exist.
+Run `rlang::last_trace()` to see where the error occurred.
+Called from: signal_abort(cnd, .file)
+```
 
-Decided 25 Aug 2026: they stay broken. So the chapter has to say out loud that
-these two fail on purpose, or someone working through the scripts in order will
-think they broke it.
--->
+My process for resolving an error message looks something like the following:
 
-## Stopping inside a function
+- Read the headline error message
+- Do I see something familiar?
+- Did I do something unexpected?
+- Have I seen this error message before?
+- How did I resolve it?
 
-<!--
-TODO: `browser()`. The prompt, and the five commands that matter.
+Here it says somewhat plainly:
 
-TODO: needs a gif or screenshots.
--->
+```
+/Users/nick_1/consulting/training/course-materials/fun2debug/data/tidy/education_2005.csv does not exist.
+```
 
-## Debugging a function you did not write
+So I would look inside `data/tidy/` and look for whether that file is there.
+If it isn't, I know I need to refer to data that is present - my mistake.
+If `data/tidy/` contains data with the name "education_2005.csv", then I would dig deeper:
 
-<!--
-TODO: `debug()` and `debugonce()`. Why `debugonce()` is nearly always the one
-you want.
+ - Is the filepath I am specifying correct?
+ - Is there something concernening with the working directory?
 
-TODO: `ozed`'s `example-ages.R` is already exactly this demo.
-`str_replace()` against `str_replace_all()` on `15--19`, stepped through.
--->
+::: {.callout-note title="Your Turn: Explore error messages"}
 
-## When the error is somewhere you cannot reach
+<details>
+<summary>Setup code</summary>
 
-<!--
-TODO: `options(error = recover)`.
--->
+```{r}
+#| ref.label: ["pkgs", "setup-data"]
+#| eval: false
+#| echo: true
+```
 
-## The RStudio debugging pane
+</details>
 
-<!--
-TODO: breakpoints, the environment pane, the traceback pane. Screenshots.
--->
+Run each of these. For each one, read out aloud the error message. Follow the process:
+
+> - Read the headline error message
+> - Do I see something familiar?
+> - Did I do something unexpected?
+> - Have I seen this error message before?
+> - How did I resolve it?
+
+
+```{r}
+#| error: true
+read_education(2005)
+
+education |> filter(stat_territory = "Tas.")
+education |> filter(stat_territory == "Tas.")
+
+pct_studying(ed_2023)
+```
+
+The third one hasn't been defined this session, so you'll get a different kind of error again.
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 4)
+```
+
+<details>
+<summary>Answer</summary>
+
+The first names the missing file, which is the *what*, and an anonymous function inside readr, which is a useless *where*.
+
+The second is a dplyr error, and it's better on both counts. It names the column that doesn't exist and it tells you it happened in `filter()`, which is a function you actually called.
+
+The third is `could not find function "pct_studying"`. There's no *where* at all, because nothing ran. That message means "you have not defined this", and nine times out of ten it means you forgot to run the chunk that defines it.
+
+</details>
+
+:::
+
+### Takehomes
+
+- Read the headline error message
+- Do I see something familiar?
+- Did I do something unexpected?
+- Have I seen this error message before?
+- How did I resolve it?
+
+## Using `traceback()` to understand error origins
+
+To tease apart an eror, you can get a lot out of following it `back`. This is called a traceback.
+
+```{r}
+#| error: true
+read_education(2005)
+traceback()
+```
+
+**Read the output from the bottom.** 
+
+This is called a "trace stack". It contains all the individual steps/moments from the function.
+
+- Frame 1: the thing you typed
+- Frame 2: What the function called
+- Frames 3,4,5, etc - inside of readr...getting further down the script/function 
+
+The way I usually look at this is to find the lowest frame that is still my code, and start from there.
+
+### `rlang::last_trace()` over `traceback()`
+
+`rlang::last_trace()` does the same job as `traceback()`, but prints it the right way up.
+
+```{r}
+#| error: true
+education |> filter(age_grp == "15_19")
+
+rlang::last_trace()
+```
+
+Same idea, nicer presentation, and it works on the errors you'll hit most often.
+
+### Takehomes
+
+- `traceback()` shows the chain of calls that led to the error
+- Read it from the bottom up, because the bottom is your code
+- `rlang::last_trace()` is the tidyverse equivalent and prints it the right way up
+
+## How to browse inside a function
+
+Reading an error message can tell you where an error happens, but it doesn't show you what the values were. 
+
+This can be a frustrating part of using functions, compared to scripts.
+
+When you write code out as a script, you get to interact with the values and the variables. But when you express your script as a series of functions, you don't get that same interactivity.
+
+My process for exploring functions, when they had errors, was:
+
+- Pull the function body out into another script
+- Set the arguments of your function as values at the top
+- Run this script line by line
+
+Any this process does work. But you are missing out on a huge opportunity,a nd also it has some shortfalls.
+
+- The opportunity is for you to explore the function quickly
+- The shortfalls include:
+  - copying the body of the function takes time
+  - You open yourself up to copy/paste errors
+  - What happens when you want to explore another function?
+
+You can save yourself this pain, of copying code out of a function, by using a function called `browser()`.
+
+You put `browser()` in the function body, then call the function.
+
+```r
+pct_studying <- function(data, age = "25_29") {
+  in_age <- filter(data, age_group == age)
+  browser()
+  summarise(in_age, pct = sum(n_studying) / sum(population) * 100)
+}
+
+pct_studying(ed_2023, age = "15-19")
+```
+
+R stops there and hands you a prompt, that looks like the following:
+
+```
+Called from: pct_studying(ed, age = "15-19")
+Browse[1]>
+```
+
+That prompt looks just lke a normal R console, except you're standing **inside the function** See how it says:
+
+`Brownse[1]>`
+
+This is the "debugging mode" of R.
+
+Look in the environment pane:
+
+<!-- ![](plcaeholder-iage-of-env-pane-debug) -->
+
+The environment pane switches from your workspace to **the function's** environment, so it lists `data`, `age` and `in_age` rather than everything you have lying around. 
+
+Every argument and every intermediate value is in there.
+
+You can explore them by seeing what their output is in the console.
+
+```
+Browse[1]> age
+[1] "15-19"
+
+Browse[1]> nrow(in_age)
+[1] 0
+
+Browse[1]> unique(data$age_group)
+[1] "15_19" "20_24" "25_29" "30_34" "35_39" "40_44" "45_49" "50_54" "55_74"
+```
+
+Can you see the error? I passed along `age`, which is `"15-1"`, but the data uses an underscore: `"15_19"`. So, the filter matched nothing.
+
+You can also run the code inside the function. You can view the browser() help offjobs with `help`. This reveals the following information
+
+```
+Browse[1]> help
+n          next
+s          step into
+f          finish
+c or cont  continue
+Q          quit
+where      show stack
+help       show help
+<expr>     evaluate expression
+Browse[1]>
+```
+
+There are three commands that are really worth knowing:
+
+- `n` runs the next line
+- `c` continues to the end
+- `Q` quits and gets you out
+- `f` finishes the function you are in
+- `s` steps into a function
+
+
+Anything else is just R, so type whatever you'd type normally
+
+::: {.callout-tip title="Going deeper: the ladder of abstraction" collapse="true"}
+
+There's a nice way to think about what just happened.
+
+Most of the time you read code at map level. `read_education(2014:2023)` and `plot_study_over_time(education, state = "Tas.")` are two lines that describe a whole analysis, and you can hold them in your head at once.
+
+`browser()` drops you to street level. Suddenly you're inside one function, looking at one value, and the analysis has vanished from view.
+
+Neither level is the right one to live at. The skill is moving between them, and knowing which one your current question belongs to. "Why is this number wrong?" is a street-level question. "What is this script for?" is not.
+
+:::
+
+### A function you didn't write
+
+You can't always add `browser()` into a function, because it:
+
+- Might not be yours
+- It might be yours, but does feel manual.
+
+There is a better way! You can use `debugonce()` or you can type `s` at the debug prompt inside that function, which steps you into that function.
+
+```r
+debugonce(pct_studying)
+pct_studying(ed_2023, age = "15-19")
+```
+
+Same prompt, same everything, and no edit to the function.
+
+`debug()` is the same thing except it's permanent, so the function stops every single time until you say `undebug()`. That gets old fast, which is why `debugonce()` is nearly always the one you want.
+
+#### Using RStudio interface for debugging
+
+RStudio has all of this on the interface.
+
+Click in the margin to the left of a line number and you get a red dot, which is a breakpoint. It does what `browser()` does, without editing the file.
+
+<!-- ![](placeholder image of this in RStudio) -->
+
+<!-- TODO: screenshot of a paused browser() session. Console showing Browse[1]>,
+the environment pane showing the function's locals rather than the workspace,
+and the Next / Continue / Stop toolbar. Only Nick can take this, it has to be
+his RStudio. Noted in dev/njt-todo.md. -->
+
+### When you can't get there at all
+
+Sometimes the failure is somewhere you'd never think to put a `browser()`, five functions deep in a package.
+
+```r
+options(error = recover)
+```
+
+Now, whenever an error happens, R shows you the same frames `traceback()` would, and lets you pick one to stand inside. It's `browser()` after the fact, at any level of the stack.
+
+It's aggressive, so turn it off when you're done:
+
+```r
+options(error = NULL)
+```
+
+::: {.callout-note title="Your Turn"}
+
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs", "setup-data"]
+#| eval: false
+#| echo: true
+```
+
+</details>
+
+Here's a function with something wrong in it. It's meant to give the percentage studying for one state, and it gives you nothing useful.
+
+```r
+state_pct <- function(data, state) {
+  rows <- filter(data, state_territory == state)
+  round(sum(rows$n_studying) / sum(rows$population) * 100, 1)
+}
+
+state_pct(ed_2023, state = "Tasmania")
+```
+
+1. Run it. What do you get, and is it an error?
+2. Put a `browser()` on the line after `rows` is created, and run it again.
+3. At the prompt, look at `state`, then `nrow(rows)`, then `unique(data$state_territory)`.
+4. Fix the call.
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 6)
+```
+
+<details>
+<summary>Answer</summary>
+
+You get `NaN`, and no error. `sum()` of nothing is 0, and 0 divided by 0 is `NaN`.
+
+At the prompt, `nrow(rows)` is 0 and `unique(data$state_territory)` shows `"Tas."` rather than `"Tasmania"`. The data uses the abbreviation.
+
+```r
+state_pct(ed_2023, state = "Tas.")
+```
+
+Worth noticing that the debugger did not tell you the answer. It showed you two values, and you worked it out. That's the whole job.
+
+</details>
+
+:::
+
+### Takehomes
+
+- `browser()` stops inside the function and gives you a normal R prompt
+- `n`, `c` and `Q` are most of what you need at that prompt
+- `debugonce()` does it to a function you didn't write, and `debug()` does it until you stop it
+- `options(error = recover)` catches failures you couldn't put a `browser()` near
+- A breakpoint in the margin is the same thing with the mouse
 
 ## Looking inside code that works
 
-<!--
-TODO: `browser()` as a reading tool, not only a repair tool. This is the section
-that makes the chapter title honest.
+Everything so far has been about code that stopped.
 
-TODO: the best case I have for this is `ozed`'s `data/raw/`. The conventions
-change between years, so reading six files gives you 480 rows, no error, no
-warning, 89 age groups where there should be ten, and a mean of `Inf`. Nothing
-tells you. You have to go and look.
+The failures I actually worry about are the ones that don't. Here's the worst kind, and it's sitting in the folder you downloaded.
 
-This is also the strongest argument in the course for the whole thesis: the
-failure you most need to catch is the one that does not raise an error.
--->
+`data/raw` holds the same education data, before anybody cleaned it up. Six years of it. Let's read the lot.
+
+```{r}
+#| label: raw-read
+#| message: false
+raw <- read_csv(list.files(here("data/raw"), full.names = TRUE))
+
+nrow(raw)
+```
+
+`r nrow(raw)` rows. No error. No warning. Nothing in red.
+
+Now look at it.
+
+```{r}
+#| label: raw-ages
+length(unique(raw$age_group))
+```
+
+There are nine age groups in this data. R has found `r length(unique(raw$age_group))`.
+
+```{r}
+#| label: raw-ages-show
+head(sort(unique(raw$age_group)), 12)
+```
+
+The separator changes between years. Somebody used a hyphen, then a double hyphen, then a full stop, and every variant became its own category.
+
+It gets better.
+
+```{r}
+#| label: raw-mean
+mean(raw$prop_studying)
+```
+
+Missing values are coded `-99` in some years, `9999` in others, and literal `Inf` in one. So the mean of a proportion, a number that cannot leave the range 0 to 1, is infinity.
+
+**Nothing told us any of this.** The read worked. The code ran. Every number that came out was the wrong number, and R was perfectly happy.
+
+This is why the chapter is called looking inside a function rather than fixing a broken one. `browser()` is not only for when things stop. It's for standing in the middle of something that ran fine and asking whether you believe it.
+
+In statistics we usually can't test our way to confidence, because there's no known right answer to compare against. Which leaves looking.
+
+### Takehomes
+
+- The failures that hurt are the ones that don't raise anything
+- Reading six files gave 89 age groups and a mean of `Inf`, silently
+- `browser()` is a reading tool, not only a repair tool
+- If nothing is going to tell you, you have to go and look
 
 ## Summary {.unnumbered}
 
-<!--
-TODO: numbered take-homes.
--->
+1. **An error means R stopped rather than guessed.** Read it before you change anything.
+2. **The message is right about what and wrong about where.** It names where the error was raised, not where it was caused.
+3. **`traceback()` reads bottom up.** The bottom frame is your code.
+4. **`browser()` puts you inside the function** with a normal prompt and every value to hand.
+5. **`debugonce()` for somebody else's function**

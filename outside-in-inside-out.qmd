@@ -1,6 +1,13 @@
 # Outside-in, inside-out {#sec-outside-in}
 
-There are two ways I to a function. Sometimes I write the function I wish existed, and then go and make it. Other times I have code that already works, and I wrap that code up into a function. This chapter does both of these approaches, and finishes with the we did in plot chapter.
+I like to think about two ways to write a function:
+
+1. Top Down: Write the function **as if it already exists** and I can use it. (then go and define it)
+2. Bottom Up: Adapt code that you've already written and you know works, into a new function.
+
+You can also think of this as "Outside in, Inside Out"..
+
+This chapter does both of these approaches.
 
 ::: {.overview}
 
@@ -20,7 +27,7 @@ There are two ways I to a function. Sometimes I write the function I wish existe
 **What you need this session**
 
 - A session of RStudio open, in the same folder as last time
-- `{fnmate}`, if it installed for you. Nothing here depends on it.
+- `{fnmate}`, if it installed for you. Not required.
 
 ```{r}
 #| label: pkgs
@@ -76,9 +83,29 @@ tas_2023 <- education |>
 
 ## Outside-in
 
-Outside-in means you write the function before you write its body.
+Outside-in means you write the function before you write its body. Another way to think of this is as pseudo-code.
 
-You start from what you want to type, rather than what you know how to do. Here is the question we set ourselves in chapter 1:
+You start by writing the function as if it already exists. 
+
+For example, imagine I knew I had to create a function to read in some education data, clean it up, then do a plot of education numbers per state, I could sketch this out:
+
+```{r}
+#| echo: true
+#| eval: false
+
+education_raw <- read_education("path/to/education.csv")
+
+edutation_tidy <- tidy_education(education_raw)
+
+plot_education_state(edutation_tidy)
+
+```
+
+None of these function exist as of yet! Which might feels a bit strange. That's OK! The point is to get used to creating functions from scratch, and thinking about them.
+
+You will likely change the function names. This isn't the end! But it gets you thinking about how it all works, and I find that really helps give you a bit of a better grapple on the code and data.
+
+Let's start from the question we set ourselves in chapter 1:
 
 **How many Australians are studying, by age group and by state, and is that changing?**
 
@@ -138,15 +165,11 @@ plot_study_over_time <- function(tas) {
 }
 ```
 
-It read that line, worked out the arguments, and left you the body to fill in.
+This is pretty neat! It worked out how to define the function based on how you wrote the signature.
 
-It also named the argument `tas`, because `tas` is what I passed. I would rename that to `data`. And the body is `NULL`, so the function can run, but returns nothing. We didn't need to put NULL in there, but it's kind of like a signal - like when you have a page in a big report that says: "This page is intentionally blank".
+Notice that it also named the argument `tas`, because `tas` is what was provided. I might rename that to `data`. And the body is `NULL`, so the function can run, but returns nothing. We didn't need to put NULL in there, but it's kind of like a signal - like when you have a page in a big report that says: "This page is intentionally blank".
 
-::: {.callout-important title="It's OK if fnmate didn't install"}
-
-The {fnmate} addin saves typing. It doesn't save the thinking, and the thinking is the part we're practising. Everywhere I use it in this book I also show what it wrote, so you can type the same thing yourself.
-
-:::
+(It's OK if fnmate didn't install)
 
 `{fnmate}` is by [Miles McBain](https://milesmcbain.xyz), who also gave us DRRY.
 
@@ -163,13 +186,15 @@ The {fnmate} addin saves typing. It doesn't save the thinking, and the thinking 
 
 </details>
 
-Somebody asks you which state has the biggest gap between the youngest and the oldest age groups, and whether that gap is closing.
+Somebody asks you:
 
-Write the script you wish you could run. Don't write a single function.
+> which state has the biggest gap in education between the youngest and the oldest age groups? Is that gap closing?
 
-1. Write the functions you wish existed, top to bottom, and give each one a name.
-2. For each one, say what goes in and what comes out.
-3. Which of them already exist?
+Write some R code from this "outside in" / "top down" / pseudocode approach. You don't need to write out the entire function. Just the signature.
+
+1. Write the function pseudocode, top to bottom, and give each one a name.
+2. For each one, write what goes in to its arguments and what comes out.
+3. Do any of of them already exist?
 4. Which one would you write first, and why?
 
 ```r
@@ -197,7 +222,7 @@ gaps <- study_gap_by_state(education)
 plot_gap_over_time(gaps)
 ```
 
-Yours will look different, and that's fine. What matters is that every line has a name you could say out loud, and that you know what goes in and what comes back.
+It's OK if yours look different, that's fine! What we want to focus on is if you can focus on what goes in and out of each of the functions. 
 
 `read_education()` already exists, and the other two don't.
 
@@ -216,7 +241,7 @@ I would write `study_gap_by_state()` first, because `plot_gap_over_time()` can't
 
 ## Inside-out
 
-Inside-out goes the other way. You have code that works, and the function comes out of it. Or, you write code, get it working, then pull/extract a function.
+Inside-out goes the other way. You have existing code that works, and the function comes out of it. Or, you write code, get it working, then pull/extract a function.
 
 Let's build `plot_study_over_time()` by going inside out or "ground up".
 
@@ -247,7 +272,7 @@ countdown(minutes = 3)
 ```
 
 
-<my collapsed section with my bad drawing>.
+<!-- TODO <my collapsed section with my bad drawing>. -->
 
 :::
 
@@ -266,7 +291,7 @@ It goes from `r format(tas_young$n_studying[1] * 1000, big.mark = ",")` down to 
 
 Worth a caution before you read too much into it. The number of 15 to 19 year olds in Tasmania fell over the same period, from `r format(tas_young$population[1] * 1000, big.mark = ",")` to `r format(tas_young$population[10] * 1000, big.mark = ",")`. Fewer people studying is not the same as a smaller share of them studying. This plot doesn't really distinguish what you are looking at.
 
-### Growing it
+### Making more lines
 
 One age group is a bit thin. What about the other eight?
 
@@ -285,13 +310,13 @@ tas |>
   facet_wrap(~age_group)
 ```
 
-That's the plot I wanted. Now it can be made nicer, which can be a bit fiddly.
+OK, that is what I wanted. Now we can make it nicer, which can be a bit fiddly.
 
 The changes are:
 
 - add a colour to the line
 - Change the linewidth
-- lavel the y axis numbers to have 1,000 marks
+- label the y axis numbers to have 1,000 marks
 - Give the plot x, y, title, and subtitle
 - Use the overall theme, `theme_minimal()`
 
@@ -304,7 +329,7 @@ tas |>
   facet_wrap(~age_group) +
   scale_y_continuous(labels = label_number(scale = 1000, big.mark = ",")) +
   labs(
-    x = NULL,
+    x = "Year",
     y = "Studying",
     title = "Proportion of people studying, by age group",
     subtitle = "Tas."
@@ -335,7 +360,7 @@ plot_study_over_time <- function(data, state) {
     facet_wrap(~age_group) +
     scale_y_continuous(labels = label_number(scale = 1000, big.mark = ",")) +
     labs(
-      x = NULL,
+      x = "Year",
       y = "Studying",
       title = "Number of people studying, by age group",
       subtitle = state

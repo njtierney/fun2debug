@@ -46,8 +46,7 @@ education_path <- function(year) {
 
 year_from_path <- function(path) {
   basename(path) |>
-    parse_number() |>
-    as.character()
+    parse_number()
 }
 
 read_education <- function(year) {
@@ -184,7 +183,7 @@ Here are the key parts:
 
 - **The name** is `pct_studying`. This is how you call it later.
 - **`function()`** is what makes a function. The `pct_studying <-` bit just gives it a name, the same way you'd name any other object.
-- **The arguments** are `data` and `age`. These are the parts that change between calls.
+- **The arguments** are `data` and `age`. These are the parts that change between calls. You will also see them called formals, parameters, or args.
 - **The body** is everything between the braces. This is the code that runs. When we use single braces like this, we are saying: Run multiple lines of code.
 - **The return value** is whatever the body evaluates last, so here that is the one row table coming out of `mutate()`.
 
@@ -192,43 +191,65 @@ The **signature** is the name plus the argument names: `pct_studying(data, age)`
 
 ![The same parts, drawn out.](figs/function-anatomy.png){fig-alt="The function pct_studying, defined as function(data, age), with six parts labelled in colour: the name, the keyword function, the arguments, an intermediate value called data_summary, the body, and the return value, which is the bare data_summary line at the end." width=100%}
 
-::: {.callout-tip title="Going deeper: side effects" collapse="true"}
+::: {.callout-tip title="Going deeper: other words for arguments" collapse="true"}
 
-A **side effect** is anything a function does other than return a value.
+You will meet the same idea under several names. It is worth recognising all of them, so that a help page or an answer online does not throw you.
 
-`education_path()`, which you wrote last session, does not have a side effect.
-It works something out and hands it back:
+**Arguments** is the word I use, and the one the R documentation mostly uses.
 
-```{r}
-education_path(2024)
-```
-
-This function does have a side effect:
+**Formals** is R's own internal word. `formals()` hands them back, with their defaults:
 
 ```{r}
-hist(rnorm(1000))
+#| label: formals-demo
+formals(pct_studying)
 ```
 
-Because it plots to the screen. `hist()` also returns a value:
+**Args** is the abbreviation, and `args()` is a base R function that shows you the signature:
 
 ```{r}
-hist_obj <- hist(rnorm(1000))
-
-hist_obj
+#| label: args-demo
+args(pct_studying)
 ```
 
-Side effects aren't bad, and plenty of useful functions have them. All of ggplot2 is drawing a plot, which is a side effect.
+That `NULL` is not a mistake. `args()` gives you back a function with an empty body, and `NULL` is the body.
 
-The catch is reasoning. We only want functions to do one thing, generally. Return one plot. Return a data frame. Once functions start returning multiple things, it can be harder to reason with them.
-
-So, in the case of `hist()`, it might be better to have two functions:
-
-- `hist_plot()` which does the histogram plotting
-- `hist_data()` which gives us the statistics, etc
-
-A function that returns something useful **and** quietly writes a file is harder to think about than one that does a single one of those things.
+**Parameters** is the usual word in other languages, and it turns up in R writing too. Strictly, the parameter is the name in the definition and the argument is the value you hand over, so `age` is the parameter and `"15_19"` is the argument. Almost nobody holds that line, me included.
 
 :::
+
+::: {.callout-tip title="Going deeper: when to write return()" collapse="true"}
+
+R hands back whatever the body evaluates last, so most functions never need `return()` at all. The style most R code follows, and the one I follow, is this:
+
+**Only use `return()` to leave early.**
+
+Here is the case where I reach for it. If you ask `pct_studying()` for an age group that is not in the data, both sums come out as zero, and zero divided by zero is `NaN`. No error, no warning. An early return is one way to deal with that:
+
+```{r}
+#| label: early-return
+pct_studying_safe <- function(data, age = "25_29") {
+  if (!age %in% data$age_group) {
+    return(NULL)
+  }
+
+  data |>
+    filter(age_group == age) |>
+    summarise(
+      studying = sum(n_studying),
+      people = sum(population)
+    ) |>
+    mutate(pct = round(studying / people * 100, 1))
+}
+
+pct_studying_safe(tas_2023, age = "99_99")
+```
+
+The `return(NULL)` says "we are done here, there is nothing to work out". Everything below it only runs when the age group is real.
+
+A `return()` on the *last* line is different. It says nothing the code has not already said, and it is one more thing to read.
+
+:::
+
 
 ::: {.callout-tip title="Going deeper: functions are values" collapse="true"}
 
@@ -300,8 +321,6 @@ my_hist2 <- function(values){
 # ed_2023$n_studying
 ```
 
-
-
 ```{r}
 #| echo: false
 #| eval: !expr knitr::is_html_output()
@@ -313,6 +332,8 @@ countdown(minutes = 5)
 ### Takehomes
 
 - The key parts of a function are: the name, the arguments, the body, the return value
+- Arguments go by other names too: formals, parameters, args
+- A function returns its last expression, so `return()` is for leaving early
 - A function returns whatever its body evaluates last
 - The signature is the name plus the argument names
 - Knowing the words means you can search for them and ask about them
@@ -437,9 +458,7 @@ That's what defaults are for. They make the common case easy without taking away
 
 ::: {.callout-tip title="Going deeper: defaults that use the other arguments" collapse="true"}
 
-A default does not have to be a fixed value. It can be worked out from the other
-arguments, because defaults are evaluated inside the function, after the
-caller's values have arrived.
+A default does not have to be a fixed value. It can be worked out from the other arguments, because defaults are evaluated inside the function, after the caller's values have arrived.
 
 ```{r}
 #| label: fig-computed-default
@@ -461,11 +480,9 @@ plot_study_titled <- function(
 plot_study_titled(tas_2023, state = "Tas.")
 ```
 
-The title writes itself from `state`, so the common case needs one argument
-instead of two.
+The title writes itself from `state`, so the common case needs one argument instead of two.
 
-The catch is that you can now pass two things that disagree, and nothing stops
-you:
+The catch is that you can now pass two things that disagree, and nothing stops you:
 
 ```{r}
 #| label: fig-disagreeing-args
@@ -473,9 +490,7 @@ you:
 plot_study_titled(tas_2023, state = "Tas.", title = "Victoria")
 ```
 
-Two arguments that have to agree with each other are a bug waiting to happen.
-Here it is only a wrong title. When it is a filter and a label, it is a wrong
-answer with a confident heading on it.
+Two arguments that have to agree with each other are a bug waiting to happen. Here it is only a wrong title. When it is a filter and a label, it is a wrong answer with a confident heading on it.
 
 :::
 
@@ -513,8 +528,7 @@ pct_studying(tas_2023, age = "99_99")
 
 The first is the default, `"25_29"`, which is what you get when you do not say.
 
-The second is the interesting one. No rows match `"99_99"`, so both sums are
-zero, and zero divided by zero is `NaN`. No error and no warning.
+The second is the interesting one. No rows match `"99_99"`, so both sums are zero, and zero divided by zero is `NaN`. No error and no warning.
 
 
 </details>
@@ -605,11 +619,9 @@ pct_studying(age = "20_24", data = tas_2023)
 pct_studying("20_24", data = tas_2023)
 ```
 
-All three give the same answer. The third one works because `data` was named, so
-the only slot left for `"20_24"` is `age`.
+All three give the same answer. The third one works because `data` was named, so the only slot left for `"20_24"` is `age`.
 
-I would not write that third one. But it is worth knowing that R takes the named
-arguments first, then pours whatever is left into the gaps in order.
+I would not write that third one. But it is worth knowing that R takes the named arguments first, then pours whatever is left into the gaps in order.
 
 </details>
 
@@ -685,8 +697,8 @@ The fix is to wrap the argument in two sets of braces, which people say out loud
 plot_study_by <- function(data, y) {
   ggplot(data, aes(x = n_studying, y = {{ y }})) +
     geom_col(fill = "#1B9E77") +
-    scale_x_continuous(labels = scales::percent) +
-    labs(x = "Studying", y = NULL) +
+    scale_x_continuous(labels = label_number(scale = 1000, big.mark = ",")) +
+    labs(x = "# Studying", y = NULL) +
     theme_minimal(base_size = 12)
 }
 
@@ -699,19 +711,15 @@ Some terms to be aware of, and discuss, if time:
 
 - standard evaluation vs Non-standard evaluation
 - quasiquotation - quoting/unquoting
-- 
+-
 
 ::: {.callout-tip title="Going deeper: why curly braces?" collapse="true"}
 
 The braces are a deliberate echo of `glue()`.
 
-In `glue("education_{year}.csv")` last session, `{ }` meant "look this up and
-put the value here". In `{{{ y }}}` they mean much the same thing. What gets put
-there is the column the caller named, and it gets looked up inside the data
-rather than in your workspace.
+In `glue("education_{year}.csv")` last session, `{ }` meant "look this up and put the value here". In `{{{ y }}}` they mean much the same thing. What gets put there is the column the caller named, and it gets looked up inside the data rather than in your workspace.
 
-So if `glue()` made sense last session, curly curly is the same instinct with
-one more layer of braces.
+So if `glue()` made sense last session, curly curly is the same instinct with one more layer of braces.
 
 :::
 
@@ -741,42 +749,10 @@ You can read more about curly curly at:
 <details>
 <summary>Setup code</summary>
 
-```r
-library(dplyr)
-library(readr)
-library(ggplot2)
-library(glue)
-library(here)
-
-education_path <- function(year) {
-  here(glue("data/tidy/education_{year}.csv"))
-}
-
-year_from_path <- function(path) {
-  basename(path) |>
-    parse_number() |>
-    as.character()
-}
-
-read_education <- function(year) {
-  files <- education_path(year)
-  education_raw <- read_csv(files, id = "path")
-
-  education_raw |>
-    mutate(year = year_from_path(path)) |>
-    select(-path)
-}
-
-education <- read_education(2014:2023)
-tas_2023 <- education |> filter(year == 2023, state_territory == "Tas.")
-
-plot_study_by <- function(data, y) {
-  ggplot(data, aes(x = n_studying, y = {{ y }})) +
-    geom_col(fill = "#1B9E77") +
-    scale_x_continuous(labels = scales::percent) +
-    labs(x = "Studying", y = NULL) +
-    theme_minimal(base_size = 12)
-}
+```{r}
+#| ref.label: ["pkgs", "setup-data"]
+#| eval: false
+#| echo: true
 ```
 
 </details>
@@ -807,8 +783,7 @@ median_by <- function(data, group) {
 median_by(filter(education, year == 2023), group = age_group)
 ```
 
-The only thing that changed from `mean_by()` is the summary function. `{{{ }}}`
-does the same job either way.
+The only thing that changed from `mean_by()` is the summary function. `{{{ }}}` does the same job either way.
 
 For step 3, the default goes in the signature the same as any other:
 
@@ -844,7 +819,7 @@ study_plot()       # better, but what does it do with it?
 plot_study_by()    # now I do not have to read the body
 ```
 
-A template I like is: **`verb_noun()`**. 
+A template I like is: **`verb_noun()`**.
 
 - the thing you do
 - the thing it happens on

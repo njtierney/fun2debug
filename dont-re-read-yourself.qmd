@@ -23,9 +23,7 @@ Imagine you open an R script you wrote a few months ago, and you cannot follow i
 - A session of RStudio open
 - The course data. Download `fun2debug-data.zip` from
   <https://fun2debug.njtierney.com/data/> and unzip it so that a folder called
-  `data` sits next to the script you are writing in. Then open that folder as
-  an RStudio project, or set your working directory to it, so that
-  `list.files("data/tidy")` shows you ten files.
+`data` sits next to the script you are writing in. Then open that folder as an RStudio project, or set your working directory to it, so that `list.files("data/tidy")` shows you ten files.
 
 ```{r}
 #| label: pkgs
@@ -101,6 +99,17 @@ This is pretty common. But still a bit annoying. We will get back to it.
 
 ::: {.callout-note title="Your Turn"}
 
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs"]
+#| eval: false
+#| echo: true
+```
+
+</details>
+
 If we want all 10 files read in, how should we do this?
 
 ```r
@@ -132,6 +141,22 @@ There are no wrong answers!
 countdown(minutes = 5)
 ```
 
+<details>
+<summary>Answer</summary>
+
+**What is different:** four characters, the year, in each path. **What is the same:** everything else. The folder, the `education_` prefix, the `.csv` on the end, and the call to `read_csv()`.
+
+**Problems you might have named:**
+
+- You have to read all ten lines to be sure they really are the same. That is the cost this chapter is about.
+- One of them could be wrong and you would not see it. A repeated 2019, a missing year, a typo in the folder.
+- Adding 2024 next year means another line, in every script that does this.
+- You end up with ten objects and no easy way to work with all the years at once.
+
+If you said something else, that is fine. The one worth landing on is the first.
+
+</details>
+
 :::
 
 There are issues with code like:
@@ -149,7 +174,7 @@ ed_2022 <- read_csv("data/tidy/education_2022.csv")
 ed_2023 <- read_csv("data/tidy/education_2023.csv")
 ```
 
-it feels a bit safe. But it is a bit repetitive! 
+it feels a bit safe. But it is a bit repetitive!
 
 But what is the thing that is changing across all of these lines of code?
 
@@ -227,8 +252,7 @@ glue("data/tidy/education_{year}.csv") |> here()
 
 ::: {.callout-tip title="Read more"}
 
-There is a longer treatment of `{here}` and project oriented workflow in R Best
-Practices, at [The {here} package](https://r-best-practices.njtierney.com/project-organisation.html#the-here-package).
+There is a longer treatment of `{here}` and project oriented workflow in R Best Practices, at [The {here} package](https://r-best-practices.njtierney.com/project-organisation.html#the-here-package).
 
 :::
 
@@ -296,13 +320,14 @@ ed_2023 <- read_csv(year_path)
 
 A function in R has three parts:
 
-1. A **name**. 
-2. **arguments**, the things that change, and 
+1. A **name**.
+2. **arguments**, the things that change, and
 3. **body**, the code that runs
 
 Let's make a function that creates the file path:
 
 ```{r}
+#| label: education-path-fn
 # function name ------  # arguments: year
 education_path <- function(year){
   glue("data/tidy/education_{year}.csv") |> here()
@@ -334,7 +359,7 @@ education_2022 <- read_education(2022)
 education_2021 <- read_education(2021)
 ```
 
-`education_path()` knows how the files are named. 
+`education_path()` knows how the files are named.
 
 `read_education()` knows how to read a path.
 
@@ -349,11 +374,10 @@ We are still doing some repetition, but bear with me here.
 <details>
 <summary>Setup code</summary>
 
-```r
-library(dplyr)
-library(readr)
-library(glue)
-library(here)
+```{r}
+#| ref.label: ["pkgs"]
+#| eval: false
+#| echo: true
 ```
 
 </details>
@@ -369,6 +393,30 @@ library(here)
 #| eval: !expr knitr::is_html_output()
 countdown(minutes = 5)
 ```
+
+<details>
+<summary>Answer</summary>
+
+**2.** You get an error, and it names the path it tried:
+
+```r
+read_education(2005)
+#> Error: '.../data/tidy/education_2005.csv' does not exist.
+```
+
+That is a good error. It tells you what it wanted and where it looked, so you can see straight away that the file is missing rather than the code being broken.
+
+**3.** Yes. `list.files(here("data/tidy"), pattern = "\\.csv$")` gives you all ten without naming any years, which is handy when you do not know what is in the folder. The trade is that you lose control of the order, and you get whatever is in there, including anything that should not be.
+
+**4.** A few worth noticing:
+
+- Nothing checks that `year` is a year. `read_education("banana")` fails inside `read_csv()` rather than saying something useful.
+- The folder is written into `education_path()`. Move the data and that function has to change, though only that one.
+- There is no way to ask for a year range without knowing which years exist.
+
+**5.** Each function knows one thing. `education_path()` knows how the files are named, `read_education()` knows how to read one. Rename the files next year and only the first one changes, and nothing that calls `read_education()` notices. You saw that in step 3, where repointing `education_path()` at `data/raw` carried `read_education()` along without touching it.
+
+</details>
 
 :::
 
@@ -435,9 +483,7 @@ ed_2023
 
 ::: {.callout-tip title="Going deeper: where the new column lands" collapse="true"}
 
-`mutate()` puts a new column on the far right. Often that is fine. When you want
-the year up the front where you can see it, `mutate()` takes `.before` and
-`.after`:
+`mutate()` puts a new column on the far right. Often that is fine. When you want the year up the front where you can see it, `mutate()` takes `.before` and `.after`:
 
 ```{r}
 #| label: mutate-before
@@ -446,8 +492,7 @@ read_education(2021) |>
   mutate(year = 2021, .before = state_territory)
 ```
 
-Name the column you want it next to, rather than a position. `.before = 1` also
-works, but it stops being true the moment somebody reorders the data.
+Name the column you want it next to, rather than a position. `.before = 1` also works, but it stops being true the moment somebody reorders the data.
 
 :::
 
@@ -508,21 +553,10 @@ This is still one line per year, though, and the year is still typed twice on ea
 <details>
 <summary>Setup code</summary>
 
-```r
-library(dplyr)
-library(readr)
-library(glue)
-library(here)
-
-education_path <- function(year) {
-  glue("data/tidy/education_{year}.csv") |> here()
-}
-
-read_education <- function(year) {
-  education_path(year) |>
-    read_csv() |>
-    mutate(year = year)
-}
+```{r}
+#| ref.label: ["pkgs", "education-path-fn", "read-education-mutate"]
+#| eval: false
+#| echo: true
 ```
 
 </details>
@@ -648,13 +682,12 @@ ten_years
 
 This works for two reasons:
 
-1. `glue()` builds ten paths when you give it ten years, and 
-2. `read_csv()` will take all ten and stack them for you. 
+1. `glue()` builds ten paths when you give it ten years, and
+2. `read_csv()` will take all ten and stack them for you.
 
 `read_csv()` will also tell you which file each row came from, with `id`.
 
-That argument only exists because `read_csv()` takes a vector of paths. You give
-it a column name, and it stores the file path in that column.
+That argument only exists because `read_csv()` takes a vector of paths. You give it a column name, and it stores the file path in that column.
 
 ```{r}
 #| label: read-csv-id
@@ -663,10 +696,7 @@ education_path(2022:2023) |>
   read_csv(id = "path")
 ```
 
-Notice what you get. You choose what the column is called, but not what goes in
-it. It is always the path. So `id` is not a way to hand the years through, it is
-a record of which file each row came from, and the year is sitting inside that
-record.
+Notice what you get. You choose what the column is called, but not what goes in it. It is always the path. So `id` is not a way to hand the years through, it is a record of which file each row came from, and the year is sitting inside that record.
 
 So a good deal of what I was about to write by hand is already sitting in `readr`.
 
