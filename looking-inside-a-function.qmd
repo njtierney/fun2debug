@@ -1,16 +1,22 @@
 # Looking inside a function {#sec-looking-inside}
 
-Writing a function is like putting your code into a box. Or, like going from a bunch of complex writing and circuitry, and building a box around it, and only adding the dials and buttons you need it to do the task. You want to use a TV remote and only touch the relevant buttons to change the channel, increase the volume, and use the arrow buttons to browse the right streaming service. You don't want to hold a circuit board, battery, and wires. You want the nice sleek remote someone designed.
+Writing a function is like putting your code into a box. 
+
+Or, for a physical analogy, it is like getting a bunch of complex wiring and circuitry, and building a box around it, and only adding the dials and buttons you need it to do the task. 
+
+Imagine a TV remote: you use a TV remote and only touch the relevant buttons to change the channel, increase the volume, and use the arrow buttons to browse the right streaming service, peruse settings, etc. 
+
+You don't want to hold the bare circuit board, battery, and wires. You want the nice sleek remote someone designed. You want to just worry about the interface.
 
 <!-- ![](placeholder scrappy drawing of this) -->
 
-I think the main benefit of the function is you express a sequence of steps into something easier to reason with. You are simplifying the complex. This is sometimes called "abstracting away complexity".
+I think this is the main benefit of a function - it is an expression of a sequence of steps into something easier to reason with. A function simplifies the complex - sometimes this is called "abstracting away complexity".
 
-Making your function be something that removes complexity is good, but you also need to be able to look inside your function to understand how it works - especially when something breaks.
+Making your function be a thing that removes complexity is good. But, you also need to be able to look inside your function to understand how it works - especially when something breaks!
 
 If we teach you how to build a nice box, but don't teach you how to open it, we aren't really teaching you how to write functions.
 
-This chapter is about how to look inside a function, so understand how it works, and how to unpack some of the errors or common failure points.
+This chapter is about how to look inside a function, so you can understand how it works, and how to unpack some of the errors or common failure points.
 
 ::: {.overview}
 
@@ -22,7 +28,7 @@ This chapter is about how to look inside a function, so understand how it works,
 
 <!-- These map onto the sections below, in order. If you move a section, move its question. -->
 
-- How do I look inside a function I wrote and look around?
+- How do I look inside a function I wrote?
 - How do I look inside a function I did not write?
 
 **What you need this session**
@@ -68,238 +74,203 @@ ed_2023 <- filter(education, year == 2023)
 
 :::
 
-## Errors are normal
+## Is the proportion of people studying changing over time?
 
-I need you to know that errors are normal, and that I run into them all the time. The thing that you get better at with experience, is knowing how to read the error messages, diagnose issues, and solve them. You get faster.
-
-So, errors are normal. But they can still be frustrating! I want you to practice **reframing** errors. They are R trying its best to help you.
-
-But let's talk through breaking down an error message.
-
-:::{.callout-note title="Your Turn: errors and you"}
-
-I'm curious to learn more about your experience with errors. Can you answer the following:
-
-- How do you view errors?
-- What was your most recent error?
-- How did you resolve a recent error message?
+We are back at the education data:
 
 ```{r}
-#| echo: false
-#| eval: !expr knitr::is_html_output()
-countdown(minutes = 5)
+education <- read_education(2014:2023)
+
+education
 ```
-:::
 
-### Takehomes
+We are going to explore the question:
 
-- An error means R stopped rather than guessed
-- Red text is not a judgement
-- Read the message before you change anything
+> Is the proportion of people studying, changing over time?
 
-## Reading an error message
-
-Here's one from the function you wrote in chapter 1. I've asked for a year we don't have.
+We can look at a general sense of this by looking at the data - looking at the proportion of people studying in each year, for all age groups and states:
 
 ```{r}
-#| label: err-2005
-#| error: true
-read_education(2005)
+ggplot(education,
+       aes(x = year,
+           y = prop_studying)) + 
+  geom_point()
 ```
 
-The error says (something like)
-
-```
-Error:
-! /Users/nick_1/consulting/training/course-materials/fun2debug/data/tidy/education_2005.csv does
-  not exist.
-Run `rlang::last_trace()` to see where the error occurred.
-Called from: signal_abort(cnd, .file)
-```
-
-My process for resolving an error message looks something like the following:
-
-- Read the headline error message
-- Do I see something familiar?
-- Did I do something unexpected?
-- Have I seen this error message before?
-- How did I resolve it?
-
-Here it says somewhat plainly:
-
-```
-/Users/nick_1/consulting/training/course-materials/fun2debug/data/tidy/education_2005.csv does not exist.
-```
-
-So I would look inside `data/tidy/` and look for whether that file is there.
-If it isn't, I know I need to refer to data that is present - my mistake.
-If `data/tidy/` contains data with the name "education_2005.csv", then I would dig deeper:
-
- - Is the filepath I am specifying correct?
- - Is there something concernening with the working directory?
-
-::: {.callout-note title="Your Turn: Explore error messages"}
-
-<details>
-<summary>Setup code</summary>
+But let's explore just looking at 15-19 year olds in tasmania:
 
 ```{r}
-#| ref.label: ["pkgs", "setup-data"]
+tas <- education |> filter(state_territory == "Tas.")
+
+young_tas <- tas |> filter(age_group == "15_19")
+
+young_tas
+
+ggplot(young_tas,
+       aes(x = year, 
+           y = prop_studying)) + 
+  geom_line() + 
+  geom_point()
+```
+
+Let's write a function to explore fitting a linear model. In essence, a linear model here will try and fit a straight line of best fit, through all of the data.
+
+```{r}
+fit_study_trend <- function(data){
+  lm(prop_studying ~ year, data = data)
+}
+```
+
+We would say:
+
+> Predict proportion of studying by Year
+
+Let's do it:
+
+```{r}
+fit_study_trend(young_tas)
+```
+
+OK! Interesting! Slightly negative effect.
+
+Let's try another state: Queensland.
+
+```{r}
 #| eval: false
-#| echo: true
+young <- education |> filter(age_group == "15_19")
+young
+
+young |> 
+  filter(state_territory == "Queensland") |> 
+  fit_study_trend()
 ```
 
-</details>
+Womp. Let's read this error message:
 
-Run each of these. For each one, read out aloud the error message. Follow the process:
+```
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Called from: lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...)
+```
 
-> - Read the headline error message
-> - Do I see something familiar?
-> - Did I do something unexpected?
-> - Have I seen this error message before?
-> - How did I resolve it?
+OK, so we use `lm()`, and I guess `lm.fit()` is used somewhere.
 
+The key seems to be:
+
+>  0 (non-NA) cases
+
+My guess would be that this is related to there not being any cases? Let's test this idea:
+
+```{r}
+young |> 
+  filter(state_territory == "Queensland")
+```
+
+Ah! I see.
+
+But what if we want to see inside the function? Is there a way to do that? Like, to look inside of `fit_study_trend()`, and see what it sees?
+
+## `browser()`: How to browse inside a function
+
+Error messages will only take you so far. Reading an error message can tell you where an error happens, but it doesn't show you what the values are inside the function. 
+
+If we wrote this out as a script:
 
 ```{r}
 #| error: true
-read_education(2005)
+young_qld <- young |> 
+  filter(state_territory == "Queensland")
 
-education |> filter(stat_territory = "Tas.")
-education |> filter(stat_territory == "Tas.")
+fit_young_qld <- lm(prop_studying ~ year, data = young_qld)
+fit_young_qld
 
-pct_studying(ed_2023)
+young_qld
 ```
 
-The third one hasn't been defined this session, so you'll get a different kind of error again.
+This used to be my process for exploring functions, when I wanted to understand how they worked, or if they had errors:
 
-```{r}
-#| echo: false
-#| eval: !expr knitr::is_html_output()
-countdown(minutes = 4)
-```
+- Pull the function body out
+- Set the arguments of your function
+- Run the script line by line
 
-:::
+The process did work. But it is also a bit of a missed opportunity to explore the function. It also has some shortfalls:
 
-### Takehomes
-
-- Read the headline error message
-- Do I see something familiar?
-- Did I do something unexpected?
-- Have I seen this error message before?
-- How did I resolve it?
-
-## Using `traceback()` to understand error origins
-
-To tease apart an eror, you can get a lot out of following it `back`. This is called a traceback.
-
-```{r}
-#| error: true
-read_education(2005)
-traceback()
-```
-
-**Read the output from the bottom.** 
-
-This is called a "trace stack". It contains all the individual steps/moments from the function.
-
-- Frame 1: the thing you typed
-- Frame 2: What the function called
-- Frames 3,4,5, etc - inside of readr...getting further down the script/function 
-
-The way I usually look at this is to find the lowest frame that is still my code, and start from there.
-
-### `rlang::last_trace()` over `traceback()`
-
-`rlang::last_trace()` does the same job as `traceback()`, but prints it the right way up.
-
-```{r}
-#| error: true
-education |> filter(age_grp == "15_19")
-
-rlang::last_trace()
-```
-
-Same idea, nicer presentation, and it works on the errors you'll hit most often.
-
-### Takehomes
-
-- `traceback()` shows the chain of calls that led to the error
-- Read it from the bottom up, because the bottom is your code
-- `rlang::last_trace()` is the tidyverse equivalent and prints it the right way up
-
-## How to browse inside a function
-
-Reading an error message can tell you where an error happens, but it doesn't show you what the values were. 
-
-This can be a frustrating part of using functions, compared to scripts.
-
-When you write code out as a script, you get to interact with the values and the variables. But when you express your script as a series of functions, you don't get that same interactivity.
-
-My process for exploring functions, when they had errors, was:
-
-- Pull the function body out into another script
-- Set the arguments of your function as values at the top
-- Run this script line by line
-
-Any this process does work. But you are missing out on a huge opportunity,a nd also it has some shortfalls.
-
-- The opportunity is for you to explore the function quickly
-- The shortfalls include:
-  - copying the body of the function takes time
-  - You open yourself up to copy/paste errors
-  - What happens when you want to explore another function?
+- copying the body of the function takes time
+- You open yourself up to copy/paste errors
+- What happens when you want to explore another function?
 
 You can save yourself this pain, of copying code out of a function, by using a function called `browser()`.
 
-You put `browser()` in the function body, then call the function.
+Imagine we had our function like this:
 
-```r
-pct_studying <- function(data, age = "25_29") {
-  in_age <- filter(data, age_group == age)
-  browser()
-  summarise(in_age, pct = sum(n_studying) / sum(population) * 100)
+```{r}
+#| eval: true
+#| error: true
+fit_study_filtered <- function(data, state, age){
+  new_data <- data |> 
+    filter(state_territory == state,
+           age_group == age)
+  
+  lm(prop_studying ~ year, data = new_data)
 }
 
-pct_studying(ed_2023, age = "15-19")
+fit_study_filtered(education, "Queensland", "15_19")
+
 ```
+
+In order to see inside the function, place `browser()` inside the code:
+
+```{r}
+fit_study_filtered <- function(data, state, age){
+  browser()
+  new_data <- data |> 
+    filter(state_territory == state,
+           age_group == age)
+  
+  lm(prop_studying ~ year, data = new_data)
+}
+
+```
+
+Then, the next time you call the function:
+
+```{r}
+#| eval: false
+#| echo: true
+fit_study_filtered(education, "Queensland", "15_19")
+
+```
+
+R stops, and gives you a prompt - something like the following:
 
 R stops there and hands you a prompt, that looks like the following:
 
 ```
-Called from: pct_studying(ed, age = "15-19")
+Called from: fit_study_filtered(education, "Queensland", "15_19")
+Browse[1]> 
+```
+
+The special thing to note is
+
+```
 Browse[1]>
 ```
 
-That prompt looks just lke a normal R console, except you're standing **inside the function** See how it says:
-
-`Brownse[1]>`
+This tells us that we are inside the function
 
 This is the "debugging mode" of R.
 
 Look in the environment pane:
 
-<!-- ![](plcaeholder-iage-of-env-pane-debug) -->
+![](figs/show-env-browser.png)
 
-The environment pane switches from your workspace to **the function's** environment, so it lists `data`, `age` and `in_age` rather than everything you have lying around. 
+The environment pane switches from your workspace to **the function's** environment, so it lists `data`, and nothing else, rather than everything you have lying around. 
 
-Every argument and every intermediate value is in there.
+Notice you can see the function arguments, and the intermediate values.
 
 You can explore them by seeing what their output is in the console.
 
-```
-Browse[1]> age
-[1] "15-19"
-
-Browse[1]> nrow(in_age)
-[1] 0
-
-Browse[1]> unique(data$age_group)
-[1] "15_19" "20_24" "25_29" "30_34" "35_39" "40_44" "45_49" "50_54" "55_74"
-```
-
-Can you see the error? I passed along `age`, which is `"15-1"`, but the data uses an underscore: `"15_19"`. So, the filter matched nothing.
-
-You can also run the code inside the function. You can view the browser() help offjobs with `help`. This reveals the following information
+You can also run the code inside the function. You can view the browser() help  with `help`. This reveals this little map of commands:
 
 ```
 Browse[1]> help
@@ -323,37 +294,179 @@ There are three commands that are really worth knowing:
 - `s` steps into a function
 
 
-Anything else is just R, so type whatever you'd type normally
+Let's type "n", to run each line of code.
 
-::: {.callout-tip title="Going deeper: the ladder of abstraction" collapse="true"}
+::: {.callout-note title="Your Turn: Practice using browser()"}
 
-There's a nice way to think about what just happened.
+<details>
+<summary>Setup code</summary>
 
-Most of the time you read code at map level. `read_education(2014:2023)` and `plot_study_over_time(education, state = "Tas.")` are two lines that describe a whole analysis, and you can hold them in your head at once.
+```{r}
+#| ref.label: ["pkgs", "setup-data", "the-functions"]
+#| eval: false
+#| echo: true
+```
 
-`browser()` drops you to street level. Suddenly you're inside one function, looking at one value, and the analysis has vanished from view.
+</details>
 
-Neither level is the right one to live at. The skill is moving between them, and knowing which one your current question belongs to. "Why is this number wrong?" is a street-level question. "What is this script for?" is not.
+Let's get you used to placing a little browser() in your code - here's a slightly modified version of the above code.
+
+```{r}
+fit_study_filtered <- function(data, state, age){
+  data_state <- data |> filter(state_territory == state)
+  data_state_age <- data_state |> filter(age_group == age)
+  
+  model_fit <- lm(prop_studying ~ year, data = data_state_age)
+  model_fit
+}
+```
+
+1. Copy the code locally
+2. Check to see if you can fit a model
+3. Place `browser()` in there, practice moving forward with `n`, or using the RStudio tools
+4. Practice looking for help with `help`
+5. Try using `s` on one of the lines. What happens?
+6. Practice using `Q`
 
 :::
 
-### A function you didn't write
+OK, now that you've had a bit of time to practice that, let's go back into this, and explore another example error:
 
-You can't always add `browser()` into a function, because it:
+::: {.callout-note title="Your Turn: find it with browser()"}
 
-- Might not be yours
-- It might be yours, but does feel manual.
+<details>
+<summary>Setup code</summary>
 
-There is a better way! You can use `debugonce()` or you can type `s` at the debug prompt inside that function, which steps you into that function.
-
-```r
-debugonce(pct_studying)
-pct_studying(ed_2023, age = "15-19")
+```{r}
+#| ref.label: ["pkgs", "setup-data", "the-functions"]
+#| eval: false
+#| echo: true
 ```
+
+</details>
+
+Let's say we have some new functions to get the percent, and trend details:
+
+```{r}
+#| label: the-functions
+
+fit_study_trend <- function(data) {
+  lm(prop_studying ~ year, data = data)
+}
+
+pct <- function(x) {
+  round(x * 100, 1)
+}
+
+trend_per_decade <- function(model) {
+  model_coef <- coef(model)
+  year_term <- model_coef[["year"]] * 10
+  year_as_percent <- pct(year_term)
+  year_as_percent
+}
+```
+
+
+```{r}
+#| error: true
+model <- lm(prop_studying ~ state_territory, data = young)
+model
+trend_per_decade(model)
+```
+
+1. Put a `browser()` at the top of `trend_per_decade()` and run it again.
+2. At the prompt, run `coef(model)`. What is in there?
+3. What does `[["year"]]` do?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+
+<details>
+<summary>Answer</summary>
+
+When we use `coef(model)`, this gives you the coefficient for every state, named `(Intercept)`, `state_territoryNSW`, `state_territoryNT` and so on. 
+
+However, in this case, there is no `year`, because year was never in the lm formula!
+
+When we do: `[["year"]]` we are asking for an element by the name "year". It errors when there is no such name. 
+
+The error: "Subscript out of bounds" means 
+
+> "you asked for something that is not in here"
+
+The fix is to the model, not to `trend_per_decade()`. Again.
+
+</details>
+
+:::
+
+### Up and down the ladder of abstraction
+
+Similar to the process of writing functions at a higher level in "outside in, inside out", we are now able to move at the higher coarser level of the functions we wrote, and then drop down into the more finer level details.
+
+I think of this process of going up and down the levels of complexity as moving "up and down the ladder of abstraction".
+
+It's like if we have our functions, we are looking at a map overview, but then when we use a function like `browser()`, it drops you into street-view.
+
+Just like in "outside in, inside out", it was useful to move between writing functions at a definition level, and then working at a script, it is useful to be able to dive into functions and understand them, then move back up.
+
+I first heard about the phrase, "Up and down the ladder of abstraction" from [Bret Victor](https://worrydream.com/), in his [Up and Down the Ladder of Abstraction](https://worrydream.com/LadderOfAbstraction/) talk. It's a really cool talk on the power of getting interactivity in debugging, an how that leads to other creative solutions.
+
+### You can't always `browser()`
+
+Some of the downsides to using `browser()` are that you cannot always use it, because you might not be able to hand place a `browser()` in a function from another package.
+
+I really like to use `debugonce()` for this. Or, if you are inside `s` at the debug prompt inside that function, which steps you into that function.
 
 Same prompt, same everything, and no edit to the function.
 
 `debug()` is the same thing except it's permanent, so the function stops every single time until you say `undebug()`. That gets old fast, which is why `debugonce()` is nearly always the one you want.
+
+:::{.callout-note title="Your Turn: using debugonce() and friends"}
+
+Now, practice the same thing you did before with browser, but:
+
+1. Run `debugonce()` on `trend_per_decade()`: `debugonce(trend_per_decade)` and run it again.
+2. Play around at the prompt
+3. Run some code
+4. finish by typing `f`
+5. Now practice using `debug(trend_per_decade)`, and make sure to use `undebug()` on it, too
+
+```{r}
+#| label: the-functions
+
+fit_study_trend <- function(data) {
+  lm(prop_studying ~ year, data = data)
+}
+
+pct <- function(x) {
+  round(x * 100, 1)
+}
+
+trend_per_decade <- function(model) {
+  model_coef <- coef(model)
+  year_term <- model_coef[["year"]] * 10
+  year_as_percent <- pct(year_term)
+  year_as_percent
+}
+```
+
+```{r}
+model <- lm(prop_studying ~ state_territory, data = young)
+model
+trend_per_decade(model)
+```
+
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+:::
 
 #### Using RStudio interface for debugging
 
@@ -368,23 +481,8 @@ the environment pane showing the function's locals rather than the workspace,
 and the Next / Continue / Stop toolbar. Only Nick can take this, it has to be
 his RStudio. Noted in dev/njt-todo.md. -->
 
-### When you can't get there at all
 
-Sometimes the failure is somewhere you'd never think to put a `browser()`, five functions deep in a package.
-
-```r
-options(error = recover)
-```
-
-Now, whenever an error happens, R shows you the same frames `traceback()` would, and lets you pick one to stand inside. It's `browser()` after the fact, at any level of the stack.
-
-It's aggressive, so turn it off when you're done:
-
-```r
-options(error = NULL)
-```
-
-::: {.callout-note title="Your Turn"}
+::: {.callout-note title="Your Turn: a function you cannot edit"}
 
 <details>
 <summary>Setup code</summary>
@@ -397,21 +495,16 @@ options(error = NULL)
 
 </details>
 
-Here's a function with something wrong in it. It's meant to give the percentage studying for one state, and it gives you nothing useful.
+`read_education()` lives in `ch1/read_education.R`. Pretend you did not write it and would rather not open it.
 
 ```r
-state_pct <- function(data, state) {
-  rows <- filter(data, state_territory == state)
-  round(sum(rows$n_studying) / sum(rows$population) * 100, 1)
-}
-
-state_pct(ed_2023, state = "Tasmania")
+read_education(2009)
 ```
 
-1. Run it. What do you get, and is it an error?
-2. Put a `browser()` on the line after `rows` is created, and run it again.
-3. At the prompt, look at `state`, then `nrow(rows)`, then `unique(data$state_territory)`.
-4. Fix the call.
+1. Run it. Where does the message say the problem is?
+2. Use `debugonce(read_education)` and run it again.
+3. Press `n` twice, and look at `files` after each one.
+4. What would you tell the person who wrote it?
 
 ```{r}
 #| echo: false
@@ -422,15 +515,116 @@ countdown(minutes = 6)
 <details>
 <summary>Answer</summary>
 
-You get `NaN`, and no error. `sum()` of nothing is 0, and 0 divided by 0 is `NaN`.
+The message names a path that does not exist, which is genuinely useful, and it names it from somewhere inside `readr`.
 
-At the prompt, `nrow(rows)` is 0 and `unique(data$state_territory)` shows `"Tas."` rather than `"Tasmania"`. The data uses the abbreviation.
+Stepping through, `files` is built before anything is read, so you can see the wrong path exist as a value before it becomes an error.
 
-```r
-state_pct(ed_2023, state = "Tas.")
+What you would tell them: nothing checks the year before building a path out of it. `read_education(2009)` and `read_education("banana")` both fail the same way, deep inside a package, when either could have been caught in the first line.
+
+</details>
+
+:::
+
+
+::: {.callout-note title="Your Turn: stepping through"}
+
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs", "setup-data", "the-functions"]
+#| eval: false
+#| echo: true
 ```
 
-Worth noticing that the debugger did not tell you the answer. It showed you two values, and you worked it out. That's the whole job.
+</details>
+
+This one has no bug. You are practising the controls.
+
+```r
+tas <- filter(young, state_territory == "Tas.")
+
+debugonce(trend_per_decade)
+
+trend_per_decade(fit_trend(tas))
+```
+
+1. At the prompt, type `s`. Where are you now?
+2. Type `x`. What is it, and where did it come from?
+3. Type `f` to finish, then `c` to carry on.
+4. Try it again with `Q` instead. What is different?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+
+<details>
+<summary>Answer</summary>
+
+`s` steps *into* the next function rather than over it, so you land inside `pct()`, one level down. The prompt still says `Browse[1]>` but `debug at #1` names a different line.
+
+`f` finishes the function you are standing in and drops you back out. `c` runs to the end and gives you the answer. `Q` stops everything and gives you nothing.
+
+The difference between `f` and `c` is the one worth having. `f` is "I have seen enough of this one", `c` is "I have seen enough of all of it".
+
+</details>
+
+:::
+
+
+::: {.callout-note title="Your Turn: no error at all"}
+
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs", "setup-data", "the-functions"]
+#| eval: false
+#| echo: true
+```
+
+</details>
+
+Everything so far has stopped with an error. This one does not.
+
+```r
+young_fit <- fit_trend(young)
+
+trend_per_decade(young_fit)
+#> 0
+```
+
+Zero. No change at all, over ten years, nationally. Nothing complains.
+
+1. Do you believe it? Say why or why not before you touch anything.
+2. `debugonce(trend_per_decade)`, run it again, and look at `nobs(model)`. How many rows went in?
+3. How many years are in this data?
+4. Work out what the zero actually is.
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 8)
+```
+
+<details>
+<summary>Answer</summary>
+
+`nobs(model)` is 80, and there are ten years. So it fitted one straight line through all eight states at once.
+
+```r
+trend_per_decade(fit_trend(filter(young, state_territory == "Tas.")))
+#> -1.4
+
+trend_per_decade(fit_trend(filter(young, state_territory == "Qld")))
+#> 3.6
+```
+
+Tasmania is falling, Queensland is rising, and pooling them gives zero because they cancel. The zero is not a measurement, it is an average of things that disagree.
+
+This is the one to take away. There was no error and no warning, so nothing was ever going to tell you. `nobs()` took one command, and you only ran it because you did not believe the number.
 
 </details>
 
@@ -441,69 +635,13 @@ Worth noticing that the debugger did not tell you the answer. It showed you two 
 - `browser()` stops inside the function and gives you a normal R prompt
 - `n`, `c` and `Q` are most of what you need at that prompt
 - `debugonce()` does it to a function you didn't write, and `debug()` does it until you stop it
-- `options(error = recover)` catches failures you couldn't put a `browser()` near
 - A breakpoint in the margin is the same thing with the mouse
-
-## Looking inside code that works
-
-Everything so far has been about code that stopped.
-
-The failures I actually worry about are the ones that don't. Here's the worst kind, and it's sitting in the folder you downloaded.
-
-`data/raw` holds the same education data, before anybody cleaned it up. Six years of it. Let's read the lot.
-
-```{r}
-#| label: raw-read
-#| message: false
-raw <- read_csv(list.files(here("data/raw"), full.names = TRUE))
-
-nrow(raw)
-```
-
-`r nrow(raw)` rows. No error. No warning. Nothing in red.
-
-Now look at it.
-
-```{r}
-#| label: raw-ages
-length(unique(raw$age_group))
-```
-
-There are nine age groups in this data. R has found `r length(unique(raw$age_group))`.
-
-```{r}
-#| label: raw-ages-show
-head(sort(unique(raw$age_group)), 12)
-```
-
-The separator changes between years. Somebody used a hyphen, then a double hyphen, then a full stop, and every variant became its own category.
-
-It gets better.
-
-```{r}
-#| label: raw-mean
-mean(raw$prop_studying)
-```
-
-Missing values are coded `-99` in some years, `9999` in others, and literal `Inf` in one. So the mean of a proportion, a number that cannot leave the range 0 to 1, is infinity.
-
-**Nothing told us any of this.** The read worked. The code ran. Every number that came out was the wrong number, and R was perfectly happy.
-
-This is why the chapter is called looking inside a function rather than fixing a broken one. `browser()` is not only for when things stop. It's for standing in the middle of something that ran fine and asking whether you believe it.
-
-In statistics we usually can't test our way to confidence, because there's no known right answer to compare against. Which leaves looking.
-
-### Takehomes
-
-- The failures that hurt are the ones that don't raise anything
-- Reading six files gave 89 age groups and a mean of `Inf`, silently
-- `browser()` is a reading tool, not only a repair tool
-- If nothing is going to tell you, you have to go and look
 
 ## Summary {.unnumbered}
 
-1. **An error means R stopped rather than guessed.** Read it before you change anything.
-2. **The message is right about what and wrong about where.** It names where the error was raised, not where it was caused.
-3. **`traceback()` reads bottom up.** The bottom frame is your code.
-4. **`browser()` puts you inside the function** with a normal prompt and every value to hand.
-5. **`debugonce()` for somebody else's function**
+1. **Some messages give you nothing to act on.** When reading harder will not help, go and look.
+2. **The mistake is often upstream** of the function that failed.
+3. **`browser()` puts you inside the function** with a normal prompt and every value to hand.
+4. **`debugonce()` for a function you did not write.** `debug()` keeps going until you stop it.
+5. **`n`, `s`, `f`, `c` and `Q`** are the controls worth knowing.
+6. **The debugger shows you values.** You still do the working out.
