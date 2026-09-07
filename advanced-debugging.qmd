@@ -1,0 +1,237 @@
+# Advanced debugging {#sec-advanced-debugging}
+
+[Looking inside a function](looking-inside-a-function.qmd) is about `browser()` and `debugonce()`, and about a wrong answer that arrives with no message at all.
+
+This appendix is the other half: what to do when R does stop and tell you something.
+
+::: {.overview}
+
+## Overview {.unnumbered}
+
+**Questions**
+
+- How do I read an R error message?
+- How do I find where the error actually came from?
+- What do I do when the failure is somewhere I cannot reach?
+
+```{r}
+#| label: pkgs
+#| output: false
+library(countdown)
+library(dplyr)
+library(readr)
+library(glue)
+library(here)
+```
+
+```{r}
+#| label: setup-data
+#| output: false
+education_path <- function(year) {
+  here(glue("data/tidy/education_{year}.csv"))
+}
+
+year_from_path <- function(path) {
+  basename(path) |>
+    parse_number()
+}
+
+read_education <- function(year) {
+  files <- education_path(year)
+  education_raw <- read_csv(files, id = "path")
+
+  education_raw |>
+    mutate(year = year_from_path(path)) |>
+    select(-path)
+}
+
+education <- read_education(2014:2023)
+
+ed_2023 <- filter(education, year == 2023)
+```
+
+:::
+
+## Errors are normal
+
+I need you to know that errors are normal, and that I run into them all the time. The thing that you get better at with experience, is knowing how to read the error messages, diagnose issues, and solve them. You get faster.
+
+So, errors are normal. But they can still be frustrating! I want you to practice **reframing** errors. They are R trying its best to help you.
+
+But let's talk through breaking down an error message.
+
+:::{.callout-note title="Your Turn: errors and you"}
+
+I'm curious to learn more about your experience with errors. Can you answer the following:
+
+- How do you view errors?
+- What was your most recent error?
+- How did you resolve a recent error message?
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+:::
+
+### Takehomes
+
+- An error means R stopped rather than guessed
+- Red text is not a judgement
+- Read the message before you change anything
+
+## Reading an error message
+
+Here's one from the function you wrote in chapter 1. I've asked for a year we don't have.
+
+```{r}
+#| label: err-2005
+#| error: true
+read_education(2005)
+```
+
+The error says (something like)
+
+```
+Error:
+! /Users/nick_1/consulting/training/course-materials/fun2debug/data/tidy/education_2005.csv does
+  not exist.
+Run `rlang::last_trace()` to see where the error occurred.
+Called from: signal_abort(cnd, .file)
+```
+
+My process for resolving an error message looks something like the following:
+
+- Read the headline error message
+- Do I see something familiar?
+- Did I do something unexpected?
+- Have I seen this error message before?
+- How did I resolve it?
+
+Here it says somewhat plainly:
+
+```
+/Users/nick_1/consulting/training/course-materials/fun2debug/data/tidy/education_2005.csv does not exist.
+```
+
+So I would look inside `data/tidy/` and look for whether that file is there.
+If it isn't, I know I need to refer to data that is present - my mistake.
+If `data/tidy/` contains data with the name "education_2005.csv", then I would dig deeper:
+
+ - Is the filepath I am specifying correct?
+ - Is there something concernening with the working directory?
+
+::: {.callout-note title="Your Turn: Explore error messages"}
+
+<details>
+<summary>Setup code</summary>
+
+```{r}
+#| ref.label: ["pkgs", "setup-data"]
+#| eval: false
+#| echo: true
+```
+
+</details>
+
+Run each of these. For each one, read out aloud the error message. Follow the process:
+
+> - Read the headline error message
+> - Do I see something familiar?
+> - Did I do something unexpected?
+> - Have I seen this error message before?
+> - How did I resolve it?
+
+
+```{r}
+#| error: true
+read_education(2005)
+
+education |> filter(stat_territory = "Tas.")
+education |> filter(stat_territory == "Tas.")
+
+pct_studying(ed_2023)
+```
+
+The third one hasn't been defined this session, so you'll get a different kind of error again.
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 4)
+```
+
+:::
+
+### Takehomes
+
+- Read the headline error message
+- Do I see something familiar?
+- Did I do something unexpected?
+- Have I seen this error message before?
+- How did I resolve it?
+
+## Using `traceback()` to understand error origins
+
+To tease apart an eror, you can get a lot out of following it `back`. This is called a traceback.
+
+```{r}
+#| error: true
+read_education(2005)
+traceback()
+```
+
+**Read the output from the bottom.** 
+
+This is called a "trace stack". It contains all the individual steps/moments from the function.
+
+- Frame 1: the thing you typed
+- Frame 2: What the function called
+- Frames 3,4,5, etc - inside of readr...getting further down the script/function 
+
+The way I usually look at this is to find the lowest frame that is still my code, and start from there.
+
+### `rlang::last_trace()` over `traceback()`
+
+`rlang::last_trace()` does the same job as `traceback()`, but prints it the right way up.
+
+```{r}
+#| error: true
+education |> filter(age_grp == "15_19")
+
+rlang::last_trace()
+```
+
+Same idea, nicer presentation, and it works on the errors you'll hit most often.
+
+### Takehomes
+
+- `traceback()` shows the chain of calls that led to the error
+- Read it from the bottom up, because the bottom is your code
+- `rlang::last_trace()` is the tidyverse equivalent and prints it the right way up
+
+### When you can't get there at all
+
+Sometimes the failure is somewhere you'd never think to put a `browser()`, five functions deep in a package.
+
+```r
+options(error = recover)
+```
+
+Now, whenever an error happens, R shows you the same frames `traceback()` would, and lets you pick one to stand inside. It's `browser()` after the fact, at any level of the stack.
+
+It's aggressive, so turn it off when you're done:
+
+```r
+options(error = NULL)
+```
+
+
+::: {.callout-tip title="Debugging inside map() and lapply()"}
+
+Running a function over many inputs makes debugging harder, because `browser()` fires once per element and you land in there ten times over.
+
+Two things help. `debugonce()` only stops the first time, which is usually the one you want. And pulling the failing element out and calling the function on it on its own turns a loop problem back into an ordinary one.
+
+:::

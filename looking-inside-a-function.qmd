@@ -136,10 +136,13 @@ OK! Interesting! Slightly negative effect.
 Let's try another state: Queensland.
 
 ```{r}
-#| eval: false
+#| label: young
 young <- education |> filter(age_group == "15_19")
 young
+```
 
+```{r}
+#| error: true
 young |> 
   filter(state_territory == "Queensland") |> 
   fit_study_trend()
@@ -169,6 +172,13 @@ young |>
 Ah! I see.
 
 But what if we want to see inside the function? Is there a way to do that? Like, to look inside of `fit_study_trend()`, and see what it sees?
+
+
+### Takehomes
+
+- An error message tells you what stopped, and often names a place you did not write
+- Guessing at the cause and then testing the guess is a reasonable first move
+- It stops telling you things once you need to know what a value was
 
 ## `browser()`: How to browse inside a function
 
@@ -283,7 +293,7 @@ help       show help
 Browse[1]>
 ```
 
-There are five commands that are really worth knowing:
+There are five commands that I think are worthwhile knowing:
 
 - `n` runs the next line
 - `c` continues to the end
@@ -325,6 +335,16 @@ fit_study_filtered <- function(data, state, age){
 4. Practice looking for help with `help`
 5. Try using `s` on one of the lines. What happens?
 6. Practice using `Q`
+
+
+<details>
+<summary>Answer</summary>
+
+<!-- TODO: Nick to fill. A model session rather than a solution, since this one
+is about the controls. A short transcript of what your prompt looked like is
+probably enough. -->
+
+</details>
 
 :::
 
@@ -413,6 +433,14 @@ Just like in "outside in, inside out", it was useful to move between writing fun
 
 I first heard about the phrase, "Up and down the ladder of abstraction" from [Bret Victor](https://worrydream.com/), in his [Up and Down the Ladder of Abstraction](https://worrydream.com/LadderOfAbstraction/) talk. It's a really cool talk on the power of getting interactivity in debugging, and how that leads to other creative solutions.
 
+
+### Takehomes
+
+- `browser()` stops inside the function and gives you an ordinary R prompt
+- The environment pane switches to the function's own environment
+- `n`, `c`, `Q`, `f` and `s` are the five controls
+- The debugger shows you values, you still do the working out
+
 ### You can't always `browser()`
 
 Some of the downsides to using `browser()` are that you cannot always use it, because you might not be able to hand place a `browser()` in a function from another package.
@@ -433,26 +461,20 @@ Now, practice the same thing you did before with browser, but:
 4. finish by typing `f`
 5. Now practice using `debug(trend_per_decade)`, and make sure to use `undebug()` on it, too
 
+<details>
+<summary>Setup code</summary>
+
 ```{r}
-#| label: the-functions
-
-fit_study_trend <- function(data) {
-  lm(prop_studying ~ year, data = data)
-}
-
-pct <- function(x) {
-  round(x * 100, 1)
-}
-
-trend_per_decade <- function(model) {
-  model_coef <- coef(model)
-  year_term <- model_coef[["year"]] * 10
-  year_as_percent <- pct(year_term)
-  year_as_percent
-}
+#| ref.label: ["pkgs", "setup-data", "the-functions"]
+#| eval: false
+#| echo: true
 ```
 
+</details>
+
 ```{r}
+#| label: debugonce-model
+#| error: true
 model <- lm(prop_studying ~ state_territory, data = young)
 model
 trend_per_decade(model)
@@ -464,6 +486,16 @@ trend_per_decade(model)
 #| eval: !expr knitr::is_html_output()
 countdown(minutes = 5)
 ```
+
+<details>
+<summary>Answer</summary>
+
+<!-- TODO: Nick to fill. A model session rather than a solution, since this one
+is about the controls. A short transcript of what your prompt looked like is
+probably enough. -->
+
+</details>
+
 :::
 
 #### Using RStudio interface for debugging
@@ -565,7 +597,7 @@ countdown(minutes = 5)
 
 `f` finishes the function you are standing in and drops you back out. `c` runs to the end and gives you the answer. `Q` stops everything and gives you nothing.
 
-The difference between `f` and `c` is the one worth having. `f` is "I have seen enough of this one", `c` is "I have seen enough of all of it".
+The difference between `f` and `c` is subtle. Basically `f` will **f**inish the current loop, or step, and you might then stay inside the function. Whereas `c` will immediately exit the browser and run the remaining code.
 
 </details>
 
@@ -641,5 +673,5 @@ This is the one to take away. There was no error and no warning, so nothing was 
 2. **The mistake is often upstream** of the function that failed.
 3. **`browser()` puts you inside the function** with a normal prompt and every value to hand.
 4. **`debugonce()` for a function you did not write.** `debug()` keeps going until you stop it.
-5. **`n`, `s`, `f`, `c` and `Q`** are the controls worth knowing.
-6. **The debugger shows you values.** You still do the working out.
+5. **`n`, `s`, `f`, `c` and `Q`** are the controls I think you should be familiar with
+6. **The debugger shows you values.** But it's still up to you to work out the issues.

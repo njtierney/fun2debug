@@ -273,6 +273,42 @@ It's OK if yours look different, that's fine! What we want to focus on is if you
 
 :::
 
+
+:::{.callout-tip title="Going Deeper: Practicing 'outside in' with new data" collapse="true"}
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+
+OK, now let's practice writing this again, but with a smaller example.
+
+The dataset is at:
+
+And can be downloaded with the following code:
+
+```{r}
+brolga_counts <- read_csv("data/animals/brolga_year_month.csv")
+
+brolga_counts
+```
+
+This data contains monthly counts of the number [brolga](https://en.wikipedia.org/wiki/Brolga) seen in Australia.
+
+There are only three columns: 
+
+- year
+- month
+- n
+
+Your question is:
+
+> Which year was the first year to have a complete number of months of records?
+
+:::
+
+
 ### Takehomes
 
 - Outside-in is where you write the function signature before the function body
@@ -282,7 +318,6 @@ It's OK if yours look different, that's fine! What we want to focus on is if you
   - its outputs
 - Keep you at a higher level of analysis. You don't get bogged down in details
 - `{fnmate}` can help you rapidly prototype functions
-
 
 ## Inside-out
 
@@ -344,7 +379,7 @@ ggplot(tas_young, aes(x = year, y = prop_studying)) +
 ```
 
 
-### Making more lines
+### Add more lines
 
 Let's make the plot for the other states and territories.
 

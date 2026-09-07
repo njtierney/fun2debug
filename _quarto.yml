@@ -45,10 +45,12 @@ book:
     - "dont-re-read-yourself.qmd"
     - "anatomy-of-a-function.qmd"
     - "outside-in-inside-out.qmd"
-    # - "looking-inside-a-function.qmd"
+    - "looking-inside-a-function.qmd"
     # - "from-script-to-functions.qmd"
     # - "measure-before-you-optimise.qmd"
     # - "writing-for-your-future-self.qmd"
+  appendices:
+    - "advanced-debugging.qmd"
 
 # Only `##` and above get a number.
 number-depth: 2

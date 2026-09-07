@@ -28,12 +28,12 @@ ggplot(education_tas, aes(x = year, y = n_studying)) +
 # Write out the steps you need to take to answer this question.
 
 # Read in education data
-education <- read_education(2014:2023)
+ozed <- read_education(2014:2023)
 # tidy it up
 # already tidy?
 # filter down to just the youngest and eldest for each state
 # education_young_old <- filter_young_old(education)
-education_young_old <- education |>
+education_young_old <- ozed |>
   group_by(state_territory) |>
   filter(age_group %in% c("15_19", "55_74")) |>
   arrange(state_territory, year, age_group)
@@ -106,8 +106,8 @@ ggplot(
 # how to source all the files?
 list.files("R/", full.names = TRUE) |> lapply(source, echo = FALSE)
 
-education <- read_education(2014:2023)
-education_young_old <- filter_young_old(education)
+ozed <- read_education(2014:2023)
+education_young_old <- filter_young_old(ozed)
 education_wide <- education_pivot_wide(education_young_old)
 education_age_diff <- education_add_diff(education_wide)
 gg_education_diff <- plot_education_diff(education_age_diff)
@@ -116,9 +116,9 @@ gg_education_diff
 # inside out:
 # How many Australians are studying, by age group and by state, and is that changing?
 
-education <- read_education(2014:2023)
+ozed <- read_education(2014:2023)
 
-young_tas <- education |>
+young_tas <- ozed |>
   filter(state_territory == "Tas.", age_group == "15_19")
 
 young_tas
@@ -126,7 +126,7 @@ young_tas
 ggplot(young_tas, aes(x = year, y = prop_studying)) +
   geom_line()
 
-education_tas <- education |>
+education_tas <- ozed |>
   filter(state_territory == "Tas.")
 
 education_tas
@@ -145,8 +145,14 @@ ggplot(education_tas, aes(x = year, y = prop_studying)) +
   facet_wrap(vars(age_group))
 
 plot_education_state <- function(data, state) {
-  filtered_data <- data |>
-    filter(....)
+  education_subset <- data |>
+    filter(state_territory == state)
 
-  ggplot(filtered_data, aes(x = ...))
+  ggplot(education_subset, aes(x = year, y = prop_studying)) +
+    geom_line() +
+    geom_point() +
+    facet_wrap(vars(age_group))
 }
+
+plot_education_state(education, "Tas.")
+plot_education_state(education, "NSW")
