@@ -72,17 +72,7 @@ ed_2023 <- filter(education, year == 2023)
 
 I need you to know that errors are normal, and that I run into them all the time. The thing that you get better at with experience, is knowing how to read the error messages, diagnose issues, and solve them. You get faster.
 
-But, for fun, here are the some most recent R error messages:
-
-```
-Error: unexpected symbol in:
-"    y = "Studying"
-    title"
-```
-
-
-
-So, errors are normal. But they can still be frustrating! I want you to practice **reframing** errors. They are R trying its best to help you. 
+So, errors are normal. But they can still be frustrating! I want you to practice **reframing** errors. They are R trying its best to help you.
 
 But let's talk through breaking down an error message.
 
