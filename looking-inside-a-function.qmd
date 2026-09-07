@@ -178,17 +178,6 @@ The third one hasn't been defined this session, so you'll get a different kind o
 countdown(minutes = 4)
 ```
 
-<details>
-<summary>Answer</summary>
-
-The first names the missing file, which is the *what*, and an anonymous function inside readr, which is a useless *where*.
-
-The second is a dplyr error, and it's better on both counts. It names the column that doesn't exist and it tells you it happened in `filter()`, which is a function you actually called.
-
-The third is `could not find function "pct_studying"`. There's no *where* at all, because nothing ran. That message means "you have not defined this", and nine times out of ten it means you forgot to run the chunk that defines it.
-
-</details>
-
 :::
 
 ### Takehomes
