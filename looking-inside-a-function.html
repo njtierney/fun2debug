@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; Looking inside a function – Introduction to Functions and Debugging</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./advanced-debugging.html" rel="next">
+<link href="./outside-in-inside-out.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b45b7b0fa9169e986df15f1ef60a279c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-13182358bc67e160affdadb17fc670fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/countdown-0.6.0/countdown.css" rel="stylesheet">
+<script src="site_libs/countdown-0.6.0/countdown.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./looking-inside-a-function.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Looking inside a function</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Functions and Debugging</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/njtierney/fun2debug" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dont-re-read-yourself.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Don’t re-read yourself</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anatomy-of-a-function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Anatomy of a function</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./outside-in-inside-out.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Outside-in, inside-out</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./looking-inside-a-function.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Looking inside a function</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./advanced-debugging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Advanced debugging</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#is-the-proportion-of-people-studying-changing-over-time" id="toc-is-the-proportion-of-people-studying-changing-over-time" class="nav-link" data-scroll-target="#is-the-proportion-of-people-studying-changing-over-time"><span class="header-section-number">4.1</span> Is the proportion of people studying changing over time?</a>
+  <ul class="collapse">
+  <li><a href="#takehomes" id="toc-takehomes" class="nav-link" data-scroll-target="#takehomes">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#browser-how-to-browse-inside-a-function" id="toc-browser-how-to-browse-inside-a-function" class="nav-link" data-scroll-target="#browser-how-to-browse-inside-a-function"><span class="header-section-number">4.2</span> <code>browser()</code>: How to browse inside a function</a>
+  <ul class="collapse">
+  <li><a href="#up-and-down-the-ladder-of-abstraction" id="toc-up-and-down-the-ladder-of-abstraction" class="nav-link" data-scroll-target="#up-and-down-the-ladder-of-abstraction">Up and down the ladder of abstraction</a></li>
+  <li><a href="#takehomes-1" id="toc-takehomes-1" class="nav-link" data-scroll-target="#takehomes-1">Takehomes</a></li>
+  <li><a href="#you-cant-always-browser" id="toc-you-cant-always-browser" class="nav-link" data-scroll-target="#you-cant-always-browser">You can’t always <code>browser()</code></a></li>
+  <li><a href="#takehomes-2" id="toc-takehomes-2" class="nav-link" data-scroll-target="#takehomes-2">Takehomes</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li>Links</li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/looking-inside-a-function.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-looking-inside" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Looking inside a function</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Writing a function is like putting your code into a box.</p>
+<p>Or, for a physical analogy, it is like getting a bunch of complex wiring and circuitry, and building a box around it, and only adding the dials and buttons you need it to do the task.</p>
+<p>Imagine a TV remote: you use a TV remote and only touch the relevant buttons to change the channel, increase the volume, and use the arrow buttons to browse the right streaming service, peruse settings, etc.</p>
+<p>You don’t want to hold the bare circuit board, battery, and wires. You want the nice sleek remote someone designed. You want to just worry about the interface.</p>
+<!-- ![](placeholder scrappy drawing of this) -->
+<p>I think this is the main benefit of a function - it is an expression of a sequence of steps into something easier to reason with. A function simplifies the complex - sometimes this is called “abstracting away complexity”.</p>
+<p>Making your function be a thing that removes complexity is good. But, you also need to be able to look inside your function to understand how it works - especially when something breaks!</p>
+<p>If we teach you how to build a nice box, but don’t teach you how to open it, we aren’t really teaching you how to write functions.</p>
+<p>This chapter is about how to look inside a function, so you can understand how it works, and how to unpack some of the errors or common failure points.</p>
+<section id="overview" class="level2 unnumbered overview">
+<h2 class="unnumbered anchored" data-anchor-id="overview">Overview</h2>
+<p><strong>Duration</strong> 60 minutes</p>
+<p><strong>Questions</strong></p>
+<!-- These map onto the sections below, in order. If you move a section, move its question. -->
+<ul>
+<li>How do I look inside a function I wrote?</li>
+<li>How do I look inside a function I did not write?</li>
+</ul>
+<p><strong>What you need this session</strong></p>
+<ul>
+<li>A session of RStudio open, in the same folder as last time</li>
+<li>The following R packages:</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-label="2"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-label="3"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-label="4"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-label="5"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-label="2"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-label="3"></a>}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-label="4"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-label="5"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb2-6"><a href="#cb2-6" aria-label="6"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-label="7"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb2-8"><a href="#cb2-8" aria-label="8"></a>}</span>
+<span id="cb2-9"><a href="#cb2-9" aria-label="9"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-label="10"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb2-11"><a href="#cb2-11" aria-label="11"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-label="12"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-label="13"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-label="14"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-label="15"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-label="16"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-label="17"></a>}</span>
+<span id="cb2-18"><a href="#cb2-18" aria-label="18"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-label="19"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-label="20"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-label="21"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="is-the-proportion-of-people-studying-changing-over-time" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="is-the-proportion-of-people-studying-changing-over-time"><span class="header-section-number">4.1</span> Is the proportion of people studying changing over time?</h2>
+<p>We are back at the education data:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 720 Columns: 6
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): state_territory, age_group
+dbl (3): n_studying, population, prop_studying
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-label="1"></a>education</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 720 × 6
+   state_territory age_group n_studying population prop_studying  year
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;
+ 1 ACT             15_19           19.3       23.8        0.811   2014
+ 2 ACT             20_24           18.1       31.6        0.573   2014
+ 3 ACT             25_29            9.4       34.9        0.269   2014
+ 4 ACT             30_34            4.5       32.8        0.137   2014
+ 5 ACT             35_39            4.5       28.7        0.157   2014
+ 6 ACT             40_44            2.6       28.4        0.0915  2014
+ 7 ACT             45_49            1         24.2        0.0413  2014
+ 8 ACT             50_54            3         24          0.125   2014
+ 9 ACT             55_74            2.1       67.2        0.0312  2014
+10 NSW             15_19          388.       462.         0.841   2014
+# ℹ 710 more rows</code></pre>
+</div>
+</div>
+<p>We are going to explore the question:</p>
+<blockquote class="blockquote">
+<p>Is the proportion of people studying, changing over time?</p>
+</blockquote>
+<p>We can look at a general sense of this by looking at the data - looking at the proportion of people studying in each year, for all age groups and states:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-label="1"></a><span class="fu">ggplot</span>(education,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-label="2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> year,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-label="3"></a>           <span class="at">y =</span> prop_studying)) <span class="sc">+</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-label="4"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="looking-inside-a-function_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>But let’s explore just looking at 15-19 year olds in Tasmania:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a>tas <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span> <span class="fu">filter</span>(state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-label="2"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-label="3"></a>young_tas <span class="ot">&lt;-</span> tas <span class="sc">|&gt;</span> <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"15_19"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-label="4"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-label="5"></a>young_tas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   state_territory age_group n_studying population prop_studying  year
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;
+ 1 Tas.            15_19           28.5       33.1         0.861  2014
+ 2 Tas.            15_19           27.6       33.9         0.814  2015
+ 3 Tas.            15_19           25.7       32.4         0.793  2016
+ 4 Tas.            15_19           26         32.4         0.802  2017
+ 5 Tas.            15_19           26.9       31.3         0.859  2018
+ 6 Tas.            15_19           24.6       29.9         0.823  2019
+ 7 Tas.            15_19           26         31.2         0.833  2020
+ 8 Tas.            15_19           26.2       30.9         0.848  2021
+ 9 Tas.            15_19           25.9       31.5         0.822  2022
+10 Tas.            15_19           24.8       31.3         0.792  2023</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a><span class="fu">ggplot</span>(young_tas,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-label="2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> year, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-label="3"></a>           <span class="at">y =</span> prop_studying)) <span class="sc">+</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-label="4"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-label="5"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="looking-inside-a-function_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s write a function to explore fitting a linear model. In essence, a linear model here will try and fit a straight line of best fit, through all of the data.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>fit_study_trend <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
+<span id="cb11-2"><a href="#cb11-2" aria-label="2"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> data)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-label="3"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We would say:</p>
+<blockquote class="blockquote">
+<p>Predict proportion of studying by Year</p>
+</blockquote>
+<p>Let’s do it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a><span class="fu">fit_study_trend</span>(young_tas)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = prop_studying ~ year, data = data)
+
+Coefficients:
+(Intercept)         year  
+   3.668775    -0.001409  </code></pre>
+</div>
+</div>
+<p>OK! Interesting! Slightly negative effect.</p>
+<p>Let’s try another state: Queensland.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a>young <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span> <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"15_19"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-label="2"></a>young</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 80 × 6
+   state_territory age_group n_studying population prop_studying  year
+   &lt;chr&gt;           &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;
+ 1 ACT             15_19           19.3       23.8         0.811  2014
+ 2 NSW             15_19          388.       462.          0.841  2014
+ 3 NT              15_19           11.2       15.4         0.727  2014
+ 4 Qld             15_19          234.       306.          0.767  2014
+ 5 SA              15_19           83.3      100.          0.830  2014
+ 6 Tas.            15_19           28.5       33.1         0.861  2014
+ 7 Vic.            15_19          310.       357.          0.867  2014
+ 8 WA              15_19          119.       159.          0.745  2014
+ 9 ACT             15_19           20.5       22.7         0.903  2015
+10 NSW             15_19          389.       460.          0.845  2015
+# ℹ 70 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-label="1"></a>young <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-label="2"></a>  <span class="fu">filter</span>(state_territory <span class="sc">==</span> <span class="st">"Queensland"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-label="3"></a>  <span class="fu">fit_study_trend</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `lm.fit()`:
+! 0 (non-NA) cases</code></pre>
+</div>
+</div>
+<p>Womp. Let’s read this error message:</p>
+<pre><code>Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Called from: lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...)</code></pre>
+<p>OK, so we use <code>lm()</code>, and I guess <code>lm.fit()</code> is used somewhere.</p>
+<p>The key seems to be:</p>
+<blockquote class="blockquote">
+<p>0 (non-NA) cases</p>
+</blockquote>
+<p>My guess would be that this is related to there not being any cases? Let’s test this idea:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-label="1"></a>young <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-label="2"></a>  <span class="fu">filter</span>(state_territory <span class="sc">==</span> <span class="st">"Queensland"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 6
+# ℹ 6 variables: state_territory &lt;chr&gt;, age_group &lt;chr&gt;, n_studying &lt;dbl&gt;,
+#   population &lt;dbl&gt;, prop_studying &lt;dbl&gt;, year &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Ah! I see.</p>
+<p>But what if we want to see inside the function? Is there a way to do that? Like, to look inside of <code>fit_study_trend()</code>, and see what it sees?</p>
+<section id="takehomes" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes">Takehomes</h3>
+<ul>
+<li>An error message tells you what stopped, and often names a place you did not write</li>
+<li>Guessing at the cause and then testing the guess is a reasonable first move</li>
+<li>It stops telling you things once you need to know what a value was</li>
+</ul>
+</section>
+</section>
+<section id="browser-how-to-browse-inside-a-function" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="browser-how-to-browse-inside-a-function"><span class="header-section-number">4.2</span> <code>browser()</code>: How to browse inside a function</h2>
+<p>Error messages will only take you so far. Reading an error message can tell you where an error happens, but it doesn’t show you what the values are inside the function.</p>
+<p>If we wrote this out as a script:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-label="1"></a>young_qld <span class="ot">&lt;-</span> young <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-label="2"></a>  <span class="fu">filter</span>(state_territory <span class="sc">==</span> <span class="st">"Queensland"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-label="3"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-label="4"></a>fit_young_qld <span class="ot">&lt;-</span> <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> young_qld)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `lm.fit()`:
+! 0 (non-NA) cases</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-label="1"></a>fit_young_qld</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error:
+! object 'fit_young_qld' not found</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-label="1"></a>young_qld</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 6
+# ℹ 6 variables: state_territory &lt;chr&gt;, age_group &lt;chr&gt;, n_studying &lt;dbl&gt;,
+#   population &lt;dbl&gt;, prop_studying &lt;dbl&gt;, year &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>This used to be my process for exploring functions, when I wanted to understand how they worked, or if they had errors:</p>
+<ul>
+<li>Pull the function body out</li>
+<li>Set the arguments of your function</li>
+<li>Run the script line by line</li>
+</ul>
+<p>The process did work. But it is also a bit of a missed opportunity to explore the function. It also has some shortfalls:</p>
+<ul>
+<li>copying the body of the function takes time</li>
+<li>You open yourself up to copy/paste errors</li>
+<li>What happens when you want to explore another function?</li>
+</ul>
+<p>You can save yourself this pain, of copying code out of a function, by using a function called <code>browser()</code>.</p>
+<p>Imagine we had our function like this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-label="1"></a>fit_study_filtered <span class="ot">&lt;-</span> <span class="cf">function</span>(data, state, age){</span>
+<span id="cb27-2"><a href="#cb27-2" aria-label="2"></a>  new_data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-label="3"></a>    <span class="fu">filter</span>(state_territory <span class="sc">==</span> state,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-label="4"></a>           age_group <span class="sc">==</span> age)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-label="5"></a>  </span>
+<span id="cb27-6"><a href="#cb27-6" aria-label="6"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> new_data)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-label="7"></a>}</span>
+<span id="cb27-8"><a href="#cb27-8" aria-label="8"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-label="9"></a><span class="fu">fit_study_filtered</span>(education, <span class="st">"Queensland"</span>, <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `lm.fit()`:
+! 0 (non-NA) cases</code></pre>
+</div>
+</div>
+<p>In order to see inside the function, place <code>browser()</code> inside the code:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-label="1"></a>fit_study_filtered <span class="ot">&lt;-</span> <span class="cf">function</span>(data, state, age){</span>
+<span id="cb29-2"><a href="#cb29-2" aria-label="2"></a>  <span class="fu">browser</span>()</span>
+<span id="cb29-3"><a href="#cb29-3" aria-label="3"></a>  new_data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-label="4"></a>    <span class="fu">filter</span>(state_territory <span class="sc">==</span> state,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-label="5"></a>           age_group <span class="sc">==</span> age)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-label="6"></a>  </span>
+<span id="cb29-7"><a href="#cb29-7" aria-label="7"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> new_data)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-label="8"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Then, the next time you call the function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-label="1"></a><span class="fu">fit_study_filtered</span>(education, <span class="st">"Queensland"</span>, <span class="st">"15_19"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>R stops, and gives you a prompt - something like the following:</p>
+<pre><code>Called from: fit_study_filtered(education, "Queensland", "15_19")
+Browse[1]&gt; </code></pre>
+<p>The special thing to note is:</p>
+<pre><code>Browse[1]&gt;</code></pre>
+<p>This tells us that we are inside the function</p>
+<p>This is the “debugging mode” of R.</p>
+<p>Look in the environment pane:</p>
+<p><img src="figs/show-env-browser.png" class="img-fluid"></p>
+<p>The environment pane switches from your workspace to <strong>the function’s</strong> environment, so it lists <code>data</code>, and nothing else, rather than everything you have lying around.</p>
+<p>Notice you can see the function arguments, and the intermediate values.</p>
+<p>You can explore them by seeing what their output is in the console.</p>
+<p>You can also run the code inside the function. You can view the browser() help with <code>help</code>. This reveals this little map of commands:</p>
+<pre><code>Browse[1]&gt; help
+n          next
+s          step into
+f          finish
+c or cont  continue
+Q          quit
+where      show stack
+help       show help
+&lt;expr&gt;     evaluate expression
+Browse[1]&gt;</code></pre>
+<p>There are five commands that I think are worthwhile knowing:</p>
+<ul>
+<li><code>n</code> runs the next line</li>
+<li><code>c</code> continues to the end</li>
+<li><code>Q</code> quits and gets you out</li>
+<li><code>f</code> finishes the function you are in</li>
+<li><code>s</code> steps into a function</li>
+</ul>
+<p>Let’s type “n”, to run each line of code.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn: Practice using browser()">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn: Practice using browser()
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-label="2"></a><span class="fu">library</span>(glue)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-label="3"></a><span class="fu">library</span>(here)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-label="4"></a><span class="fu">library</span>(scales)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-label="5"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-label="6"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb34-7"><a href="#cb34-7" aria-label="7"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb34-8"><a href="#cb34-8" aria-label="8"></a>}</span>
+<span id="cb34-9"><a href="#cb34-9" aria-label="9"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-label="10"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb34-11"><a href="#cb34-11" aria-label="11"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-label="12"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb34-13"><a href="#cb34-13" aria-label="13"></a>}</span>
+<span id="cb34-14"><a href="#cb34-14" aria-label="14"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-label="15"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb34-16"><a href="#cb34-16" aria-label="16"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb34-17"><a href="#cb34-17" aria-label="17"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-label="18"></a></span>
+<span id="cb34-19"><a href="#cb34-19" aria-label="19"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-label="20"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-label="21"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb34-22"><a href="#cb34-22" aria-label="22"></a>}</span>
+<span id="cb34-23"><a href="#cb34-23" aria-label="23"></a></span>
+<span id="cb34-24"><a href="#cb34-24" aria-label="24"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb34-25"><a href="#cb34-25" aria-label="25"></a></span>
+<span id="cb34-26"><a href="#cb34-26" aria-label="26"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>)</span>
+<span id="cb34-27"><a href="#cb34-27" aria-label="27"></a>fit_study_trend <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb34-28"><a href="#cb34-28" aria-label="28"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> data)</span>
+<span id="cb34-29"><a href="#cb34-29" aria-label="29"></a>}</span>
+<span id="cb34-30"><a href="#cb34-30" aria-label="30"></a></span>
+<span id="cb34-31"><a href="#cb34-31" aria-label="31"></a>pct <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb34-32"><a href="#cb34-32" aria-label="32"></a>  <span class="fu">round</span>(x <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb34-33"><a href="#cb34-33" aria-label="33"></a>}</span>
+<span id="cb34-34"><a href="#cb34-34" aria-label="34"></a></span>
+<span id="cb34-35"><a href="#cb34-35" aria-label="35"></a>trend_per_decade <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb34-36"><a href="#cb34-36" aria-label="36"></a>  model_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)</span>
+<span id="cb34-37"><a href="#cb34-37" aria-label="37"></a>  year_term <span class="ot">&lt;-</span> model_coef[[<span class="st">"year"</span>]] <span class="sc">*</span> <span class="dv">10</span></span>
+<span id="cb34-38"><a href="#cb34-38" aria-label="38"></a>  year_as_percent <span class="ot">&lt;-</span> <span class="fu">pct</span>(year_term)</span>
+<span id="cb34-39"><a href="#cb34-39" aria-label="39"></a>  year_as_percent</span>
+<span id="cb34-40"><a href="#cb34-40" aria-label="40"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</details>
+<p>Let’s get you used to placing a little browser() in your code - here’s a slightly modified version of the above code.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-label="1"></a>fit_study_filtered <span class="ot">&lt;-</span> <span class="cf">function</span>(data, state, age){</span>
+<span id="cb35-2"><a href="#cb35-2" aria-label="2"></a>  data_state <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">filter</span>(state_territory <span class="sc">==</span> state)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-label="3"></a>  data_state_age <span class="ot">&lt;-</span> data_state <span class="sc">|&gt;</span> <span class="fu">filter</span>(age_group <span class="sc">==</span> age)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-label="4"></a>  </span>
+<span id="cb35-5"><a href="#cb35-5" aria-label="5"></a>  model_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> data_state_age)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-label="6"></a>  model_fit</span>
+<span id="cb35-7"><a href="#cb35-7" aria-label="7"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol type="1">
+<li>Copy the code locally</li>
+<li>Check to see if you can fit a model</li>
+<li>Place <code>browser()</code> in there, practice moving forward with <code>n</code>, or using the RStudio tools</li>
+<li>Practice looking for help with <code>help</code></li>
+<li>Try using <code>s</code> on one of the lines. What happens?</li>
+<li>Practice using <code>Q</code></li>
+</ol>
+<details>
+<summary>
+Answer
+</summary>
+<!-- TODO: Nick to fill. A model session rather than a solution, since this one
+is about the controls. A short transcript of what your prompt looked like is
+probably enough. -->
+</details>
+</div>
+</div>
+<p>OK, now that you’ve had a bit of time to practice that, let’s go back into this, and explore another example error:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn: find it with browser()">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn: find it with browser()
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-label="2"></a><span class="fu">library</span>(glue)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-label="3"></a><span class="fu">library</span>(here)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-label="4"></a><span class="fu">library</span>(scales)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-label="5"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-label="6"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb36-7"><a href="#cb36-7" aria-label="7"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb36-8"><a href="#cb36-8" aria-label="8"></a>}</span>
+<span id="cb36-9"><a href="#cb36-9" aria-label="9"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-label="10"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb36-11"><a href="#cb36-11" aria-label="11"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-label="12"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb36-13"><a href="#cb36-13" aria-label="13"></a>}</span>
+<span id="cb36-14"><a href="#cb36-14" aria-label="14"></a></span>
+<span id="cb36-15"><a href="#cb36-15" aria-label="15"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb36-16"><a href="#cb36-16" aria-label="16"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb36-17"><a href="#cb36-17" aria-label="17"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb36-18"><a href="#cb36-18" aria-label="18"></a></span>
+<span id="cb36-19"><a href="#cb36-19" aria-label="19"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-label="20"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-label="21"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb36-22"><a href="#cb36-22" aria-label="22"></a>}</span>
+<span id="cb36-23"><a href="#cb36-23" aria-label="23"></a></span>
+<span id="cb36-24"><a href="#cb36-24" aria-label="24"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb36-25"><a href="#cb36-25" aria-label="25"></a></span>
+<span id="cb36-26"><a href="#cb36-26" aria-label="26"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>)</span>
+<span id="cb36-27"><a href="#cb36-27" aria-label="27"></a>fit_study_trend <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb36-28"><a href="#cb36-28" aria-label="28"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> data)</span>
+<span id="cb36-29"><a href="#cb36-29" aria-label="29"></a>}</span>
+<span id="cb36-30"><a href="#cb36-30" aria-label="30"></a></span>
+<span id="cb36-31"><a href="#cb36-31" aria-label="31"></a>pct <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb36-32"><a href="#cb36-32" aria-label="32"></a>  <span class="fu">round</span>(x <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb36-33"><a href="#cb36-33" aria-label="33"></a>}</span>
+<span id="cb36-34"><a href="#cb36-34" aria-label="34"></a></span>
+<span id="cb36-35"><a href="#cb36-35" aria-label="35"></a>trend_per_decade <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb36-36"><a href="#cb36-36" aria-label="36"></a>  model_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)</span>
+<span id="cb36-37"><a href="#cb36-37" aria-label="37"></a>  year_term <span class="ot">&lt;-</span> model_coef[[<span class="st">"year"</span>]] <span class="sc">*</span> <span class="dv">10</span></span>
+<span id="cb36-38"><a href="#cb36-38" aria-label="38"></a>  year_as_percent <span class="ot">&lt;-</span> <span class="fu">pct</span>(year_term)</span>
+<span id="cb36-39"><a href="#cb36-39" aria-label="39"></a>  year_as_percent</span>
+<span id="cb36-40"><a href="#cb36-40" aria-label="40"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</details>
+<p>Let’s say we have some new functions to get the percent, and trend details:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-label="1"></a>fit_study_trend <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb37-2"><a href="#cb37-2" aria-label="2"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> data)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-label="3"></a>}</span>
+<span id="cb37-4"><a href="#cb37-4" aria-label="4"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-label="5"></a>pct <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb37-6"><a href="#cb37-6" aria-label="6"></a>  <span class="fu">round</span>(x <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-label="7"></a>}</span>
+<span id="cb37-8"><a href="#cb37-8" aria-label="8"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-label="9"></a>trend_per_decade <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb37-10"><a href="#cb37-10" aria-label="10"></a>  model_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-label="11"></a>  year_term <span class="ot">&lt;-</span> model_coef[[<span class="st">"year"</span>]] <span class="sc">*</span> <span class="dv">10</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-label="12"></a>  year_as_percent <span class="ot">&lt;-</span> <span class="fu">pct</span>(year_term)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-label="13"></a>  year_as_percent</span>
+<span id="cb37-14"><a href="#cb37-14" aria-label="14"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-label="1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(prop_studying <span class="sc">~</span> state_territory, <span class="at">data =</span> young)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-label="2"></a>model</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = prop_studying ~ state_territory, data = young)
+
+Coefficients:
+        (Intercept)   state_territoryNSW    state_territoryNT  
+           0.869777            -0.020385            -0.158507  
+ state_territoryQld    state_territorySA  state_territoryTas.  
+          -0.097271            -0.032893            -0.044895  
+state_territoryVic.    state_territoryWA  
+           0.004219            -0.070663  </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-label="1"></a><span class="fu">trend_per_decade</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `model_coef[["year"]]`:
+! subscript out of bounds</code></pre>
+</div>
+</div>
+<ol type="1">
+<li>Put a <code>browser()</code> at the top of <code>trend_per_decade()</code> and run it again.</li>
+<li>At the prompt, run <code>coef(model)</code>. What is in there?</li>
+<li>What does <code>[["year"]]</code> do?</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_fb1bf471" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<details>
+<summary>
+Answer
+</summary>
+<p>When we use <code>coef(model)</code>, this gives you the coefficient for every state, named <code>(Intercept)</code>, <code>state_territoryNSW</code>, <code>state_territoryNT</code> and so on.</p>
+<p>However, in this case, there is no <code>year</code>, because year was never in the lm formula!</p>
+<p>When we do: <code>[["year"]]</code> we are asking for an element by the name “year”. It errors when there is no such name.</p>
+<p>The error: “Subscript out of bounds” means</p>
+<blockquote class="blockquote">
+<p>“you asked for something that is not in here”</p>
+</blockquote>
+<p>The fix is to the model, not to <code>trend_per_decade()</code>. Again.</p>
+</details>
+</div>
+</div>
+<section id="up-and-down-the-ladder-of-abstraction" class="level3">
+<h3 class="anchored" data-anchor-id="up-and-down-the-ladder-of-abstraction">Up and down the ladder of abstraction</h3>
+<p>Similar to the process of writing functions at a higher level in “outside in, inside out”, we are now able to move at the higher coarser level of the functions we wrote, and then drop down into the more finer level details.</p>
+<p>I think of this process of going up and down the levels of complexity as moving “up and down the ladder of abstraction”.</p>
+<p>It’s like if we have our functions, we are looking at a map overview, but then when we use a function like <code>browser()</code>, it drops you into street-view.</p>
+<p>Just like in “outside in, inside out”, it was useful to move between writing functions at a definition level, and then working at a script, it is useful to be able to dive into functions and understand them, then move back up.</p>
+<p>I first heard about the phrase, “Up and down the ladder of abstraction” from <a href="https://worrydream.com/">Bret Victor</a>, in his <a href="https://worrydream.com/LadderOfAbstraction/">Up and Down the Ladder of Abstraction</a> talk. It’s a really cool talk on the power of getting interactivity in debugging, and how that leads to other creative solutions.</p>
+</section>
+<section id="takehomes-1" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-1">Takehomes</h3>
+<ul>
+<li><code>browser()</code> stops inside the function and gives you an ordinary R prompt</li>
+<li>The environment pane switches to the function’s own environment</li>
+<li><code>n</code>, <code>c</code>, <code>Q</code>, <code>f</code> and <code>s</code> are the five controls</li>
+<li>The debugger shows you values, you still do the working out</li>
+</ul>
+</section>
+<section id="you-cant-always-browser" class="level3">
+<h3 class="anchored" data-anchor-id="you-cant-always-browser">You can’t always <code>browser()</code></h3>
+<p>Some of the downsides to using <code>browser()</code> are that you cannot always use it, because you might not be able to hand place a <code>browser()</code> in a function from another package.</p>
+<p>I really like to use <code>debugonce()</code> for this. Or, if you are already at the debug prompt, <code>s</code> steps you into that function.</p>
+<p>Same prompt, same everything, and no edit to the function.</p>
+<p><code>debug()</code> is the same thing except it’s permanent, so the function stops every single time until you say <code>undebug()</code>. That gets old fast, which is why <code>debugonce()</code> is nearly always the one you want.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn: using debugonce() and friends">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn: using debugonce() and friends
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now, practice the same thing you did before with browser, but:</p>
+<ol type="1">
+<li>Run <code>debugonce()</code> on <code>trend_per_decade()</code>: <code>debugonce(trend_per_decade)</code> and run it again.</li>
+<li>Play around at the prompt</li>
+<li>Run some code</li>
+<li>finish by typing <code>f</code></li>
+<li>Now practice using <code>debug(trend_per_decade)</code>, and make sure to use <code>undebug()</code> on it, too</li>
+</ol>
+<details>
+<summary>
+Setup code
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-label="2"></a><span class="fu">library</span>(glue)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-label="3"></a><span class="fu">library</span>(here)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-label="4"></a><span class="fu">library</span>(scales)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-label="5"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-label="6"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb42-7"><a href="#cb42-7" aria-label="7"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb42-8"><a href="#cb42-8" aria-label="8"></a>}</span>
+<span id="cb42-9"><a href="#cb42-9" aria-label="9"></a></span>
+<span id="cb42-10"><a href="#cb42-10" aria-label="10"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb42-11"><a href="#cb42-11" aria-label="11"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-label="12"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb42-13"><a href="#cb42-13" aria-label="13"></a>}</span>
+<span id="cb42-14"><a href="#cb42-14" aria-label="14"></a></span>
+<span id="cb42-15"><a href="#cb42-15" aria-label="15"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb42-16"><a href="#cb42-16" aria-label="16"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb42-17"><a href="#cb42-17" aria-label="17"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb42-18"><a href="#cb42-18" aria-label="18"></a></span>
+<span id="cb42-19"><a href="#cb42-19" aria-label="19"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-label="20"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-label="21"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb42-22"><a href="#cb42-22" aria-label="22"></a>}</span>
+<span id="cb42-23"><a href="#cb42-23" aria-label="23"></a></span>
+<span id="cb42-24"><a href="#cb42-24" aria-label="24"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb42-25"><a href="#cb42-25" aria-label="25"></a></span>
+<span id="cb42-26"><a href="#cb42-26" aria-label="26"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>)</span>
+<span id="cb42-27"><a href="#cb42-27" aria-label="27"></a>fit_study_trend <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb42-28"><a href="#cb42-28" aria-label="28"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> data)</span>
+<span id="cb42-29"><a href="#cb42-29" aria-label="29"></a>}</span>
+<span id="cb42-30"><a href="#cb42-30" aria-label="30"></a></span>
+<span id="cb42-31"><a href="#cb42-31" aria-label="31"></a>pct <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb42-32"><a href="#cb42-32" aria-label="32"></a>  <span class="fu">round</span>(x <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb42-33"><a href="#cb42-33" aria-label="33"></a>}</span>
+<span id="cb42-34"><a href="#cb42-34" aria-label="34"></a></span>
+<span id="cb42-35"><a href="#cb42-35" aria-label="35"></a>trend_per_decade <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb42-36"><a href="#cb42-36" aria-label="36"></a>  model_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)</span>
+<span id="cb42-37"><a href="#cb42-37" aria-label="37"></a>  year_term <span class="ot">&lt;-</span> model_coef[[<span class="st">"year"</span>]] <span class="sc">*</span> <span class="dv">10</span></span>
+<span id="cb42-38"><a href="#cb42-38" aria-label="38"></a>  year_as_percent <span class="ot">&lt;-</span> <span class="fu">pct</span>(year_term)</span>
+<span id="cb42-39"><a href="#cb42-39" aria-label="39"></a>  year_as_percent</span>
+<span id="cb42-40"><a href="#cb42-40" aria-label="40"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</details>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-label="1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(prop_studying <span class="sc">~</span> state_territory, <span class="at">data =</span> young)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-label="2"></a>model</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = prop_studying ~ state_territory, data = young)
+
+Coefficients:
+        (Intercept)   state_territoryNSW    state_territoryNT  
+           0.869777            -0.020385            -0.158507  
+ state_territoryQld    state_territorySA  state_territoryTas.  
+          -0.097271            -0.032893            -0.044895  
+state_territoryVic.    state_territoryWA  
+           0.004219            -0.070663  </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-label="1"></a><span class="fu">trend_per_decade</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `model_coef[["year"]]`:
+! subscript out of bounds</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_0fd61879" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<details>
+<summary>
+Answer
+</summary>
+<!-- TODO: Nick to fill. A model session rather than a solution, since this one
+is about the controls. A short transcript of what your prompt looked like is
+probably enough. -->
+</details>
+</div>
+</div>
+<section id="using-rstudio-interface-for-debugging" class="level4">
+<h4 class="anchored" data-anchor-id="using-rstudio-interface-for-debugging">Using RStudio interface for debugging</h4>
+<p>RStudio has all of this on the interface.</p>
+<p>Click in the margin to the left of a line number and you get a red dot, which is a breakpoint. It does what <code>browser()</code> does, without editing the file.</p>
+<!-- ![](placeholder image of this in RStudio) -->
+<!-- TODO: screenshot of a paused browser() session. Console showing Browse[1]>,
+the environment pane showing the function's locals rather than the workspace,
+and the Next / Continue / Stop toolbar. Only Nick can take this, it has to be
+his RStudio. Noted in dev/njt-todo.md. -->
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn: a function you cannot edit">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn: a function you cannot edit
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-label="2"></a><span class="fu">library</span>(glue)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-label="3"></a><span class="fu">library</span>(here)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-label="4"></a><span class="fu">library</span>(scales)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-label="5"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-label="6"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb47-7"><a href="#cb47-7" aria-label="7"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb47-8"><a href="#cb47-8" aria-label="8"></a>}</span>
+<span id="cb47-9"><a href="#cb47-9" aria-label="9"></a></span>
+<span id="cb47-10"><a href="#cb47-10" aria-label="10"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb47-11"><a href="#cb47-11" aria-label="11"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb47-12"><a href="#cb47-12" aria-label="12"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb47-13"><a href="#cb47-13" aria-label="13"></a>}</span>
+<span id="cb47-14"><a href="#cb47-14" aria-label="14"></a></span>
+<span id="cb47-15"><a href="#cb47-15" aria-label="15"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb47-16"><a href="#cb47-16" aria-label="16"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb47-17"><a href="#cb47-17" aria-label="17"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb47-18"><a href="#cb47-18" aria-label="18"></a></span>
+<span id="cb47-19"><a href="#cb47-19" aria-label="19"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb47-20"><a href="#cb47-20" aria-label="20"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb47-21"><a href="#cb47-21" aria-label="21"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb47-22"><a href="#cb47-22" aria-label="22"></a>}</span>
+<span id="cb47-23"><a href="#cb47-23" aria-label="23"></a></span>
+<span id="cb47-24"><a href="#cb47-24" aria-label="24"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb47-25"><a href="#cb47-25" aria-label="25"></a></span>
+<span id="cb47-26"><a href="#cb47-26" aria-label="26"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</details>
+<p><code>read_education()</code> lives in <code>ch1/read_education.R</code>. Pretend you did not write it and would rather not open it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-label="1"></a><span class="fu">read_education</span>(<span class="dv">2009</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="1">
+<li>Run it. Where does the message say the problem is?</li>
+<li>Use <code>debugonce(read_education)</code> and run it again.</li>
+<li>Press <code>n</code> twice, and look at <code>files</code> after each one.</li>
+<li>What would you tell the person who wrote it?</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_fc61beac" minutes="6" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<details>
+<summary>
+Answer
+</summary>
+<p>The message names a path that does not exist, which is genuinely useful, and it names it from somewhere inside <code>readr</code>.</p>
+<p>Stepping through, <code>files</code> is built before anything is read, so you can see the wrong path exist as a value before it becomes an error.</p>
+<p>What you would tell them: nothing checks the year before building a path out of it. <code>read_education(2009)</code> and <code>read_education("banana")</code> both fail the same way, deep inside a package, when either could have been caught in the first line.</p>
+</details>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn: stepping through">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn: stepping through
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-label="2"></a><span class="fu">library</span>(glue)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-label="3"></a><span class="fu">library</span>(here)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-label="4"></a><span class="fu">library</span>(scales)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-label="5"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-label="6"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb49-7"><a href="#cb49-7" aria-label="7"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb49-8"><a href="#cb49-8" aria-label="8"></a>}</span>
+<span id="cb49-9"><a href="#cb49-9" aria-label="9"></a></span>
+<span id="cb49-10"><a href="#cb49-10" aria-label="10"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb49-11"><a href="#cb49-11" aria-label="11"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-label="12"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb49-13"><a href="#cb49-13" aria-label="13"></a>}</span>
+<span id="cb49-14"><a href="#cb49-14" aria-label="14"></a></span>
+<span id="cb49-15"><a href="#cb49-15" aria-label="15"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb49-16"><a href="#cb49-16" aria-label="16"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb49-17"><a href="#cb49-17" aria-label="17"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb49-18"><a href="#cb49-18" aria-label="18"></a></span>
+<span id="cb49-19"><a href="#cb49-19" aria-label="19"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb49-20"><a href="#cb49-20" aria-label="20"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-label="21"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb49-22"><a href="#cb49-22" aria-label="22"></a>}</span>
+<span id="cb49-23"><a href="#cb49-23" aria-label="23"></a></span>
+<span id="cb49-24"><a href="#cb49-24" aria-label="24"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb49-25"><a href="#cb49-25" aria-label="25"></a></span>
+<span id="cb49-26"><a href="#cb49-26" aria-label="26"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>)</span>
+<span id="cb49-27"><a href="#cb49-27" aria-label="27"></a>fit_study_trend <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb49-28"><a href="#cb49-28" aria-label="28"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> data)</span>
+<span id="cb49-29"><a href="#cb49-29" aria-label="29"></a>}</span>
+<span id="cb49-30"><a href="#cb49-30" aria-label="30"></a></span>
+<span id="cb49-31"><a href="#cb49-31" aria-label="31"></a>pct <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb49-32"><a href="#cb49-32" aria-label="32"></a>  <span class="fu">round</span>(x <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb49-33"><a href="#cb49-33" aria-label="33"></a>}</span>
+<span id="cb49-34"><a href="#cb49-34" aria-label="34"></a></span>
+<span id="cb49-35"><a href="#cb49-35" aria-label="35"></a>trend_per_decade <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb49-36"><a href="#cb49-36" aria-label="36"></a>  model_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)</span>
+<span id="cb49-37"><a href="#cb49-37" aria-label="37"></a>  year_term <span class="ot">&lt;-</span> model_coef[[<span class="st">"year"</span>]] <span class="sc">*</span> <span class="dv">10</span></span>
+<span id="cb49-38"><a href="#cb49-38" aria-label="38"></a>  year_as_percent <span class="ot">&lt;-</span> <span class="fu">pct</span>(year_term)</span>
+<span id="cb49-39"><a href="#cb49-39" aria-label="39"></a>  year_as_percent</span>
+<span id="cb49-40"><a href="#cb49-40" aria-label="40"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</details>
+<p>This one has no bug. You are practising the controls.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-label="1"></a>tas <span class="ot">&lt;-</span> <span class="fu">filter</span>(young, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-label="2"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-label="3"></a><span class="fu">debugonce</span>(trend_per_decade)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-label="4"></a></span>
+<span id="cb50-5"><a href="#cb50-5" aria-label="5"></a><span class="fu">trend_per_decade</span>(<span class="fu">fit_trend</span>(tas))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="1">
+<li>At the prompt, type <code>s</code>. Where are you now?</li>
+<li>Type <code>x</code>. What is it, and where did it come from?</li>
+<li>Type <code>f</code> to finish, then <code>c</code> to carry on.</li>
+<li>Try it again with <code>Q</code> instead. What is different?</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_d4347ef4" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<details>
+<summary>
+Answer
+</summary>
+<p><code>s</code> steps <em>into</em> the next function rather than over it, so you land inside <code>pct()</code>, one level down. The prompt still says <code>Browse[1]&gt;</code> but <code>debug at #1</code> names a different line.</p>
+<p><code>f</code> finishes the function you are standing in and drops you back out. <code>c</code> runs to the end and gives you the answer. <code>Q</code> stops everything and gives you nothing.</p>
+<p>The difference between <code>f</code> and <code>c</code> is subtle. Basically <code>f</code> will <strong>f</strong>inish the current loop, or step, and you might then stay inside the function. Whereas <code>c</code> will immediately exit the browser and run the remaining code.</p>
+</details>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Your Turn: no error at all">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your Turn: no error at all
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<details>
+<summary>
+Setup code
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-label="2"></a><span class="fu">library</span>(glue)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-label="3"></a><span class="fu">library</span>(here)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-label="4"></a><span class="fu">library</span>(scales)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-label="5"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-label="6"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb51-7"><a href="#cb51-7" aria-label="7"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb51-8"><a href="#cb51-8" aria-label="8"></a>}</span>
+<span id="cb51-9"><a href="#cb51-9" aria-label="9"></a></span>
+<span id="cb51-10"><a href="#cb51-10" aria-label="10"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb51-11"><a href="#cb51-11" aria-label="11"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-label="12"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb51-13"><a href="#cb51-13" aria-label="13"></a>}</span>
+<span id="cb51-14"><a href="#cb51-14" aria-label="14"></a></span>
+<span id="cb51-15"><a href="#cb51-15" aria-label="15"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb51-16"><a href="#cb51-16" aria-label="16"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb51-17"><a href="#cb51-17" aria-label="17"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb51-18"><a href="#cb51-18" aria-label="18"></a></span>
+<span id="cb51-19"><a href="#cb51-19" aria-label="19"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb51-20"><a href="#cb51-20" aria-label="20"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb51-21"><a href="#cb51-21" aria-label="21"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb51-22"><a href="#cb51-22" aria-label="22"></a>}</span>
+<span id="cb51-23"><a href="#cb51-23" aria-label="23"></a></span>
+<span id="cb51-24"><a href="#cb51-24" aria-label="24"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb51-25"><a href="#cb51-25" aria-label="25"></a></span>
+<span id="cb51-26"><a href="#cb51-26" aria-label="26"></a>ed_2023 <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, year <span class="sc">==</span> <span class="dv">2023</span>)</span>
+<span id="cb51-27"><a href="#cb51-27" aria-label="27"></a>fit_study_trend <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb51-28"><a href="#cb51-28" aria-label="28"></a>  <span class="fu">lm</span>(prop_studying <span class="sc">~</span> year, <span class="at">data =</span> data)</span>
+<span id="cb51-29"><a href="#cb51-29" aria-label="29"></a>}</span>
+<span id="cb51-30"><a href="#cb51-30" aria-label="30"></a></span>
+<span id="cb51-31"><a href="#cb51-31" aria-label="31"></a>pct <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb51-32"><a href="#cb51-32" aria-label="32"></a>  <span class="fu">round</span>(x <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb51-33"><a href="#cb51-33" aria-label="33"></a>}</span>
+<span id="cb51-34"><a href="#cb51-34" aria-label="34"></a></span>
+<span id="cb51-35"><a href="#cb51-35" aria-label="35"></a>trend_per_decade <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb51-36"><a href="#cb51-36" aria-label="36"></a>  model_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)</span>
+<span id="cb51-37"><a href="#cb51-37" aria-label="37"></a>  year_term <span class="ot">&lt;-</span> model_coef[[<span class="st">"year"</span>]] <span class="sc">*</span> <span class="dv">10</span></span>
+<span id="cb51-38"><a href="#cb51-38" aria-label="38"></a>  year_as_percent <span class="ot">&lt;-</span> <span class="fu">pct</span>(year_term)</span>
+<span id="cb51-39"><a href="#cb51-39" aria-label="39"></a>  year_as_percent</span>
+<span id="cb51-40"><a href="#cb51-40" aria-label="40"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</details>
+<p>Everything so far has stopped with an error. This one does not.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-label="1"></a>young_fit <span class="ot">&lt;-</span> <span class="fu">fit_trend</span>(young)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-label="2"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-label="3"></a><span class="fu">trend_per_decade</span>(young_fit)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-label="4"></a><span class="co">#&gt; 0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Zero. No change at all, over ten years, nationally. Nothing complains.</p>
+<ol type="1">
+<li>Do you believe it? Say why or why not before you touch anything.</li>
+<li><code>debugonce(trend_per_decade)</code>, run it again, and look at <code>nobs(model)</code>. How many rows went in?</li>
+<li>How many years are in this data?</li>
+<li>Work out what the zero actually is.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_69c745d1" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<details>
+<summary>
+Answer
+</summary>
+<p><code>nobs(model)</code> is 80, and there are ten years. So it fitted one straight line through all eight states at once.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-label="1"></a><span class="fu">trend_per_decade</span>(<span class="fu">fit_trend</span>(<span class="fu">filter</span>(young, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)))</span>
+<span id="cb53-2"><a href="#cb53-2" aria-label="2"></a><span class="co">#&gt; -1.4</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-label="3"></a></span>
+<span id="cb53-4"><a href="#cb53-4" aria-label="4"></a><span class="fu">trend_per_decade</span>(<span class="fu">fit_trend</span>(<span class="fu">filter</span>(young, state_territory <span class="sc">==</span> <span class="st">"Qld"</span>)))</span>
+<span id="cb53-5"><a href="#cb53-5" aria-label="5"></a><span class="co">#&gt; 3.6</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Tasmania is falling, Queensland is rising, and pooling them gives zero because they cancel. The zero is not a measurement, it is an average of things that disagree.</p>
+<p>This is the one to take away. There was no error and no warning, so nothing was ever going to tell you. <code>nobs()</code> took one command, and you only ran it because you did not believe the number.</p>
+</details>
+</div>
+</div>
+</section>
+</section>
+<section id="takehomes-2" class="level3">
+<h3 class="anchored" data-anchor-id="takehomes-2">Takehomes</h3>
+<ul>
+<li><code>browser()</code> stops inside the function and gives you a normal R prompt</li>
+<li><code>n</code>, <code>c</code> and <code>Q</code> are most of what you need at that prompt</li>
+<li><code>debugonce()</code> does it to a function you didn’t write, and <code>debug()</code> does it until you stop it</li>
+<li>A breakpoint in the margin is the same thing with the mouse</li>
+</ul>
+</section>
+</section>
+<section id="summary" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="summary">Summary</h2>
+<ol type="1">
+<li><strong>Some messages give you nothing to act on.</strong> When reading harder will not help, go and look.</li>
+<li><strong>The mistake is often upstream</strong> of the function that failed.</li>
+<li><strong><code>browser()</code> puts you inside the function</strong> with a normal prompt and every value to hand.</li>
+<li><strong><code>debugonce()</code> for a function you did not write.</strong> <code>debug()</code> keeps going until you stop it.</li>
+<li><strong><code>n</code>, <code>s</code>, <code>f</code>, <code>c</code> and <code>Q</code></strong> are the controls I think you should be familiar with</li>
+<li><strong>The debugger shows you values.</strong> But it’s still up to you to work out the issues.</li>
+</ol>
+
+
+</section>
+<section class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="">Links</h2>
+<ul>
+<li><a href="https://worrydream.com/">Bret Victor</a></li>
+<li><a href="https://worrydream.com/LadderOfAbstraction/">Up and Down the Ladder of Abstraction</a></li>
+</ul>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/fun2debug\.njtierney\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./outside-in-inside-out.html" class="pagination-link" aria-label="Outside-in, inside-out">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Outside-in, inside-out</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./advanced-debugging.html" class="pagination-link" aria-label="Advanced debugging">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Advanced debugging</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2026, Nicholas Tierney</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/njtierney/fun2debug/edit/main/looking-inside-a-function.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/njtierney/fun2debug/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

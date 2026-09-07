@@ -71,6 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./looking-inside-a-function.html" rel="next">
 <link href="./anatomy-of-a-function.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -182,6 +183,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Outside-in, inside-out</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./looking-inside-a-function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Looking inside a function</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./advanced-debugging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Advanced debugging</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -200,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#inside-out" id="toc-inside-out" class="nav-link" data-scroll-target="#inside-out"><span class="header-section-number">3.2</span> Inside-out</a>
   <ul class="collapse">
-  <li><a href="#making-more-lines" id="toc-making-more-lines" class="nav-link" data-scroll-target="#making-more-lines">Making more lines</a></li>
+  <li><a href="#add-more-lines" id="toc-add-more-lines" class="nav-link" data-scroll-target="#add-more-lines">Add more lines</a></li>
   <li><a href="#wrapping-up-adding-state" id="toc-wrapping-up-adding-state" class="nav-link" data-scroll-target="#wrapping-up-adding-state">Wrapping up: adding state</a></li>
   <li><a href="#takehomes-1" id="toc-takehomes-1" class="nav-link" data-scroll-target="#takehomes-1">Takehomes</a></li>
   </ul></li>
@@ -476,7 +500,7 @@ Setup code
 <span id="cb9-5"><a href="#cb9-5" aria-label="5"></a><span class="fu">___</span>(___)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_b3b8b45a" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_134571b3" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <details>
@@ -501,6 +525,69 @@ One possible answer
 <p>It’s OK if yours look different, that’s fine! What we want to focus on is if you can focus on what goes in and out of each of the functions.</p>
 <p><code>read_education()</code> already exists, and the other two don’t.</p>
 </details>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Going Deeper: Practicing 'outside in' with new data">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Going Deeper: Practicing ‘outside in’ with new data
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="cell-output-display">
+<countdown-timer class="countdown" id="timer_5a731b01" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+</div>
+</div>
+<p>OK, now let’s practice writing this again, but with a smaller example.</p>
+<p>The dataset is at:</p>
+<p>And can be downloaded with the following code:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>brolga_counts <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/animals/brolga_year_month.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 977 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (3): year, month, n
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-label="1"></a>brolga_counts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 977 × 3
+    year month     n
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1770     1    22
+ 2  1770     5    36
+ 3  1800     1     1
+ 4  1817     5     1
+ 5  1817     6     1
+ 6  1817     7     1
+ 7  1820    10     1
+ 8  1822    10     1
+ 9  1824    12     1
+10  1825     9     1
+# ℹ 967 more rows</code></pre>
+</div>
+</div>
+<p>This data contains monthly counts of the number <a href="https://en.wikipedia.org/wiki/Brolga">brolga</a> seen in Australia.</p>
+<p>There are only three columns:</p>
+<ul>
+<li>year</li>
+<li>month</li>
+<li>n</li>
+</ul>
+<p>Your question is:</p>
+<blockquote class="blockquote">
+<p>Which year was the first year to have a complete number of months of records?</p>
+</blockquote>
+</div>
 </div>
 </div>
 </section>
@@ -529,10 +616,10 @@ One possible answer
 <p>Let’s build <code>plot_study_over_time()</code> by going inside-out.</p>
 <p>Start small, with one state and one age group.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>tas_young <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-label="2"></a>  <span class="fu">filter</span>(state_territory <span class="sc">==</span> <span class="st">"Tas."</span>, age_group <span class="sc">==</span> <span class="st">"15_19"</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-label="3"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-label="4"></a>tas_young</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-label="1"></a>tas_young <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-label="2"></a>  <span class="fu">filter</span>(state_territory <span class="sc">==</span> <span class="st">"Tas."</span>, age_group <span class="sc">==</span> <span class="st">"15_19"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-label="3"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-label="4"></a>tas_young</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 6
    state_territory age_group n_studying population prop_studying  year
@@ -565,15 +652,15 @@ One possible answer
 <p>Your sketch doesn’t need to be great!</p>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_fe1f5b7f" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_66d433b2" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <!-- TODO <my collapsed section with my bad drawing>. -->
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_young, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-label="2"></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_young, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-label="2"></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-first-line" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A line chart of the number of 15 to 19 year olds studying in Tasmania from 2014 to 2023. The line drifts down from about 28,500 to about 24,800, wobbling on the way." width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -590,24 +677,24 @@ Figure&nbsp;3.1
 <p>Now go back to your drawing. Does it looks sort of what you expected?</p>
 <p>Worth a caution before you read too much into it. The number of 15 to 19 year olds in Tasmania fell over the same period, from 33,100 to 31,300. Fewer people studying is not the same as a smaller share of them studying. Maybe we need to look at the proportion of people?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_young, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying)) <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-label="2"></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_young, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying)) <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-label="2"></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="outside-in-inside-out_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="outside-in-inside-out_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<section id="making-more-lines" class="level3">
-<h3 class="anchored" data-anchor-id="making-more-lines">Making more lines</h3>
+<section id="add-more-lines" class="level3">
+<h3 class="anchored" data-anchor-id="add-more-lines">Add more lines</h3>
 <p>Let’s make the plot for the other states and territories.</p>
 <p>So drop the age filter - just filter down to each state. Then, give each age group its own little panel with <code>facet_wrap()</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-label="1"></a>tas <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-label="2"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-label="3"></a>tas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-label="1"></a>tas <span class="ot">&lt;-</span> <span class="fu">filter</span>(education, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-label="2"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-label="3"></a>tas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 90 × 6
    state_territory age_group n_studying population prop_studying  year
@@ -624,10 +711,10 @@ Figure&nbsp;3.1
 10 Tas.            15_19           27.6       33.9       0.814    2015
 # ℹ 80 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a><span class="fu">ggplot</span>(tas,</span>
-<span id="cb17-2"><a href="#cb17-2" aria-label="2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying)) <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-label="3"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-label="4"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-label="1"></a><span class="fu">ggplot</span>(tas,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-label="2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-label="3"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-label="4"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-facets" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Nine small line charts, one per age group, of the number of people studying in Tasmania from 2014 to 2023. The 15 to 19 panel is much the highest at around 25,000, and the older panels sit near the bottom of the range." width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -653,19 +740,19 @@ Figure&nbsp;3.2
 <li>Use the overall theme, <code>theme_minimal()</code></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-label="1"></a><span class="fu">ggplot</span>(tas,</span>
-<span id="cb18-2"><a href="#cb18-2" aria-label="2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying)) <span class="sc">+</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-label="3"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"#1B9E77"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-label="4"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group) <span class="sc">+</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-label="5"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>(),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-label="6"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-label="7"></a>  <span class="fu">labs</span>(</span>
-<span id="cb18-8"><a href="#cb18-8" aria-label="8"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-label="9"></a>    <span class="at">y =</span> <span class="st">"Studying"</span>,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-label="10"></a>    <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group"</span>,</span>
-<span id="cb18-11"><a href="#cb18-11" aria-label="11"></a>    <span class="at">subtitle =</span> <span class="st">"Tas."</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-label="12"></a>  ) <span class="sc">+</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-label="13"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-label="1"></a><span class="fu">ggplot</span>(tas,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-label="2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-label="3"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"#1B9E77"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-label="4"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-label="5"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>(),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-label="6"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-label="7"></a>  <span class="fu">labs</span>(</span>
+<span id="cb22-8"><a href="#cb22-8" aria-label="8"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-label="9"></a>    <span class="at">y =</span> <span class="st">"Studying"</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-label="10"></a>    <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group"</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-label="11"></a>    <span class="at">subtitle =</span> <span class="st">"Tas."</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-label="12"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-label="13"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-polished" class="quarto-float quarto-figure quarto-figure-center anchored" alt="The same nine panels of Tasmanian study numbers over time, now in green, with a comma separated count axis, a title, and a light theme." width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -691,22 +778,22 @@ Figure&nbsp;3.3
 <p>Everything else in the code will work for all states, not just tasmania.</p>
 <p>Let’s write out the code for all states:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-label="1"></a>    <span class="fu">ggplot</span>(education,</span>
-<span id="cb19-2"><a href="#cb19-2" aria-label="2"></a>           <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying, <span class="at">colour =</span> state_territory)) <span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-label="3"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-label="4"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group) <span class="sc">+</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-label="5"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(),</span>
-<span id="cb19-6"><a href="#cb19-6" aria-label="6"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-label="7"></a>    <span class="fu">labs</span>(</span>
-<span id="cb19-8"><a href="#cb19-8" aria-label="8"></a>      <span class="at">x =</span> <span class="st">"Year"</span>,</span>
-<span id="cb19-9"><a href="#cb19-9" aria-label="9"></a>      <span class="at">y =</span> <span class="st">"Studying"</span>,</span>
-<span id="cb19-10"><a href="#cb19-10" aria-label="10"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group and state"</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-label="11"></a>    ) <span class="sc">+</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-label="12"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-label="1"></a>    <span class="fu">ggplot</span>(education,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-label="2"></a>           <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying, <span class="at">colour =</span> state_territory)) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-label="3"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-label="4"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-label="5"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-label="6"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-label="7"></a>    <span class="fu">labs</span>(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-label="8"></a>      <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-label="9"></a>      <span class="at">y =</span> <span class="st">"Studying"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-label="10"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group and state"</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-label="11"></a>    ) <span class="sc">+</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-label="12"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="outside-in-inside-out_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="outside-in-inside-out_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -714,46 +801,46 @@ Figure&nbsp;3.3
 <p>Now, can we update this to be a function.</p>
 <p>Name the function - what are its arguments?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-label="1"></a>plot_study_over_time <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
-<span id="cb20-2"><a href="#cb20-2" aria-label="2"></a>  </span>
-<span id="cb20-3"><a href="#cb20-3" aria-label="3"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-label="1"></a>plot_study_over_time <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
+<span id="cb24-2"><a href="#cb24-2" aria-label="2"></a>  </span>
+<span id="cb24-3"><a href="#cb24-3" aria-label="3"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then paste in the code into the body - make sure you change the DATA!</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-label="1"></a>plot_study_over_time <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
-<span id="cb21-2"><a href="#cb21-2" aria-label="2"></a>      <span class="fu">ggplot</span>(data,</span>
-<span id="cb21-3"><a href="#cb21-3" aria-label="3"></a>           <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying, <span class="at">colour =</span> state_territory)) <span class="sc">+</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-label="4"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-label="5"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group) <span class="sc">+</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-label="6"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(),</span>
-<span id="cb21-7"><a href="#cb21-7" aria-label="7"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-label="8"></a>    <span class="fu">labs</span>(</span>
-<span id="cb21-9"><a href="#cb21-9" aria-label="9"></a>      <span class="at">x =</span> <span class="st">"Year"</span>,</span>
-<span id="cb21-10"><a href="#cb21-10" aria-label="10"></a>      <span class="at">y =</span> <span class="st">"Studying"</span>,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-label="11"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group and state"</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-label="12"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-label="13"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
-<span id="cb21-14"><a href="#cb21-14" aria-label="14"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-label="1"></a>plot_study_over_time <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
+<span id="cb25-2"><a href="#cb25-2" aria-label="2"></a>      <span class="fu">ggplot</span>(data,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-label="3"></a>           <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> prop_studying, <span class="at">colour =</span> state_territory)) <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-label="4"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-label="5"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-label="6"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(),</span>
+<span id="cb25-7"><a href="#cb25-7" aria-label="7"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-label="8"></a>    <span class="fu">labs</span>(</span>
+<span id="cb25-9"><a href="#cb25-9" aria-label="9"></a>      <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-label="10"></a>      <span class="at">y =</span> <span class="st">"Studying"</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-label="11"></a>      <span class="at">title =</span> <span class="st">"Proportion of people studying, by age group and state"</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-label="12"></a>    ) <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-label="13"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-label="14"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-label="1"></a><span class="fu">plot_study_over_time</span>(education)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-label="1"></a><span class="fu">plot_study_over_time</span>(education)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="outside-in-inside-out_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="outside-in-inside-out_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Remember, because we return a ggplot2 plot, we can update it with ggplot code:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-label="1"></a><span class="fu">plot_study_over_time</span>(education) <span class="sc">+</span> </span>
-<span id="cb23-2"><a href="#cb23-2" aria-label="2"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"% studying"</span>,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-label="3"></a>       <span class="at">colour =</span> <span class="st">"State / Territory"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-label="1"></a><span class="fu">plot_study_over_time</span>(education) <span class="sc">+</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-label="2"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"% studying"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-label="3"></a>       <span class="at">colour =</span> <span class="st">"State / Territory"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="outside-in-inside-out_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="outside-in-inside-out_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -773,56 +860,56 @@ Figure&nbsp;3.3
 Setup code
 </summary>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-label="2"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-label="3"></a><span class="fu">library</span>(readr)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-label="4"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-label="5"></a><span class="fu">library</span>(scales)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-label="6"></a><span class="fu">library</span>(glue)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-label="7"></a><span class="fu">library</span>(here)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-label="8"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
-<span id="cb24-9"><a href="#cb24-9" aria-label="9"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
-<span id="cb24-10"><a href="#cb24-10" aria-label="10"></a>}</span>
-<span id="cb24-11"><a href="#cb24-11" aria-label="11"></a></span>
-<span id="cb24-12"><a href="#cb24-12" aria-label="12"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
-<span id="cb24-13"><a href="#cb24-13" aria-label="13"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-label="14"></a>    <span class="fu">parse_number</span>()</span>
-<span id="cb24-15"><a href="#cb24-15" aria-label="15"></a>}</span>
-<span id="cb24-16"><a href="#cb24-16" aria-label="16"></a></span>
-<span id="cb24-17"><a href="#cb24-17" aria-label="17"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
-<span id="cb24-18"><a href="#cb24-18" aria-label="18"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
-<span id="cb24-19"><a href="#cb24-19" aria-label="19"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
-<span id="cb24-20"><a href="#cb24-20" aria-label="20"></a></span>
-<span id="cb24-21"><a href="#cb24-21" aria-label="21"></a>  education_raw <span class="sc">|&gt;</span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-label="22"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
-<span id="cb24-23"><a href="#cb24-23" aria-label="23"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
-<span id="cb24-24"><a href="#cb24-24" aria-label="24"></a>}</span>
-<span id="cb24-25"><a href="#cb24-25" aria-label="25"></a></span>
-<span id="cb24-26"><a href="#cb24-26" aria-label="26"></a>pct_studying <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">age =</span> <span class="st">"25_29"</span>) {</span>
-<span id="cb24-27"><a href="#cb24-27" aria-label="27"></a>  data_summary <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb24-28"><a href="#cb24-28" aria-label="28"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb24-29"><a href="#cb24-29" aria-label="29"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb24-30"><a href="#cb24-30" aria-label="30"></a>      <span class="at">total_studying =</span> <span class="fu">sum</span>(n_studying),</span>
-<span id="cb24-31"><a href="#cb24-31" aria-label="31"></a>      <span class="at">total_population =</span> <span class="fu">sum</span>(population)</span>
-<span id="cb24-32"><a href="#cb24-32" aria-label="32"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb24-33"><a href="#cb24-33" aria-label="33"></a>    <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(total_studying <span class="sc">/</span> total_population <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
-<span id="cb24-34"><a href="#cb24-34" aria-label="34"></a>  data_summary</span>
-<span id="cb24-35"><a href="#cb24-35" aria-label="35"></a>}</span>
-<span id="cb24-36"><a href="#cb24-36" aria-label="36"></a></span>
-<span id="cb24-37"><a href="#cb24-37" aria-label="37"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
-<span id="cb24-38"><a href="#cb24-38" aria-label="38"></a></span>
-<span id="cb24-39"><a href="#cb24-39" aria-label="39"></a>tas_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
-<span id="cb24-40"><a href="#cb24-40" aria-label="40"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-label="1"></a><span class="fu">library</span>(countdown)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-label="2"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-label="3"></a><span class="fu">library</span>(readr)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-label="4"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-label="5"></a><span class="fu">library</span>(scales)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-label="6"></a><span class="fu">library</span>(glue)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-label="7"></a><span class="fu">library</span>(here)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-label="8"></a>education_path <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb28-9"><a href="#cb28-9" aria-label="9"></a>  <span class="fu">here</span>(<span class="fu">glue</span>(<span class="st">"data/tidy/education_{year}.csv"</span>))</span>
+<span id="cb28-10"><a href="#cb28-10" aria-label="10"></a>}</span>
+<span id="cb28-11"><a href="#cb28-11" aria-label="11"></a></span>
+<span id="cb28-12"><a href="#cb28-12" aria-label="12"></a>year_from_path <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb28-13"><a href="#cb28-13" aria-label="13"></a>  <span class="fu">basename</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-label="14"></a>    <span class="fu">parse_number</span>()</span>
+<span id="cb28-15"><a href="#cb28-15" aria-label="15"></a>}</span>
+<span id="cb28-16"><a href="#cb28-16" aria-label="16"></a></span>
+<span id="cb28-17"><a href="#cb28-17" aria-label="17"></a>read_education <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
+<span id="cb28-18"><a href="#cb28-18" aria-label="18"></a>  files <span class="ot">&lt;-</span> <span class="fu">education_path</span>(year)</span>
+<span id="cb28-19"><a href="#cb28-19" aria-label="19"></a>  education_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(files, <span class="at">id =</span> <span class="st">"path"</span>)</span>
+<span id="cb28-20"><a href="#cb28-20" aria-label="20"></a></span>
+<span id="cb28-21"><a href="#cb28-21" aria-label="21"></a>  education_raw <span class="sc">|&gt;</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-label="22"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year_from_path</span>(path)) <span class="sc">|&gt;</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-label="23"></a>    <span class="fu">select</span>(<span class="sc">-</span>path)</span>
+<span id="cb28-24"><a href="#cb28-24" aria-label="24"></a>}</span>
+<span id="cb28-25"><a href="#cb28-25" aria-label="25"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-label="26"></a>pct_studying <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">age =</span> <span class="st">"25_29"</span>) {</span>
+<span id="cb28-27"><a href="#cb28-27" aria-label="27"></a>  data_summary <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-label="28"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-label="29"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb28-30"><a href="#cb28-30" aria-label="30"></a>      <span class="at">total_studying =</span> <span class="fu">sum</span>(n_studying),</span>
+<span id="cb28-31"><a href="#cb28-31" aria-label="31"></a>      <span class="at">total_population =</span> <span class="fu">sum</span>(population)</span>
+<span id="cb28-32"><a href="#cb28-32" aria-label="32"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb28-33"><a href="#cb28-33" aria-label="33"></a>    <span class="fu">mutate</span>(<span class="at">pct =</span> <span class="fu">round</span>(total_studying <span class="sc">/</span> total_population <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb28-34"><a href="#cb28-34" aria-label="34"></a>  data_summary</span>
+<span id="cb28-35"><a href="#cb28-35" aria-label="35"></a>}</span>
+<span id="cb28-36"><a href="#cb28-36" aria-label="36"></a></span>
+<span id="cb28-37"><a href="#cb28-37" aria-label="37"></a>education <span class="ot">&lt;-</span> <span class="fu">read_education</span>(<span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>)</span>
+<span id="cb28-38"><a href="#cb28-38" aria-label="38"></a></span>
+<span id="cb28-39"><a href="#cb28-39" aria-label="39"></a>tas_2023 <span class="ot">&lt;-</span> education <span class="sc">|&gt;</span></span>
+<span id="cb28-40"><a href="#cb28-40" aria-label="40"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>, state_territory <span class="sc">==</span> <span class="st">"Tas."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </details>
 <p>Here is some code that looks at the a similar question, but facets by state. Can you make this into a function where you can change the age group?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-label="1"></a>education <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-label="2"></a>  <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-label="3"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-label="4"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-label="5"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>state_territory) <span class="sc">+</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-label="6"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="dv">1000</span>, <span class="at">big.mark =</span> <span class="st">","</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-label="1"></a>education <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-label="2"></a>  <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-label="3"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-label="4"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-label="5"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>state_territory) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-label="6"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="dv">1000</span>, <span class="at">big.mark =</span> <span class="st">","</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-yt-working-code" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Eight small line charts, one per state and territory, of the number of 15 to 19 year olds studying from 2014 to 2023. New South Wales and Victoria dominate the range, and the smaller jurisdictions are flat near the bottom." width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -844,17 +931,17 @@ Figure&nbsp;3.4
 <li><strong>Check.</strong> You should get the same plot you started with.</li>
 <li><strong>Default.</strong> Give <code>age</code> a default, so <code>plot_age_over_time(education)</code> works on its own.</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-label="1"></a>plot_age_over_time <span class="ot">&lt;-</span> <span class="cf">function</span>(data, ___) {</span>
-<span id="cb26-2"><a href="#cb26-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-label="3"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> ___) <span class="sc">|&gt;</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-label="4"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-label="5"></a>    <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-label="6"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>state_territory) <span class="sc">+</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-label="7"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="dv">1000</span>, <span class="at">big.mark =</span> <span class="st">","</span>))</span>
-<span id="cb26-8"><a href="#cb26-8" aria-label="8"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-label="1"></a>plot_age_over_time <span class="ot">&lt;-</span> <span class="cf">function</span>(data, ___) {</span>
+<span id="cb30-2"><a href="#cb30-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-label="3"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> ___) <span class="sc">|&gt;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-label="4"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-label="5"></a>    <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-label="6"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>state_territory) <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-label="7"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="dv">1000</span>, <span class="at">big.mark =</span> <span class="st">","</span>))</span>
+<span id="cb30-8"><a href="#cb30-8" aria-label="8"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_96e86461" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_10cab548" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <details>
@@ -863,17 +950,17 @@ Answer
 </summary>
 <p>Only open this if you have had a go.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-label="1"></a>plot_age_over_time <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">age =</span> <span class="st">"15_19"</span>) {</span>
-<span id="cb27-2"><a href="#cb27-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-label="3"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-label="4"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-label="5"></a>    <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-label="6"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>state_territory) <span class="sc">+</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-label="7"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="dv">1000</span>, <span class="at">big.mark =</span> <span class="st">","</span>)) <span class="sc">+</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-label="8"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Studying"</span>, <span class="at">subtitle =</span> age)</span>
-<span id="cb27-9"><a href="#cb27-9" aria-label="9"></a>}</span>
-<span id="cb27-10"><a href="#cb27-10" aria-label="10"></a></span>
-<span id="cb27-11"><a href="#cb27-11" aria-label="11"></a><span class="fu">plot_age_over_time</span>(education, <span class="at">age =</span> <span class="st">"25_29"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-label="1"></a>plot_age_over_time <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">age =</span> <span class="st">"15_19"</span>) {</span>
+<span id="cb31-2"><a href="#cb31-2" aria-label="2"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-label="3"></a>    <span class="fu">filter</span>(age_group <span class="sc">==</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-label="4"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-label="5"></a>    <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"#1B9E77"</span>) <span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-label="6"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>state_territory) <span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-label="7"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="dv">1000</span>, <span class="at">big.mark =</span> <span class="st">","</span>)) <span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-label="8"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Studying"</span>, <span class="at">subtitle =</span> age)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-label="9"></a>}</span>
+<span id="cb31-10"><a href="#cb31-10" aria-label="10"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-label="11"></a><span class="fu">plot_age_over_time</span>(education, <span class="at">age =</span> <span class="st">"25_29"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-yt-answer" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Eight small line charts, one per state and territory, of the number of 25 to 29 year olds studying from 2014 to 2023, drawn by the new function." width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -892,7 +979,7 @@ Figure&nbsp;3.5
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Going deeper: one more to try on your own">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -901,19 +988,19 @@ Figure&nbsp;3.5
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Here is some code I actually wrote while making this chapter. It compares the youngest and oldest age groups in a state.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-label="1"></a>young <span class="ot">&lt;-</span> tas_2023 <span class="sc">|&gt;</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-label="2"></a>  <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-label="3"></a>  <span class="fu">summarise</span>(<span class="at">pct =</span> <span class="fu">sum</span>(n_studying) <span class="sc">/</span> <span class="fu">sum</span>(population) <span class="sc">*</span> <span class="dv">100</span>)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-label="4"></a></span>
-<span id="cb28-5"><a href="#cb28-5" aria-label="5"></a>old <span class="ot">&lt;-</span> tas_2023 <span class="sc">|&gt;</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-label="6"></a>  <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"55_74"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-label="7"></a>  <span class="fu">summarise</span>(<span class="at">pct =</span> <span class="fu">sum</span>(n_studying) <span class="sc">/</span> <span class="fu">sum</span>(population) <span class="sc">*</span> <span class="dv">100</span>)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-label="8"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-label="9"></a><span class="fu">round</span>(young<span class="sc">$</span>pct <span class="sc">-</span> old<span class="sc">$</span>pct, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-label="1"></a>young <span class="ot">&lt;-</span> tas_2023 <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-label="2"></a>  <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"15_19"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-label="3"></a>  <span class="fu">summarise</span>(<span class="at">pct =</span> <span class="fu">sum</span>(n_studying) <span class="sc">/</span> <span class="fu">sum</span>(population) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-label="4"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-label="5"></a>old <span class="ot">&lt;-</span> tas_2023 <span class="sc">|&gt;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-label="6"></a>  <span class="fu">filter</span>(age_group <span class="sc">==</span> <span class="st">"55_74"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-label="7"></a>  <span class="fu">summarise</span>(<span class="at">pct =</span> <span class="fu">sum</span>(n_studying) <span class="sc">/</span> <span class="fu">sum</span>(population) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-label="8"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-label="9"></a><span class="fu">round</span>(young<span class="sc">$</span>pct <span class="sc">-</span> old<span class="sc">$</span>pct, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 78.3</code></pre>
 </div>
@@ -926,13 +1013,13 @@ Figure&nbsp;3.5
 One possible answer
 </summary>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-label="1"></a>study_gap <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">young =</span> <span class="st">"15_19"</span>, <span class="at">old =</span> <span class="st">"55_74"</span>) {</span>
-<span id="cb30-2"><a href="#cb30-2" aria-label="2"></a>  young_pct <span class="ot">&lt;-</span> <span class="fu">pct_studying</span>(data, <span class="at">age =</span> young)<span class="sc">$</span>pct</span>
-<span id="cb30-3"><a href="#cb30-3" aria-label="3"></a>  old_pct <span class="ot">&lt;-</span> <span class="fu">pct_studying</span>(data, <span class="at">age =</span> old)<span class="sc">$</span>pct</span>
-<span id="cb30-4"><a href="#cb30-4" aria-label="4"></a>  <span class="fu">round</span>(young_pct <span class="sc">-</span> old_pct, <span class="dv">1</span>)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-label="5"></a>}</span>
-<span id="cb30-6"><a href="#cb30-6" aria-label="6"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-label="7"></a><span class="fu">study_gap</span>(tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-label="1"></a>study_gap <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">young =</span> <span class="st">"15_19"</span>, <span class="at">old =</span> <span class="st">"55_74"</span>) {</span>
+<span id="cb34-2"><a href="#cb34-2" aria-label="2"></a>  young_pct <span class="ot">&lt;-</span> <span class="fu">pct_studying</span>(data, <span class="at">age =</span> young)<span class="sc">$</span>pct</span>
+<span id="cb34-3"><a href="#cb34-3" aria-label="3"></a>  old_pct <span class="ot">&lt;-</span> <span class="fu">pct_studying</span>(data, <span class="at">age =</span> old)<span class="sc">$</span>pct</span>
+<span id="cb34-4"><a href="#cb34-4" aria-label="4"></a>  <span class="fu">round</span>(young_pct <span class="sc">-</span> old_pct, <span class="dv">1</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-label="5"></a>}</span>
+<span id="cb34-6"><a href="#cb34-6" aria-label="6"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-label="7"></a><span class="fu">study_gap</span>(tas_2023)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 78.3</code></pre>
 </div>
@@ -982,7 +1069,7 @@ One possible answer
 <p>There are no wrong answers!</p>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_8e576313" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_4e360a15" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 </div>
@@ -1026,6 +1113,7 @@ One possible answer
 <h2 class="unnumbered anchored" data-anchor-id="">Links</h2>
 <ul>
 <li><a href="https://milesmcbain.xyz">Miles McBain</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Brolga">brolga</a></li>
 </ul>
 </section>
 
@@ -1437,6 +1525,9 @@ One possible answer
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./looking-inside-a-function.html" class="pagination-link" aria-label="Looking inside a function">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Looking inside a function</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
