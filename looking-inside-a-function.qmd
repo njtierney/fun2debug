@@ -97,7 +97,7 @@ ggplot(education,
   geom_point()
 ```
 
-But let's explore just looking at 15-19 year olds in tasmania:
+But let's explore just looking at 15-19 year olds in Tasmania:
 
 ```{r}
 tas <- education |> filter(state_territory == "Tas.")
@@ -243,14 +243,12 @@ fit_study_filtered(education, "Queensland", "15_19")
 
 R stops, and gives you a prompt - something like the following:
 
-R stops there and hands you a prompt, that looks like the following:
-
 ```
 Called from: fit_study_filtered(education, "Queensland", "15_19")
 Browse[1]> 
 ```
 
-The special thing to note is
+The special thing to note is:
 
 ```
 Browse[1]>
@@ -270,7 +268,7 @@ Notice you can see the function arguments, and the intermediate values.
 
 You can explore them by seeing what their output is in the console.
 
-You can also run the code inside the function. You can view the browser() help  with `help`. This reveals this little map of commands:
+You can also run the code inside the function. You can view the browser() help with `help`. This reveals this little map of commands:
 
 ```
 Browse[1]> help
@@ -285,7 +283,7 @@ help       show help
 Browse[1]>
 ```
 
-There are three commands that are really worth knowing:
+There are five commands that are really worth knowing:
 
 - `n` runs the next line
 - `c` continues to the end
@@ -413,13 +411,13 @@ It's like if we have our functions, we are looking at a map overview, but then w
 
 Just like in "outside in, inside out", it was useful to move between writing functions at a definition level, and then working at a script, it is useful to be able to dive into functions and understand them, then move back up.
 
-I first heard about the phrase, "Up and down the ladder of abstraction" from [Bret Victor](https://worrydream.com/), in his [Up and Down the Ladder of Abstraction](https://worrydream.com/LadderOfAbstraction/) talk. It's a really cool talk on the power of getting interactivity in debugging, an how that leads to other creative solutions.
+I first heard about the phrase, "Up and down the ladder of abstraction" from [Bret Victor](https://worrydream.com/), in his [Up and Down the Ladder of Abstraction](https://worrydream.com/LadderOfAbstraction/) talk. It's a really cool talk on the power of getting interactivity in debugging, and how that leads to other creative solutions.
 
 ### You can't always `browser()`
 
 Some of the downsides to using `browser()` are that you cannot always use it, because you might not be able to hand place a `browser()` in a function from another package.
 
-I really like to use `debugonce()` for this. Or, if you are inside `s` at the debug prompt inside that function, which steps you into that function.
+I really like to use `debugonce()` for this. Or, if you are already at the debug prompt, `s` steps you into that function.
 
 Same prompt, same everything, and no edit to the function.
 
