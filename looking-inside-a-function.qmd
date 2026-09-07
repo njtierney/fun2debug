@@ -88,7 +88,7 @@ We are going to explore the question:
 
 > Is the proportion of people studying, changing over time?
 
-We can look at a general sense of this by looking at the data - looking at the proportion of people studying in each year, for all age groups and states:
+We can get at a general sense of this by viewing the data. Looking at the proportion of people studying in each year, for all age groups and states:
 
 ```{r}
 ggplot(education,
@@ -158,6 +158,48 @@ Called from: lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...)
 
 OK, so we use `lm()`, and I guess `lm.fit()` is used somewhere.
 
+:::{.callout-note title="Your Turn: Error messages"}
+
+What do you think the error message is telling us?
+
+
+```
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Called from: lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...)
+```
+
+How about:
+
+```{r}
+#| error: true
+lm(penguins, bill_dep ~ bill_len)
+```
+
+Or
+
+```{r}
+#| error: true
+sd(1,2,3,4,5)
+```
+
+How about:
+
+```{r}
+#| error: true
+ggplot(airquality, x = Ozone, y = Solar.R) + 
+  geom_line()
+```
+
+
+```{r}
+#| echo: false
+#| eval: !expr knitr::is_html_output()
+countdown(minutes = 5)
+```
+:::
+
+
 The key seems to be:
 
 >  0 (non-NA) cases
@@ -173,18 +215,11 @@ Ah! I see.
 
 But what if we want to see inside the function? Is there a way to do that? Like, to look inside of `fit_study_trend()`, and see what it sees?
 
-
-### Takehomes
-
-- An error message tells you what stopped, and often names a place you did not write
-- Guessing at the cause and then testing the guess is a reasonable first move
-- It stops telling you things once you need to know what a value was
-
 ## `browser()`: How to browse inside a function
 
 Error messages will only take you so far. Reading an error message can tell you where an error happens, but it doesn't show you what the values are inside the function. 
 
-If we wrote this out as a script:
+If we wrote this out as a script - you can do this interactively.
 
 ```{r}
 #| error: true
@@ -199,19 +234,51 @@ young_qld
 
 This used to be my process for exploring functions, when I wanted to understand how they worked, or if they had errors:
 
-- Pull the function body out
-- Set the arguments of your function
-- Run the script line by line
+1. Pull the function body out
+1. Set the arguments of your function
+1. Run the script line by line
 
-The process did work. But it is also a bit of a missed opportunity to explore the function. It also has some shortfalls:
+::: {.panel-tabset}
 
-- copying the body of the function takes time
-- You open yourself up to copy/paste errors
-- What happens when you want to explore another function?
+## Pull function body
 
-You can save yourself this pain, of copying code out of a function, by using a function called `browser()`.
+```{r}
+#| eval: false
+fit_study_trend <- function(data){
+  lm(prop_studying ~ year, data = data)
+}
 
-Imagine we had our function like this:
+lm(prop_studying ~ year, data = data)
+```
+
+## Set arguments
+
+```{r}
+#| eval: false
+data <- education
+lm(prop_studying ~ year, data = data)
+```
+
+## Run lines
+
+```{r}
+#| error: true
+data <- education
+lm(prop_studying ~ year, data = data)
+```
+
+
+:::
+
+The process **does** work. But it also has some shortfalls:
+
+- Copying the body of the function takes time. This is a one-line function. What if your function is really big?
+- Copying and pasting opens you to copy/paste errors
+- What if you want to explore another function inside that one?
+
+There is a more elegant solution: using `browser()`.
+
+Imagine we had our function like this - multiple steps, filtering out, then fitting a model.
 
 ```{r}
 #| eval: true
@@ -274,11 +341,47 @@ Look in the environment pane:
 
 The environment pane switches from your workspace to **the function's** environment, so it lists `data`, and nothing else, rather than everything you have lying around. 
 
+This is something worth noting about functions:
+
+> Functions have their own environment
+
 Notice you can see the function arguments, and the intermediate values.
 
-You can explore them by seeing what their output is in the console.
+::: {.callout-tip title="Going deeper: functions, environments, scoping" collapse="true"}
 
-You can also run the code inside the function. You can view the browser() help with `help`. This reveals this little map of commands:
+There are more details to functions, we have only scratched the surface. I think this rule kind of gets you most of the way there:
+
+> Functions can override assignment within the function body. 
+
+If you define x inside a function, it uses that variable. Otherwise, it searches for it.
+
+```{r}
+x <- 10
+my_fun <- function(x){
+  x * 0.5
+}
+
+my_fun(1)
+my_fun(2)
+my_fun(3)
+
+y <- 10
+my_example <- function(x){
+  x * y
+}
+
+my_example(1)
+```
+
+It is a bit spooky! But it turns out this is really useful in statistical computing.
+
+This idea is called lexical scoping. A good place to learn more about this is in [the functions chapter of advanced R](https://adv-r.hadley.nz/functions.html#lexical-scoping).
+
+:::
+
+You can explore functions by seeing what their output is in the console.
+
+You can also run the code inside the function. You can view the `browser()` help with `help`. This reveals a little map of commands:
 
 ```
 Browse[1]> help
@@ -317,7 +420,7 @@ Let's type "n", to run each line of code.
 
 </details>
 
-Let's get you used to placing a little browser() in your code - here's a slightly modified version of the above code.
+Let's get you used to placing a little `browser()` in your code: here's a slightly modified version of the above code.
 
 ```{r}
 fit_study_filtered <- function(data, state, age){
@@ -340,7 +443,7 @@ fit_study_filtered <- function(data, state, age){
 <details>
 <summary>Answer</summary>
 
-<!-- TODO: Nick to fill. A model session rather than a solution, since this one
+<!-- TODO: A model session rather than a solution, since this one
 is about the controls. A short transcript of what your prompt looked like is
 probably enough. -->
 
@@ -441,15 +544,43 @@ I first heard about the phrase, "Up and down the ladder of abstraction" from [Br
 - `n`, `c`, `Q`, `f` and `s` are the five controls
 - The debugger shows you values, you still do the working out
 
-### You can't always `browser()`
+### `debug()`: You can't always `browser()`
 
 Some of the downsides to using `browser()` are that you cannot always use it, because you might not be able to hand place a `browser()` in a function from another package.
 
 I really like to use `debugonce()` for this. Or, if you are already at the debug prompt, `s` steps you into that function.
 
+The pattern is:
+
+```{r}
+#| eval: false
+#| echo: true
+debugonce(function_to_debug)
+function_to_debug(arg1 = x)
+```
+
+Compared to `browser()`:
+
+```{r}
+#| eval: false
+#| echo: true
+function_to_debug <- function(arg1){
+  browser()
+  arg1
+}
+```
+
 Same prompt, same everything, and no edit to the function.
 
 `debug()` is the same thing except it's permanent, so the function stops every single time until you say `undebug()`. That gets old fast, which is why `debugonce()` is nearly always the one you want.
+
+```{r}
+#| eval: false
+#| echo: true
+debug(function_to_debug)
+function_to_debug(arg1 = x)
+undebug(function_to_debug)
+```
 
 :::{.callout-note title="Your Turn: using debugonce() and friends"}
 
