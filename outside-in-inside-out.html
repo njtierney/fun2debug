@@ -500,7 +500,7 @@ Setup code
 <span id="cb9-5"><a href="#cb9-5" aria-label="5"></a><span class="fu">___</span>(___)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_28376baa" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_1d88d169" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <details>
@@ -541,14 +541,14 @@ One possible answer
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_8aea831b" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_555d57b0" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <p>OK, now let’s practice writing this again, but with a smaller example.</p>
 <p>The dataset is at:</p>
 <p>And can be downloaded with the following code:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>brolga_counts <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/animals/brolga_year_month.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>brolga_counts <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://fun2debug.njtierney.com/data/animals/brolga_year_month.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 977 Columns: 3
 ── Column specification ────────────────────────────────────────────────────────
@@ -576,6 +576,7 @@ dbl (3): year, month, n
 # ℹ 967 more rows</code></pre>
 </div>
 </div>
+<p>or you can go to <a href="https://fun2debug.njtierney.com/data/" class="uri">https://fun2debug.njtierney.com/data/</a> and download the brolga data there</p>
 <p>This data contains monthly counts of the number <a href="https://en.wikipedia.org/wiki/Brolga">brolga</a> seen in Australia.</p>
 <p>There are only three columns:</p>
 <ul>
@@ -652,7 +653,7 @@ dbl (3): year, month, n
 <p>Your sketch doesn’t need to be great!</p>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_8df18a3b" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_398c1e42" minutes="3" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <!-- TODO <my collapsed section with my bad drawing>. -->
@@ -662,7 +663,7 @@ dbl (3): year, month, n
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a><span class="fu">ggplot</span>(tas_young, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_studying)) <span class="sc">+</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-label="2"></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-first-line" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A line chart of the number of 15 to 19 year olds studying in Tasmania from 2014 to 2023. The line drifts down from about 28,500 to about 24,800, wobbling on the way." width="672">
+<div id="fig-first-line" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="A line chart of the number of 15 to 19 year olds studying in Tasmania from 2014 to 2023. The line drifts down from about 28,500 to about 24,800, wobbling on the way.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-first-line-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="outside-in-inside-out_files/figure-html/fig-first-line-1.png" id="fig-first-line" class="img-fluid figure-img" alt="A line chart of the number of 15 to 19 year olds studying in Tasmania from 2014 to 2023. The line drifts down from about 28,500 to about 24,800, wobbling on the way." width="672">
@@ -716,7 +717,7 @@ Figure&nbsp;3.1
 <span id="cb21-3"><a href="#cb21-3" aria-label="3"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-label="4"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>age_group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-facets" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Nine small line charts, one per age group, of the number of people studying in Tasmania from 2014 to 2023. The 15 to 19 panel is much the highest at around 25,000, and the older panels sit near the bottom of the range." width="672">
+<div id="fig-facets" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="Nine small line charts, one per age group, of the number of people studying in Tasmania from 2014 to 2023. The 15 to 19 panel is much the highest at around 25,000, and the older panels sit near the bottom of the range.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-facets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="outside-in-inside-out_files/figure-html/fig-facets-1.png" id="fig-facets" class="img-fluid figure-img" alt="Nine small line charts, one per age group, of the number of people studying in Tasmania from 2014 to 2023. The 15 to 19 panel is much the highest at around 25,000, and the older panels sit near the bottom of the range." width="672">
@@ -754,7 +755,7 @@ Figure&nbsp;3.2
 <span id="cb22-12"><a href="#cb22-12" aria-label="12"></a>  ) <span class="sc">+</span></span>
 <span id="cb22-13"><a href="#cb22-13" aria-label="13"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-polished" class="quarto-float quarto-figure quarto-figure-center anchored" alt="The same nine panels of Tasmanian study numbers over time, now in green, with a comma separated count axis, a title, and a light theme." width="672">
+<div id="fig-polished" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="The same nine panels of Tasmanian study numbers over time, now in green, with a comma separated count axis, a title, and a light theme.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-polished-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="outside-in-inside-out_files/figure-html/fig-polished-1.png" id="fig-polished" class="img-fluid figure-img" alt="The same nine panels of Tasmanian study numbers over time, now in green, with a comma separated count axis, a title, and a light theme." width="672">
@@ -911,7 +912,7 @@ Setup code
 <span id="cb29-5"><a href="#cb29-5" aria-label="5"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>state_territory) <span class="sc">+</span></span>
 <span id="cb29-6"><a href="#cb29-6" aria-label="6"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">scale =</span> <span class="dv">1000</span>, <span class="at">big.mark =</span> <span class="st">","</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-yt-working-code" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Eight small line charts, one per state and territory, of the number of 15 to 19 year olds studying from 2014 to 2023. New South Wales and Victoria dominate the range, and the smaller jurisdictions are flat near the bottom." width="672">
+<div id="fig-yt-working-code" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="Eight small line charts, one per state and territory, of the number of 15 to 19 year olds studying from 2014 to 2023. New South Wales and Victoria dominate the range, and the smaller jurisdictions are flat near the bottom.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-yt-working-code-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="outside-in-inside-out_files/figure-html/fig-yt-working-code-1.png" id="fig-yt-working-code" class="img-fluid figure-img" alt="Eight small line charts, one per state and territory, of the number of 15 to 19 year olds studying from 2014 to 2023. New South Wales and Victoria dominate the range, and the smaller jurisdictions are flat near the bottom." width="672">
@@ -941,7 +942,7 @@ Figure&nbsp;3.4
 <span id="cb30-8"><a href="#cb30-8" aria-label="8"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_6825e95f" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_1fa61229" minutes="8" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 <details>
@@ -962,7 +963,7 @@ Answer
 <span id="cb31-10"><a href="#cb31-10" aria-label="10"></a></span>
 <span id="cb31-11"><a href="#cb31-11" aria-label="11"></a><span class="fu">plot_age_over_time</span>(education, <span class="at">age =</span> <span class="st">"25_29"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-yt-answer" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Eight small line charts, one per state and territory, of the number of 25 to 29 year olds studying from 2014 to 2023, drawn by the new function." width="672">
+<div id="fig-yt-answer" class="quarto-float quarto-figure quarto-figure-center anchored" width="672" alt="Eight small line charts, one per state and territory, of the number of 25 to 29 year olds studying from 2014 to 2023, drawn by the new function.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-yt-answer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="outside-in-inside-out_files/figure-html/fig-yt-answer-1.png" id="fig-yt-answer" class="img-fluid figure-img" alt="Eight small line charts, one per state and territory, of the number of 25 to 29 year olds studying from 2014 to 2023, drawn by the new function." width="672">
@@ -1069,7 +1070,7 @@ One possible answer
 <p>There are no wrong answers!</p>
 <div class="cell">
 <div class="cell-output-display">
-<countdown-timer class="countdown" id="timer_b7195bfe" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
+<countdown-timer class="countdown" id="timer_af3cf955" minutes="5" seconds="0" update-every="1" tabindex="0" style="right:0;bottom:0;"></countdown-timer>
 </div>
 </div>
 </div>
@@ -1113,6 +1114,7 @@ One possible answer
 <h2 class="unnumbered anchored" data-anchor-id="">Links</h2>
 <ul>
 <li><a href="https://milesmcbain.xyz">Miles McBain</a></li>
+<li><a href="https://fun2debug.njtierney.com/data/" class="uri">https://fun2debug.njtierney.com/data/</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Brolga">brolga</a></li>
 </ul>
 </section>
