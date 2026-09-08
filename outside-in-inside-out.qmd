@@ -308,6 +308,11 @@ Your question is:
 
 > Which year was the first year to have a complete number of months of records?
 
+1. Write out the steps to answer this question
+2. Practice writing just the function signatures
+3. Use fnmate to create the functions
+4. Get it working!
+
 :::
 
 
