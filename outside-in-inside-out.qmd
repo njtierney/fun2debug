@@ -301,8 +301,12 @@ This data contains monthly counts of the number [brolga](https://en.wikipedia.or
 There are only three columns: 
 
 - year
-- month
+- month (1 is January, 12 is December)
 - n
+
+If we look at the first row, this can be interpreted as:
+
+> There were `r brolga_counts$n[1]` sightings of a brolga in year: `r brolga_counts$year[1]`, month: `r brolgar_counts$month[1]` (January).
 
 Your question is:
 
